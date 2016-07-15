@@ -33,10 +33,10 @@
                     android:layout_weight="1"
                     android:id="@+id/map_frame">
 
-                    <!--<com.google.android.gms.maps.MapView-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:id="@+id/map"/>-->
+                    <com.google.android.gms.maps.MapView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/map"/>
 
 
                     <RelativeLayout
@@ -85,7 +85,7 @@
                 android:layout_gravity="left"
                 android:layout_width="@dimen/drawer_width"
                 android:layout_height="match_parent"
-                android:background="#888">
+                android:background="#fefefe">
 
                 <ScrollView
                     android:layout_width="match_parent"

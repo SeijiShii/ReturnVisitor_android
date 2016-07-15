@@ -4,26 +4,25 @@
     api-level="22"
     density="xhdpi"
     format="8"
-    timestamp="211759275490016"
-    token="-3413086739163856745"
-    verifier="FULL_BUILD_REQUESTED" >
+    timestamp="215229675761376"
+    token="-3413086739163856745" >
 
     <task
         name="javac"
-        duration="2879" />
+        duration="0" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="220" />
+        duration="0" />
     <task
         name="verifier"
-        duration="94" />
+        duration="0" />
 
     <artifact
-        location="C:\AndroidStudioProjects\ReturnVisitor\app\build\outputs\apk\app-debug.apk"
-        type="MAIN" />
+        location="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\instant-run-resources\resources-debug.ir.ap_"
+        type="RESOURCES" />
 
     <build
         timestamp="211759275490016"
@@ -31,6 +30,18 @@
         <artifact
             location="C:\AndroidStudioProjects\ReturnVisitor\app\build\outputs\apk\app-debug.apk"
             type="MAIN" />
+    </build>
+    <build
+        timestamp="214333279730364"
+        verifier="COMPATIBLE" >
+        <artifact
+            location="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\builds\debug\214333279730364\classes.dex"
+            type="RELOAD_DEX" />
+    </build>
+    <build timestamp="215229675761376" >
+        <artifact
+            location="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\instant-run-resources\resources-debug.ir.ap_"
+            type="RESOURCES" />
     </build>
 
 </instant-run>
