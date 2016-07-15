@@ -6,7 +6,7 @@
     <dimen name="tool_bar_height">60dp</dimen>
 
     <!-- Nav Drawer -->
-    <dimen name="drawer_width">300dp</dimen>
+    <dimen name="drawer_width">280dp</dimen>
 
     <!-- Ad Frame  -->
     <dimen name="ad_frame_height">80dp</dimen>

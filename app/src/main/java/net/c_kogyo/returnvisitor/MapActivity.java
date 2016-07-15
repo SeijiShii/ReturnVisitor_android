@@ -1,5 +1,6 @@
 package net.c_kogyo.returnvisitor;
 
+import android.content.res.Configuration;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,8 @@ public class MapActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     private DrawerLayout navDrawer;
@@ -46,4 +48,6 @@ public class MapActivity extends AppCompatActivity {
         mDrawerToggle.setDrawerIndicatorEnabled(true);
 
     }
+
+
 }

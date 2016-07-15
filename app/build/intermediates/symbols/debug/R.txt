@@ -541,7 +541,7 @@ int id customPanel 0x7f0b0039
 int id decor_content_parent 0x7f0b0043
 int id default_activity_button 0x7f0b002a
 int id disableHome 0x7f0b000c
-int id drawer 0x7f0b0055
+int id drawer 0x7f0b0054
 int id edit_query 0x7f0b0047
 int id end 0x7f0b001b
 int id end_padder 0x7f0b0065
@@ -604,7 +604,7 @@ int id textSpacerNoButtons 0x7f0b0037
 int id time 0x7f0b005f
 int id title 0x7f0b002d
 int id title_template 0x7f0b0032
-int id tool_bar 0x7f0b0054
+int id tool_bar 0x7f0b0055
 int id top 0x7f0b0023
 int id topPanel 0x7f0b0031
 int id up 0x7f0b0008

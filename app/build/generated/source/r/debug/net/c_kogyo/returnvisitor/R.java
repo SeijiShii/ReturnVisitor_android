@@ -1978,7 +1978,7 @@ containing a value of this type.
         public static final int decor_content_parent=0x7f0b0043;
         public static final int default_activity_button=0x7f0b002a;
         public static final int disableHome=0x7f0b000c;
-        public static final int drawer=0x7f0b0055;
+        public static final int drawer=0x7f0b0054;
         public static final int edit_query=0x7f0b0047;
         public static final int end=0x7f0b001b;
         public static final int end_padder=0x7f0b0065;
@@ -2041,7 +2041,7 @@ containing a value of this type.
         public static final int time=0x7f0b005f;
         public static final int title=0x7f0b002d;
         public static final int title_template=0x7f0b0032;
-        public static final int tool_bar=0x7f0b0054;
+        public static final int tool_bar=0x7f0b0055;
         public static final int top=0x7f0b0023;
         public static final int topPanel=0x7f0b0031;
         public static final int up=0x7f0b0008;

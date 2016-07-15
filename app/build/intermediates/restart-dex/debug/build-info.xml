@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <instant-run
     abi="x86"
-    api-level="22"
-    density="xhdpi"
+    api-level="23"
+    density="mdpi"
     format="8"
-    timestamp="215229675761376"
+    timestamp="222450491542909"
     token="-3413086739163856745" >
 
     <task
@@ -12,7 +12,7 @@
         duration="0" />
     <task
         name="instant-run-dex"
-        duration="0" />
+        duration="75" />
     <task
         name="instant-run-transform"
         duration="0" />
@@ -23,25 +23,31 @@
     <artifact
         location="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\instant-run-resources\resources-debug.ir.ap_"
         type="RESOURCES" />
+    <artifact
+        location="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\reload-dex\debug\classes.dex"
+        type="RELOAD_DEX" />
 
     <build
-        timestamp="211759275490016"
+        timestamp="221411588198950"
         verifier="FULL_BUILD_REQUESTED" >
         <artifact
             location="C:\AndroidStudioProjects\ReturnVisitor\app\build\outputs\apk\app-debug.apk"
             type="MAIN" />
     </build>
     <build
-        timestamp="214333279730364"
-        verifier="COMPATIBLE" >
+        timestamp="222050960273986"
+        verifier="R_CLASS_CHANGE" >
         <artifact
-            location="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\builds\debug\214333279730364\classes.dex"
-            type="RELOAD_DEX" />
+            location="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_4\classes.dex"
+            type="DEX" />
     </build>
-    <build timestamp="215229675761376" >
+    <build timestamp="222450491542909" >
         <artifact
             location="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\instant-run-resources\resources-debug.ir.ap_"
             type="RESOURCES" />
+        <artifact
+            location="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\reload-dex\debug\classes.dex"
+            type="RELOAD_DEX" />
     </build>
 
 </instant-run>
