@@ -21,12 +21,48 @@
     </item>
     <item
         is-multidex="false"
+        jar="C:\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\24.0.0\support-annotations-24.0.0.jar"
+        jumboMode="false"
+        optimize="false"
+        revision="24.0.0"
+        sha1="2943c74db6d4346ab8c6531adac91fa05c137c40">
+        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\support-annotations-24.0.0_fe7480820c20c289a17422f6ee907fbcc1697ea1.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.0.0\jars\classes.jar"
         jumboMode="false"
         optimize="false"
         revision="24.0.0"
         sha1="2f7e6e2dad1bccaf68a8820820adc6c0d5b96d37">
         <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-24.0.0_a8efc50f0dcb60ed450de7e79aa0e88dcb4e966d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.0.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="false"
+        revision="24.0.0"
+        sha1="3bd97cfefd783e9de1dd1c30574a6adb44b4409b">
+        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-24.0.0_f8308ed5efb92acc3823c9aa0cb00a308f54202c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="false"
+        revision="24.0.0"
+        sha1="04de44f90606c77f3b28cf44861f306290505aac">
+        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-maps-8.4.0_84fcb9d6b3dc51642673910367eb45b25f9d6812.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        optimize="false"
+        revision="24.0.0"
+        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
+        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-base-8.4.0_d9c6a8567103f1bc37e05d628fa1472f0a486498.jar" />
     </item>
     <item
         is-multidex="false"
@@ -39,75 +75,12 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-tasks\9.2.1\jars\classes.jar"
+        jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.4.0\jars\classes.jar"
         jumboMode="false"
         optimize="false"
         revision="24.0.0"
-        sha1="819c2c3a4fb135e085445d11131d069cf9c32b2a">
-        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-tasks-9.2.1_174a8d25870d3d8df1c70a0389076364c5e4a486.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\24.0.0\support-annotations-24.0.0.jar"
-        jumboMode="false"
-        optimize="false"
-        revision="24.0.0"
-        sha1="2943c74db6d4346ab8c6531adac91fa05c137c40">
-        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\support-annotations-24.0.0_fe7480820c20c289a17422f6ee907fbcc1697ea1.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\9.2.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="false"
-        revision="24.0.0"
-        sha1="421b36cf4f0d3bbd75e8f28647fccf36674ef049">
-        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-base-9.2.1_8b51199e43f5f35e62348115205ff7191c4e4810.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\9.2.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="false"
-        revision="24.0.0"
-        sha1="6b896c1067633db41e9c10a3a5d0919c5c4cfc8c">
-        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-9.2.1_3d8b08f61dcdff97a935acc68e13af1ac454737d.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.android.support.constraint\constraint-layout\1.0.0-alpha4\jars\classes.jar"
-        jumboMode="false"
-        optimize="false"
-        revision="24.0.0"
-        sha1="affe29a90a2a709bfd2b8d6411aa99c05a2be96f">
-        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.android.support.constraint-constraint-layout-1.0.0-alpha4_0ed033c33c24a7c7be60070ff35e3eda9e572f98.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\9.2.1\jars\classes.jar"
-        jumboMode="false"
-        optimize="false"
-        revision="24.0.0"
-        sha1="bbd51be332bace144b3d16501ec0af379c3c8750">
-        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-maps-9.2.1_0d19941fc8748d708eaa260d9e89d3b7eebea40b.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.0-alpha4\constraint-layout-solver-1.0.0-alpha4.jar"
-        jumboMode="false"
-        optimize="false"
-        revision="24.0.0"
-        sha1="a882fef6a6b9e3efbb0b6b001895a5fc7c35b391">
-        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\constraint-layout-solver-1.0.0-alpha4_b96ac0f853ab52bb39085f6edbbdf4c795b2379a.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\24.0.0\jars\classes.jar"
-        jumboMode="false"
-        optimize="false"
-        revision="24.0.0"
-        sha1="3bd97cfefd783e9de1dd1c30574a6adb44b4409b">
-        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-24.0.0_f8308ed5efb92acc3823c9aa0cb00a308f54202c.jar" />
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="C:\AndroidStudioProjects\ReturnVisitor\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-8.4.0_96e52b7f63d74a159114b0c2d3e581633f6d28a5.jar" />
     </item>
 
 </items>

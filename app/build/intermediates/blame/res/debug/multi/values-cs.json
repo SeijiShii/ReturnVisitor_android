@@ -372,13 +372,13 @@
                     "endOffset": 2332
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 4,
+                        "startLine": 24,
                         "startColumn": 4,
-                        "startOffset": 329,
-                        "endColumn": 271,
-                        "endOffset": 596
+                        "startOffset": 3512,
+                        "endColumn": 275,
+                        "endOffset": 3783
                     }
                 }
             },
@@ -391,13 +391,13 @@
                     "endOffset": 2461
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 5,
+                        "startLine": 10,
                         "startColumn": 4,
-                        "startOffset": 601,
+                        "startOffset": 1327,
                         "endColumn": 128,
-                        "endOffset": 725
+                        "endOffset": 1451
                     }
                 }
             },
@@ -410,13 +410,13 @@
                     "endOffset": 2653
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 6,
+                        "startLine": 9,
                         "startColumn": 4,
-                        "startOffset": 730,
-                        "endColumn": 191,
-                        "endOffset": 917
+                        "startOffset": 1131,
+                        "endColumn": 195,
+                        "endOffset": 1322
                     }
                 }
             },
@@ -429,13 +429,13 @@
                     "endOffset": 2780
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 7,
+                        "startLine": 8,
                         "startColumn": 4,
-                        "startOffset": 922,
+                        "startOffset": 1004,
                         "endColumn": 126,
-                        "endOffset": 1044
+                        "endOffset": 1126
                     }
                 }
             },
@@ -448,13 +448,13 @@
                     "endOffset": 2910
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 8,
+                        "startLine": 7,
                         "startColumn": 4,
-                        "startOffset": 1049,
+                        "startOffset": 874,
                         "endColumn": 129,
-                        "endOffset": 1174
+                        "endOffset": 999
                     }
                 }
             },
@@ -467,13 +467,13 @@
                     "endOffset": 3128
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 9,
+                        "startLine": 5,
                         "startColumn": 4,
-                        "startOffset": 1179,
-                        "endColumn": 217,
-                        "endOffset": 1392
+                        "startOffset": 430,
+                        "endColumn": 221,
+                        "endOffset": 647
                     }
                 }
             },
@@ -486,13 +486,13 @@
                     "endOffset": 3346
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 10,
+                        "startLine": 6,
                         "startColumn": 4,
-                        "startOffset": 1397,
-                        "endColumn": 217,
-                        "endOffset": 1610
+                        "startOffset": 652,
+                        "endColumn": 221,
+                        "endOffset": 869
                     }
                 }
             },
@@ -505,13 +505,13 @@
                     "endOffset": 3475
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 11,
+                        "startLine": 4,
                         "startColumn": 4,
-                        "startOffset": 1615,
+                        "startOffset": 301,
                         "endColumn": 128,
-                        "endOffset": 1739
+                        "endOffset": 425
                     }
                 }
             },
@@ -520,17 +520,17 @@
                     "startLine": 29,
                     "startColumn": 4,
                     "startOffset": 3480,
-                    "endColumn": 171,
-                    "endOffset": 3647
+                    "endColumn": 173,
+                    "endOffset": 3649
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 12,
+                        "startLine": 19,
                         "startColumn": 4,
-                        "startOffset": 1744,
-                        "endColumn": 171,
-                        "endOffset": 1911
+                        "startOffset": 2735,
+                        "endColumn": 173,
+                        "endOffset": 2904
                     }
                 }
             },
@@ -538,18 +538,18 @@
                 "to": {
                     "startLine": 30,
                     "startColumn": 4,
-                    "startOffset": 3652,
-                    "endColumn": 121,
-                    "endOffset": 3769
+                    "startOffset": 3654,
+                    "endColumn": 118,
+                    "endOffset": 3768
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 13,
+                        "startLine": 18,
                         "startColumn": 4,
-                        "startOffset": 1916,
-                        "endColumn": 121,
-                        "endOffset": 2033
+                        "startOffset": 2616,
+                        "endColumn": 118,
+                        "endOffset": 2730
                     }
                 }
             },
@@ -557,18 +557,18 @@
                 "to": {
                     "startLine": 31,
                     "startColumn": 4,
-                    "startOffset": 3774,
+                    "startOffset": 3773,
                     "endColumn": 164,
-                    "endOffset": 3934
+                    "endOffset": 3933
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 14,
+                        "startLine": 17,
                         "startColumn": 4,
-                        "startOffset": 2038,
+                        "startOffset": 2451,
                         "endColumn": 164,
-                        "endOffset": 2198
+                        "endOffset": 2611
                     }
                 }
             },
@@ -576,18 +576,18 @@
                 "to": {
                     "startLine": 32,
                     "startColumn": 4,
-                    "startOffset": 3939,
+                    "startOffset": 3938,
                     "endColumn": 116,
-                    "endOffset": 4051
+                    "endOffset": 4050
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 15,
+                        "startLine": 16,
                         "startColumn": 4,
-                        "startOffset": 2203,
+                        "startOffset": 2334,
                         "endColumn": 116,
-                        "endOffset": 2315
+                        "endOffset": 2446
                     }
                 }
             },
@@ -595,18 +595,18 @@
                 "to": {
                     "startLine": 33,
                     "startColumn": 4,
-                    "startOffset": 4056,
-                    "endColumn": 129,
+                    "startOffset": 4055,
+                    "endColumn": 130,
                     "endOffset": 4181
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 16,
+                        "startLine": 3,
                         "startColumn": 4,
-                        "startOffset": 2320,
-                        "endColumn": 129,
-                        "endOffset": 2445
+                        "startOffset": 170,
+                        "endColumn": 130,
+                        "endOffset": 296
                     }
                 }
             },
@@ -615,17 +615,17 @@
                     "startLine": 34,
                     "startColumn": 4,
                     "startOffset": 4186,
-                    "endColumn": 180,
-                    "endOffset": 4362
+                    "endColumn": 162,
+                    "endOffset": 4344
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 17,
+                        "startLine": 28,
                         "startColumn": 4,
-                        "startOffset": 2450,
-                        "endColumn": 180,
-                        "endOffset": 2626
+                        "startOffset": 4217,
+                        "endColumn": 162,
+                        "endOffset": 4375
                     }
                 }
             },
@@ -633,18 +633,18 @@
                 "to": {
                     "startLine": 35,
                     "startColumn": 4,
-                    "startOffset": 4367,
-                    "endColumn": 144,
-                    "endOffset": 4507
+                    "startOffset": 4349,
+                    "endColumn": 125,
+                    "endOffset": 4470
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 18,
+                        "startLine": 27,
                         "startColumn": 4,
-                        "startOffset": 2631,
-                        "endColumn": 144,
-                        "endOffset": 2771
+                        "startOffset": 4091,
+                        "endColumn": 125,
+                        "endOffset": 4212
                     }
                 }
             },
@@ -652,18 +652,18 @@
                 "to": {
                     "startLine": 36,
                     "startColumn": 4,
-                    "startOffset": 4512,
-                    "endColumn": 162,
-                    "endOffset": 4670
+                    "startOffset": 4475,
+                    "endColumn": 171,
+                    "endOffset": 4642
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 19,
+                        "startLine": 26,
                         "startColumn": 4,
-                        "startOffset": 2776,
-                        "endColumn": 162,
-                        "endOffset": 2934
+                        "startOffset": 3919,
+                        "endColumn": 171,
+                        "endOffset": 4086
                     }
                 }
             },
@@ -671,18 +671,18 @@
                 "to": {
                     "startLine": 37,
                     "startColumn": 4,
-                    "startOffset": 4675,
-                    "endColumn": 125,
-                    "endOffset": 4796
+                    "startOffset": 4647,
+                    "endColumn": 130,
+                    "endOffset": 4773
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 20,
+                        "startLine": 25,
                         "startColumn": 4,
-                        "startOffset": 2939,
-                        "endColumn": 125,
-                        "endOffset": 3060
+                        "startOffset": 3788,
+                        "endColumn": 130,
+                        "endOffset": 3914
                     }
                 }
             },
@@ -690,18 +690,18 @@
                 "to": {
                     "startLine": 38,
                     "startColumn": 4,
-                    "startOffset": 4801,
-                    "endColumn": 179,
-                    "endOffset": 4976
+                    "startOffset": 4778,
+                    "endColumn": 244,
+                    "endOffset": 5018
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-basement\\8.4.0\\res\\values-cs\\common_strings.xml",
                     "position": {
-                        "startLine": 21,
+                        "startLine": 3,
                         "startColumn": 4,
-                        "startOffset": 3065,
-                        "endColumn": 179,
-                        "endOffset": 3240
+                        "startOffset": 170,
+                        "endColumn": 248,
+                        "endOffset": 414
                     }
                 }
             },
@@ -709,18 +709,18 @@
                 "to": {
                     "startLine": 39,
                     "startColumn": 4,
-                    "startOffset": 4981,
-                    "endColumn": 130,
-                    "endOffset": 5107
+                    "startOffset": 5023,
+                    "endColumn": 266,
+                    "endOffset": 5285
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 22,
+                        "startLine": 21,
                         "startColumn": 4,
-                        "startOffset": 3245,
-                        "endColumn": 130,
-                        "endOffset": 3371
+                        "startOffset": 3031,
+                        "endColumn": 270,
+                        "endOffset": 3297
                     }
                 }
             },
@@ -728,18 +728,18 @@
                 "to": {
                     "startLine": 40,
                     "startColumn": 4,
-                    "startOffset": 5112,
-                    "endColumn": 244,
-                    "endOffset": 5352
+                    "startOffset": 5290,
+                    "endColumn": 121,
+                    "endOffset": 5407
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-basement\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 4,
+                        "startLine": 20,
                         "startColumn": 4,
-                        "startOffset": 330,
-                        "endColumn": 244,
-                        "endOffset": 570
+                        "startOffset": 2909,
+                        "endColumn": 121,
+                        "endOffset": 3026
                     }
                 }
             },
@@ -747,18 +747,18 @@
                 "to": {
                     "startLine": 41,
                     "startColumn": 4,
-                    "startOffset": 5357,
-                    "endColumn": 266,
-                    "endOffset": 5619
+                    "startOffset": 5412,
+                    "endColumn": 112,
+                    "endOffset": 5520
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 23,
+                        "startLine": 22,
                         "startColumn": 4,
-                        "startOffset": 3376,
-                        "endColumn": 266,
-                        "endOffset": 3638
+                        "startOffset": 3302,
+                        "endColumn": 112,
+                        "endOffset": 3410
                     }
                 }
             },
@@ -766,18 +766,18 @@
                 "to": {
                     "startLine": 42,
                     "startColumn": 4,
-                    "startOffset": 5624,
-                    "endColumn": 121,
-                    "endOffset": 5741
+                    "startOffset": 5525,
+                    "endColumn": 194,
+                    "endOffset": 5715
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 24,
+                        "startLine": 12,
                         "startColumn": 4,
-                        "startOffset": 3643,
-                        "endColumn": 121,
-                        "endOffset": 3760
+                        "startOffset": 1586,
+                        "endColumn": 198,
+                        "endOffset": 1780
                     }
                 }
             },
@@ -785,18 +785,18 @@
                 "to": {
                     "startLine": 43,
                     "startColumn": 4,
-                    "startOffset": 5746,
-                    "endColumn": 112,
-                    "endOffset": 5854
+                    "startOffset": 5720,
+                    "endColumn": 129,
+                    "endOffset": 5845
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 25,
+                        "startLine": 11,
                         "startColumn": 4,
-                        "startOffset": 3765,
-                        "endColumn": 112,
-                        "endOffset": 3873
+                        "startOffset": 1456,
+                        "endColumn": 129,
+                        "endOffset": 1581
                     }
                 }
             },
@@ -804,18 +804,18 @@
                 "to": {
                     "startLine": 44,
                     "startColumn": 4,
-                    "startOffset": 5859,
-                    "endColumn": 194,
-                    "endOffset": 6049
+                    "startOffset": 5850,
+                    "endColumn": 219,
+                    "endOffset": 6065
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 26,
+                        "startLine": 15,
                         "startColumn": 4,
-                        "startOffset": 3878,
-                        "endColumn": 194,
-                        "endOffset": 4068
+                        "startOffset": 2110,
+                        "endColumn": 223,
+                        "endOffset": 2329
                     }
                 }
             },
@@ -823,18 +823,18 @@
                 "to": {
                     "startLine": 45,
                     "startColumn": 4,
-                    "startOffset": 6054,
-                    "endColumn": 129,
-                    "endOffset": 6179
+                    "startOffset": 6070,
+                    "endColumn": 139,
+                    "endOffset": 6205
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 27,
+                        "startLine": 14,
                         "startColumn": 4,
-                        "startOffset": 4073,
-                        "endColumn": 129,
-                        "endOffset": 4198
+                        "startOffset": 1970,
+                        "endColumn": 139,
+                        "endOffset": 2105
                     }
                 }
             },
@@ -842,18 +842,18 @@
                 "to": {
                     "startLine": 46,
                     "startColumn": 4,
-                    "startOffset": 6184,
-                    "endColumn": 219,
-                    "endOffset": 6399
+                    "startOffset": 6210,
+                    "endColumn": 184,
+                    "endOffset": 6390
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 28,
+                        "startLine": 13,
                         "startColumn": 4,
-                        "startOffset": 4203,
-                        "endColumn": 219,
-                        "endOffset": 4418
+                        "startOffset": 1785,
+                        "endColumn": 184,
+                        "endOffset": 1965
                     }
                 }
             },
@@ -861,18 +861,18 @@
                 "to": {
                     "startLine": 47,
                     "startColumn": 4,
-                    "startOffset": 6404,
-                    "endColumn": 139,
-                    "endOffset": 6539
+                    "startOffset": 6395,
+                    "endColumn": 96,
+                    "endOffset": 6487
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 29,
+                        "startLine": 23,
                         "startColumn": 4,
-                        "startOffset": 4423,
-                        "endColumn": 139,
-                        "endOffset": 4558
+                        "startOffset": 3415,
+                        "endColumn": 96,
+                        "endOffset": 3507
                     }
                 }
             },
@@ -880,18 +880,18 @@
                 "to": {
                     "startLine": 48,
                     "startColumn": 4,
-                    "startOffset": 6544,
-                    "endColumn": 184,
-                    "endOffset": 6724
+                    "startOffset": 6492,
+                    "endColumn": 96,
+                    "endOffset": 6584
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 30,
+                        "startLine": 29,
                         "startColumn": 4,
-                        "startOffset": 4563,
-                        "endColumn": 184,
-                        "endOffset": 4743
+                        "startOffset": 4380,
+                        "endColumn": 96,
+                        "endOffset": 4472
                     }
                 }
             },
@@ -899,18 +899,18 @@
                 "to": {
                     "startLine": 49,
                     "startColumn": 4,
-                    "startOffset": 6729,
-                    "endColumn": 97,
-                    "endOffset": 6822
+                    "startOffset": 6589,
+                    "endColumn": 115,
+                    "endOffset": 6700
                 },
                 "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
+                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\8.4.0\\res\\values-cs\\base_strings.xml",
                     "position": {
-                        "startLine": 31,
+                        "startLine": 30,
                         "startColumn": 4,
-                        "startOffset": 4748,
-                        "endColumn": 97,
-                        "endOffset": 4841
+                        "startOffset": 4477,
+                        "endColumn": 115,
+                        "endOffset": 4588
                     }
                 }
             },
@@ -918,47 +918,9 @@
                 "to": {
                     "startLine": 50,
                     "startColumn": 4,
-                    "startOffset": 6827,
-                    "endColumn": 96,
-                    "endOffset": 6919
-                },
-                "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
-                    "position": {
-                        "startLine": 32,
-                        "startColumn": 4,
-                        "startOffset": 4846,
-                        "endColumn": 96,
-                        "endOffset": 4938
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 51,
-                    "startColumn": 4,
-                    "startOffset": 6924,
-                    "endColumn": 114,
-                    "endOffset": 7034
-                },
-                "from": {
-                    "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.google.android.gms\\play-services-base\\9.2.1\\res\\values-cs\\values.xml",
-                    "position": {
-                        "startLine": 33,
-                        "startColumn": 4,
-                        "startOffset": 4943,
-                        "endColumn": 114,
-                        "endOffset": 5053
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 52,
-                    "startColumn": 4,
-                    "startOffset": 7039,
+                    "startOffset": 6705,
                     "endColumn": 100,
-                    "endOffset": 7135
+                    "endOffset": 6801
                 },
                 "from": {
                     "file": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.0.0\\res\\values-cs\\values-cs.xml",
