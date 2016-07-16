@@ -66,30 +66,39 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
-//                mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
+        try {
+            mMap.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
 
+        }
 
-        LatLng latLng = mMap.getCameraPosition().target;
-        Log.d(MAP_DEBUG, latLng.latitude + ", " + latLng.longitude);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        mMap.moveCamera(CameraUpdateFactory.zoomTo(13f));
-        Log.d(MAP_DEBUG, "Zoom Level = " + mMap.getCameraPosition().zoom);
-
-        latLng = new LatLng(20.694882,-101.369367);
+        LatLng latLng = new LatLng(20.694882,-101.369367);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         Log.d(MAP_DEBUG, latLng.latitude + ", " + latLng.longitude);
 
-        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
-            @Override
-            public void onCameraChange(CameraPosition cameraPosition) {
-                Log.d(MAP_DEBUG, "Camera Position Changed!");
-                Log.d(MAP_DEBUG, "Zoom Level = " + mMap.getCameraPosition().zoom);
-                LatLng latLng = cameraPosition.target;
-                Log.d(MAP_DEBUG, latLng.latitude + ", " + latLng.longitude);
 
-            }
-        });
+//        LatLng latLng = mMap.getCameraPosition().target;
+//        Log.d(MAP_DEBUG, latLng.latitude + ", " + latLng.longitude);
+//
+//        mMap.moveCamera(CameraUpdateFactory.zoomTo(13f));
+//        Log.d(MAP_DEBUG, "Zoom Level = " + mMap.getCameraPosition().zoom);
+//
+//
+//        mMap.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+//            @Override
+//            public void onCameraChange(CameraPosition cameraPosition) {
+//                Log.d(MAP_DEBUG, "Camera Position Changed!");
+//                Log.d(MAP_DEBUG, "Zoom Level = " + mMap.getCameraPosition().zoom);
+//                LatLng latLng = cameraPosition.target;
+//                Log.d(MAP_DEBUG, latLng.latitude + ", " + latLng.longitude);
+
+//            }
+//        });
 
 
     }
@@ -105,30 +114,5 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
-//    // エミュレータテスト用のズームコントロールをセッティングする
-//    ZoomControls zoomControls;
-//    private void createZoomControls() {
-//
-//        zoomControls = (ZoomControls) findViewById(R.id.map_zoom_controls);
-//        zoomControls.setOnZoomInClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                if (mMap == null) return;
-//                mMap.animateCamera(CameraUpdateFactory.zoomIn());
-//                Log.d(MAP_DEBUG,"Zoom Level = " + mMap.getCameraPosition().zoom);
-//
-//            }
-//        });
-//        zoomControls.setOnZoomOutClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                if (mMap == null) return;
-//                mMap.animateCamera(CameraUpdateFactory.zoomOut());
-//                Log.d(MAP_DEBUG,"Zoom Level = " + mMap.getCameraPosition().zoom);
-//            }
-//        });
-//    }
 
 }
