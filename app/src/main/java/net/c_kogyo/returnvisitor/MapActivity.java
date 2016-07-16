@@ -1,5 +1,6 @@
 package net.c_kogyo.returnvisitor;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -8,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ZoomControls;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,6 +21,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     static final String MAP_DEBUG ="map_debug";
 
+    // Shared Preferences用のタグ類
+    static final String RETURN_VISITOR_SHARED_PREFS = "return_visitor_shared_prefs";
+    static final String ZOOM_LEVEL = "zoom_level";
+    static final String LATITUDE = "latitude";
+    static final String LONGITUDE = "longitude";
+
     MapView mMapView;
     GoogleMap mMap;
 
@@ -32,7 +38,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         mMapView = (MapView) findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
-        mMapView.getMapAsync(this);
 
         createToolBar();
         createDrawer();
@@ -44,6 +49,43 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onResume();
         mMapView.onResume();
 
+        mMapView.getMapAsync(this);
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        saveCameraPosition();
+    }
+
+    private void loadCameraPosition() {
+        SharedPreferences prefs = getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE);
+        float zoomLevel = prefs.getFloat(ZOOM_LEVEL, 0f);
+        double lat = Double.valueOf(prefs.getString(LATITUDE, "1000"));
+        double lng = Double.valueOf(prefs.getString(LONGITUDE, "1000"));
+
+        if (lat >= 1000 || lng >= 1000) return;
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lat, lng), zoomLevel));
+    }
+
+    private void saveCameraPosition() {
+
+        SharedPreferences prefs = getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        float zoomLevel = mMap.getCameraPosition().zoom;
+        String latSt = String.valueOf(mMap.getCameraPosition().target.latitude);
+        String lngSt = String.valueOf(mMap.getCameraPosition().target.longitude);
+
+        editor.putFloat(ZOOM_LEVEL, zoomLevel);
+        editor.putString(LATITUDE, latSt);
+        editor.putString(LONGITUDE, lngSt);
+
+        editor.apply();
     }
 
     // ドロワーを開閉するにはToolBarが必要。
@@ -80,9 +122,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // xmlでの指定の方法が分からん
         mMap.setPadding(0, 35, 0, 0);
 
-        LatLng latLng = new LatLng(20.694882,-101.369367);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        Log.d(MAP_DEBUG, latLng.latitude + ", " + latLng.longitude);
+        loadCameraPosition();
+
+//
+//        LatLng latLng = new LatLng(20.694882,-101.369367);
+//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+//        Log.d(MAP_DEBUG, latLng.latitude + ", " + latLng.longitude);
 
 
 //        LatLng latLng = mMap.getCameraPosition().target;
