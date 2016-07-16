@@ -2,5 +2,9 @@
     {
         "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi\\ic_launcher.png",
         "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-mdpi\\rv_icon.png",
+        "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\mipmap-mdpi\\rv_icon.png"
     }
 ]

@@ -108,6 +108,10 @@
         "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.0.0\\res\\drawable\\abc_item_background_holo_light.xml"
     },
     {
+        "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\rv_icon.png",
+        "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\drawable\\rv_icon.png"
+    },
+    {
         "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\drawable\\abc_spinner_textfield_background_material.xml",
         "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.0.0\\res\\drawable\\abc_spinner_textfield_background_material.xml"
     },
