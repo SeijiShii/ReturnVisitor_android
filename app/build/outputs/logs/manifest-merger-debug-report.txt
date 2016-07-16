@@ -62,7 +62,7 @@ MERGED from [com.android.support:support-v4:24.0.0] C:\AndroidStudioProjects\Ret
 	android:allowBackup
 		ADDED from C:\AndroidStudioProjects\ReturnVisitor\app\src\main\AndroidManifest.xml:14:9-35
 	android:icon
-		ADDED from C:\AndroidStudioProjects\ReturnVisitor\app\src\main\AndroidManifest.xml:15:9-43
+		ADDED from C:\AndroidStudioProjects\ReturnVisitor\app\src\main\AndroidManifest.xml:15:9-39
 	android:theme
 		ADDED from C:\AndroidStudioProjects\ReturnVisitor\app\src\main\AndroidManifest.xml:18:9-40
 meta-data#com.google.android.gms.version

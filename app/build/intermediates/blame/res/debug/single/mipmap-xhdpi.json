@@ -1,6 +1,14 @@
 [
     {
+        "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi\\rv_icon.png",
+        "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\mipmap-xhdpi\\rv_icon.png"
+    },
+    {
         "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi\\ic_launcher.png",
         "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xhdpi\\lock.png",
+        "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\mipmap-xhdpi\\lock.png"
     }
 ]

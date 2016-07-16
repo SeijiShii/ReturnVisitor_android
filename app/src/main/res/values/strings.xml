@@ -7,4 +7,7 @@
     <string name="GM_API_KEY"> AIzaSyCiYJ1Xpqh1bMbCw6hYuCBBVrKwwI8VjHg</string>
 
     <string name="long_click_on_map">Long Click on the Map to Register Place</string>
+
+    <string name="login">Log in</string>
+    <string name="logged_in_as">Logged in as %s</string>
 </resources>

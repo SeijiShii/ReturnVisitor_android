@@ -4,5 +4,8 @@
     <color name="colorPrimaryDark">#328800</color>
     <color name="colorAccent">#fffd20</color>
 
+    <color name="light_green">#a1ff6a</color>
+
+    <color name="text_color_normal">#666</color>
     <color name="ad_frame_back">#555</color>
 </resources>
