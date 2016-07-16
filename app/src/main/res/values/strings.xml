@@ -10,4 +10,6 @@
 
     <string name="login">Log in</string>
     <string name="logged_in_as">Logged in as %s</string>
+
+    <string name="git_test">Git TEST</string>
 </resources>

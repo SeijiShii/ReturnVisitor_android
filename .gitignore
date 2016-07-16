@@ -5,4 +5,4 @@
 .DS_Store
 /captures
 
-strings.xml
+/app/src/main/res/values/strings.xml
