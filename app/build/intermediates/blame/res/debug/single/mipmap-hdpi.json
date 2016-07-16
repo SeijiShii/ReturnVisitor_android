@@ -10,5 +10,9 @@
     {
         "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi\\lock.png",
         "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\mipmap-hdpi\\lock.png"
+    },
+    {
+        "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-hdpi\\marker_blue.png",
+        "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\mipmap-hdpi\\marker_blue.png"
     }
 ]

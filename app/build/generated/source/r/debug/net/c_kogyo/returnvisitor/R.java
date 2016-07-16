@@ -2211,7 +2211,8 @@ containing a value of this type.
     public static final class mipmap {
         public static final int ic_launcher=0x7f030000;
         public static final int lock=0x7f030001;
-        public static final int rv_icon=0x7f030002;
+        public static final int marker_blue=0x7f030002;
+        public static final int rv_icon=0x7f030003;
     }
     public static final class string {
         public static final int GM_API_KEY=0x7f060031;

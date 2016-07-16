@@ -4,6 +4,10 @@
         "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
     },
     {
+        "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi\\marker_blue.png",
+        "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\mipmap-xxhdpi\\marker_blue.png"
+    },
+    {
         "merged": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\build\\intermediates\\res\\merged\\debug\\mipmap-xxhdpi\\rv_icon.png",
         "source": "C:\\AndroidStudioProjects\\ReturnVisitor\\app\\src\\main\\res\\mipmap-xxhdpi\\rv_icon.png"
     },
