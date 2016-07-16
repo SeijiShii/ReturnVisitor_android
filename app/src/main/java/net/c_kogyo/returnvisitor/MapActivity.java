@@ -77,6 +77,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
+        // xmlでの指定の方法が分からん
+        mMap.setPadding(0, 35, 0, 0);
+
         LatLng latLng = new LatLng(20.694882,-101.369367);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         Log.d(MAP_DEBUG, latLng.latitude + ", " + latLng.longitude);

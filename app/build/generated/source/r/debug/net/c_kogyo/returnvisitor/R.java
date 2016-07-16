@@ -2271,6 +2271,7 @@ containing a value of this type.
         public static final int common_signin_button_text_long=0x7f06002f;
         public static final int drawer_close=0x7f060041;
         public static final int drawer_open=0x7f060042;
+        public static final int long_click_on_map=0x7f060043;
         public static final int status_bar_notification_info_overflow=0x7f060030;
     }
     public static final class style {

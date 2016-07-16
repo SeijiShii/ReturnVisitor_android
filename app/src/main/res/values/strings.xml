@@ -5,4 +5,6 @@
     <string name="drawer_close">Drawer Close</string>
 
     <string name="GM_API_KEY"> AIzaSyCiYJ1Xpqh1bMbCw6hYuCBBVrKwwI8VjHg</string>
+
+    <string name="long_click_on_map">Long Click on the Map to Register Place</string>
 </resources>
