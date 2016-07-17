@@ -78,7 +78,8 @@
             android:layout_centerInParent="true"
             android:background="@drawable/white_gray_selector"
             android:textColor="@color/text_color_normal"
-            android:padding="5dp"/>
+            android:padding="5dp"
+            android:id="@+id/google_login_button"/>
 
     </RelativeLayout>
 
@@ -95,7 +96,8 @@
             android:layout_centerInParent="true"
             android:background="@drawable/fb_blue_selector"
             android:textColor="#FFF"
-            android:padding="5dp"/>
+            android:padding="5dp"
+            android:id="@+id/fb_login_button"/>
 
     </RelativeLayout>
 
