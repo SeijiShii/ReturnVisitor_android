@@ -7,3 +7,8 @@
 
 app/src/main/res/values/strings.xml
 app/build/intermediates/
+.gradle/2.10/taskArtifacts/
+.gradle/2.10/tasks/
+app/build/generated/source/
+build/intermediates/
+app/build/outputs/
