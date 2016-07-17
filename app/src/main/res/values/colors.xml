@@ -2,10 +2,13 @@
 <resources>
     <color name="colorPrimary">#52dc00</color>
     <color name="colorPrimaryDark">#328800</color>
-    <color name="colorAccent">#fffd20</color>
+    <color name="colorAccent">#ffac02</color>
 
     <color name="light_green">#a1ff6a</color>
 
     <color name="text_color_normal">#666</color>
     <color name="ad_frame_back">#555</color>
+
+    <color name="facebook_blue">#3a5897</color>
+    <color name="facebook_blue_pale">#97acd7</color>
 </resources>
