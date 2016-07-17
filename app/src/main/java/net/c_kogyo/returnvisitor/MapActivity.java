@@ -16,7 +16,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.facebook.appevents.AppEventsLogger;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.internal.CollectionMapper;
+import com.facebook.internal.LoginAuthorizationType;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -32,17 +40,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import com.facebook.FacebookSdk;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 public class MapActivity extends AppCompatActivity
                             implements OnMapReadyCallback,
-                                        GoogleApiClient.OnConnectionFailedListener {
+                                        GoogleApiClient.OnConnectionFailedListener,
+                                        FacebookCallback<LoginResult> {
 
 
     static final String MAP_DEBUG ="map_debug";
@@ -63,6 +77,7 @@ public class MapActivity extends AppCompatActivity
 
         initFirebaseAuth();
         initGoogleSignIn();
+        initFacebookLogin();
 
         setContentView(R.layout.activity_map);
 
@@ -224,12 +239,6 @@ public class MapActivity extends AppCompatActivity
         };
     }
 
-
-    private void facebookLogin() {
-        FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
-    }
-
     private Button loginOutButton;
     private void createLoginOutButton() {
 
@@ -263,7 +272,7 @@ public class MapActivity extends AppCompatActivity
 
                 LoginSelectDialog.newInstance(MapActivity.this,
                         new OnGoogleSignInClickListener(),
-                        new OnFBLoginClickListener(),
+                        new OnFBLoinClickListener(),
                         new EmailLoginClickListener())
                         .show(getFragmentManager(), "Login_dialog");
             }
@@ -316,28 +325,19 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
-    private static final Integer RC_SIGN_IN = 716;
+    // Google Sign in
 
+    private static final int GOOGLE_SIGN_IN_RC = 716;
     class OnGoogleSignInClickListener {
 
         void onClick() {
 //            Toast.makeText(MapActivity.this, "Google Sign in Clicked", Toast.LENGTH_SHORT).show();
             navDrawer.closeDrawer(Gravity.LEFT);
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-            startActivityForResult(signInIntent, RC_SIGN_IN);
+            startActivityForResult(signInIntent, GOOGLE_SIGN_IN_RC);
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        }
-    }
 
     private static final String GOOGLE_SIGN_IN_TAG = "google_sign_in_tag";
     private void handleSignInResult(GoogleSignInResult result) {
@@ -381,12 +381,101 @@ public class MapActivity extends AppCompatActivity
                 });
     }
 
-    class OnFBLoginClickListener {
 
-        void onClick() {
-            Toast.makeText(MapActivity.this, "FB Log in Clicked", Toast.LENGTH_SHORT).show();
+    // Facebook Login
+
+    private static final int FB_LOG_IN_RC = 64206;
+
+    class OnFBLoinClickListener {
+
+        public void onClick() {
             navDrawer.closeDrawer(Gravity.LEFT);
+            performFBLogin();
         }
     }
 
+    private CallbackManager mCallbackManager;
+    private void initFacebookLogin() {
+
+        FacebookSdk.sdkInitialize(this);
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager loginManager = LoginManager.getInstance();
+        loginManager.registerCallback(mCallbackManager, this);
+    }
+
+    private void performFBLogin() {
+
+        LoginManager loginManager = LoginManager.getInstance();
+        List<String> permissions = Arrays.asList("email", "public_profile");
+
+        loginManager.logInWithReadPermissions(this, permissions);
+
+    }
+
+    private static final String FB_TAG = "facebook_tag";
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == GOOGLE_SIGN_IN_RC) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        } else if (requestCode == FB_LOG_IN_RC) {
+
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onSuccess(LoginResult loginResult) {
+
+        Log.d(FB_TAG, "facebook:onSuccess:" + loginResult);
+        handleFacebookAccessToken(loginResult.getAccessToken());
+    }
+
+    @Override
+    public void onCancel() {
+
+        Log.d(FB_TAG, "facebook:onCancel");
+        // ...
+
+    }
+
+    @Override
+    public void onError(FacebookException error) {
+
+        Log.d(FB_TAG, "facebook:onError", error);
+        // ...
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+        Log.d(FB_TAG, "handleFacebookAccessToken:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(FB_TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(FB_TAG, "signInWithCredential", task.getException());
+                            Toast.makeText(MapActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            setLogOutButton();
+                        }
+
+                        // ...
+                    }
+                });
+    }
+
 }
+
