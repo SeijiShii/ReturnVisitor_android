@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -277,8 +279,33 @@ public class MapActivity extends AppCompatActivity
 
         }
         String logOutText = getString(R.string.logged_in_as, name);
-
         loginOutButton.setText(logOutText);
+
+        loginOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signOutFromFirebaseAuth();
+                navDrawer.closeDrawer(Gravity.LEFT);
+
+            }
+        });
+    }
+
+    private void signOutFromFirebaseAuth() {
+
+        new AlertDialog.Builder(this).setTitle(R.string.log_out_text)
+                .setMessage(R.string.log_out_message)
+                .setPositiveButton(R.string.log_out_text, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseAuth.getInstance().signOut();
+                        setLoginButton();
+                    }
+                })
+                .setNegativeButton(R.string.cancel_text, null)
+                .create()
+                .show();
+
     }
 
     class EmailLoginClickListener {
