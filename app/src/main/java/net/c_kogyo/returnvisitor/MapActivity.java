@@ -183,7 +183,7 @@ public class MapActivity extends AppCompatActivity
         mDrawerToggle = new ActionBarDrawerToggle(this, navDrawer, toolbar, R.string.app_name, R.string.app_name);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
 
-        createLoginButton();
+        createLoginOutButton();
 
     }
 
@@ -193,6 +193,7 @@ public class MapActivity extends AppCompatActivity
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id))
                 .requestEmail()
                 .build();
 
@@ -227,24 +228,57 @@ public class MapActivity extends AppCompatActivity
         AppEventsLogger.activateApp(this);
     }
 
-    private void createLoginButton() {
+    private Button loginOutButton;
+    private void createLoginOutButton() {
 
-        Button loginButton = (Button) findViewById(R.id.login_button);
+         loginOutButton = (Button) findViewById(R.id.login_button);
         
-        if (mAuth.)
+        if (mAuth == null) {
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
+            setLoginButton();
+
+        } else {
+            if (mAuth.getCurrentUser() == null) {
+
+                setLoginButton();
+
+            } else {
+
+                setLogOutButton();
+
+            }
+        }
+
+
+
+    }
+
+    private void setLoginButton() {
+        loginOutButton.setText(R.string.login);
+        loginOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 LoginSelectDialog.newInstance(MapActivity.this,
-                                                new OnGoogleSignInClickListener(),
-                                                new OnFBLoginClickListener(),
-                                                new EmailLoginClickListener())
-                                                .show(getFragmentManager(), "Login_dialog");
+                        new OnGoogleSignInClickListener(),
+                        new OnFBLoginClickListener(),
+                        new EmailLoginClickListener())
+                        .show(getFragmentManager(), "Login_dialog");
             }
         });
+    }
 
+    private void setLogOutButton() {
+
+        String name = "";
+        try {
+            name = mAuth.getCurrentUser().getDisplayName();
+        } catch (NullPointerException e) {
+
+        }
+        String logOutText = getString(R.string.logged_in_as, name);
+
+        loginOutButton.setText(logOutText);
     }
 
     class EmailLoginClickListener {
@@ -311,7 +345,10 @@ public class MapActivity extends AppCompatActivity
                         if (!task.isSuccessful()) {
                             Log.w(FIREBASE_TAG, "signInWithCredential", task.getException());
                             Toast.makeText(MapActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            setLogOutButton();
                         }
+
                         // ...
                     }
                 });
