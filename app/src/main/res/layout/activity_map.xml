@@ -146,7 +146,8 @@
                     android:textColor="@color/text_color_normal"
                     android:paddingLeft="10dp"
                     android:gravity="left|center_vertical"
-                    android:drawablePadding="10dp"/>
+                    android:drawablePadding="10dp"
+                    android:id="@+id/login_button"/>
 
                 <View
                     android:layout_width="match_parent"
