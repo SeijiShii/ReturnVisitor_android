@@ -10,7 +10,7 @@ app/build/intermediates/
 .gradle/2.10/taskArtifacts/
 .gradle/2.10/tasks/
 app/build/generated/source/
-build/intermediates/
+/intermediates/
 app/build/outputs/
 app/app-debug.apk
 
