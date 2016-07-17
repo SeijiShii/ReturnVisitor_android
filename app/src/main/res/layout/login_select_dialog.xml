@@ -27,7 +27,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/text_color_normal"/>
+            android:background="#999"/>
 
         <EditText
             android:layout_width="match_parent"
@@ -41,6 +41,21 @@
             android:background="#00000000"/>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:id="@+id/notify_text"
+            android:textColor="#f00"
+            android:textSize="12sp"/>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

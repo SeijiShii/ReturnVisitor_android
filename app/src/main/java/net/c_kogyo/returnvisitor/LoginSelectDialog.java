@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -54,6 +55,7 @@ public class LoginSelectDialog extends DialogFragment {
 
         createEmailText();
         createPasswordText();
+        createNotifyText();
         createLoginButton();
         createGoogleLoginButton();
         createFBLoginButton();
@@ -90,9 +92,20 @@ public class LoginSelectDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
 
-                mEmailLoginClickListener.onClick(emailText.getText().toString(), passwordText.getText().toString());
-                dismiss();
+                String email = emailText.getText().toString();
+                String pw = passwordText.getText().toString();
 
+                if (email.equals("")) {
+
+                    notifyText.setText(R.string.email_missed);
+                } else if (pw.equals("")) {
+
+                    notifyText.setText(R.string.password_missed);
+                } else {
+                    notifyText.setText("");
+                    mEmailLoginClickListener.onClick(emailText.getText().toString(), passwordText.getText().toString());
+                    dismiss();
+                }
             }
         });
     }
@@ -124,13 +137,14 @@ public class LoginSelectDialog extends DialogFragment {
             }
         });
 
-//        CallbackManager callbackManager = CallbackManager.Factory.create();
-//        LoginButton fbLoginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
-//        fbLoginButton.setReadPermissions("email", "public_profile");
-//        fbLoginButton.registerCallback(callbackManager, mFacebookCallback);
-
     }
 
+    private TextView notifyText;
+    private void createNotifyText() {
+
+        notifyText = (TextView) view.findViewById(R.id.notify_text);
+
+    }
 
 }
 
