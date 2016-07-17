@@ -46,6 +46,9 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.ArrayList;
@@ -56,7 +59,8 @@ import java.util.List;
 public class MapActivity extends AppCompatActivity
                             implements OnMapReadyCallback,
                                         GoogleApiClient.OnConnectionFailedListener,
-                                        FacebookCallback<LoginResult> {
+                                        FacebookCallback<LoginResult>,
+                                        OnCompleteListener<AuthResult>{
 
 
     static final String MAP_DEBUG ="map_debug";
@@ -235,6 +239,11 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
+                if (firebaseAuth.getCurrentUser() != null) {
+                    setLogOutButton();
+                } else {
+                    setLoginButton();
+                }
             }
         };
     }
@@ -317,12 +326,60 @@ public class MapActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == GOOGLE_SIGN_IN_RC) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            handleSignInResult(result);
+        } else if (requestCode == FB_LOG_IN_RC) {
+
+            mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    // Email Login
+
+    private String mEmail;
+    private String mPassword;
+
+    private static final String EMAIL_LOG_IN_TAG = "email_login_tag";
     class EmailLoginClickListener {
 
         void onClick(String email, String password) {
-            Toast.makeText(MapActivity.this, "Email Sign in Clicked", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MapActivity.this, "Email Sign in Clicked", Toast.LENGTH_SHORT).show();
             navDrawer.closeDrawer(Gravity.LEFT);
+
+            mEmail = email;
+            mPassword = password;
+
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(MapActivity.this, MapActivity.this);
+
         }
+    }
+
+
+    @Override
+    public void onComplete(@NonNull Task<AuthResult> task) {
+        Log.d(EMAIL_LOG_IN_TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+
+        // If sign in fails, display a message to the user. If sign in succeeds
+        // the auth state listener will be notified and logic to handle the
+        // signed in user can be handled in the listener.
+        if (!task.isSuccessful()) {
+            Toast.makeText(MapActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+
+            mAuth.signInWithEmailAndPassword(mEmail, mPassword).addOnCompleteListener(MapActivity.this, MapActivity.this);
+
+        } else {
+            mEmail = null;
+            mPassword = null;
+        }
+
+        // ...
     }
 
     // Google Sign in
@@ -414,21 +471,6 @@ public class MapActivity extends AppCompatActivity
 
     private static final String FB_TAG = "facebook_tag";
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == GOOGLE_SIGN_IN_RC) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
-        } else if (requestCode == FB_LOG_IN_RC) {
-
-            mCallbackManager.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
     @Override
     public void onSuccess(LoginResult loginResult) {
 
@@ -476,6 +518,8 @@ public class MapActivity extends AppCompatActivity
                     }
                 });
     }
+
+
 
 }
 

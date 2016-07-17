@@ -103,7 +103,7 @@ public class LoginSelectDialog extends DialogFragment {
                     notifyText.setText(R.string.password_missed);
                 } else {
                     notifyText.setText("");
-                    mEmailLoginClickListener.onClick(emailText.getText().toString(), passwordText.getText().toString());
+                    mEmailLoginClickListener.onClick(email, pw);
                     dismiss();
                 }
             }
