@@ -12,3 +12,5 @@ app/build/intermediates/
 app/build/generated/source/
 build/intermediates/
 app/build/outputs/
+app/app-debug.apk
+
