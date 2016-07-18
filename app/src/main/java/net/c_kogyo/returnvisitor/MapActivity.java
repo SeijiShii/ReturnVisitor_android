@@ -46,7 +46,9 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -241,6 +243,14 @@ public class MapActivity extends AppCompatActivity
 
                 if (firebaseAuth.getCurrentUser() != null) {
                     setLogOutButton();
+
+                    String name = firebaseAuth.getCurrentUser().getDisplayName();
+                    if (name == null) {
+                        name = firebaseAuth.getCurrentUser().getEmail();
+                    }
+
+                    Toast.makeText(MapActivity.this, name, Toast.LENGTH_SHORT).show();
+
                 } else {
                     setLoginButton();
                 }
@@ -293,6 +303,11 @@ public class MapActivity extends AppCompatActivity
         String name = "";
         try {
             name = mAuth.getCurrentUser().getDisplayName();
+
+            if (name == null) {
+                name = mAuth.getCurrentUser().getEmail();
+            }
+
         } catch (NullPointerException e) {
 
         }
@@ -361,7 +376,6 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public void onComplete(@NonNull Task<AuthResult> task) {
         Log.d(EMAIL_LOG_IN_TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
@@ -370,9 +384,23 @@ public class MapActivity extends AppCompatActivity
         // the auth state listener will be notified and logic to handle the
         // signed in user can be handled in the listener.
         if (!task.isSuccessful()) {
-            Toast.makeText(MapActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
 
-            mAuth.signInWithEmailAndPassword(mEmail, mPassword).addOnCompleteListener(MapActivity.this, MapActivity.this);
+            FirebaseAuthException e = (FirebaseAuthException) task.getException();
+            if (e != null) {
+
+                Log.d(EMAIL_LOG_IN_TAG, e.getErrorCode());
+//                Toast.makeText(MapActivity.this, e.getErrorCode(), Toast.LENGTH_SHORT).show();
+
+                if (e.getErrorCode().equals("ERROR_EMAIL_ALREADY_IN_USE")) {
+                    mAuth.signInWithEmailAndPassword(mEmail, mPassword).addOnCompleteListener(MapActivity.this, MapActivity.this);
+                } else if (e.getErrorCode().equals("ERROR_WRONG_PASSWORD")) {
+                    Toast.makeText(MapActivity.this, R.string.wrong_password, Toast.LENGTH_SHORT).show();
+                } else if (e.getErrorCode().equals("ERROR_WEAK_PASSWORD")) {
+                    Toast.makeText(MapActivity.this, R.string.weak_password, Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
 
         } else {
             mEmail = null;
@@ -402,10 +430,8 @@ public class MapActivity extends AppCompatActivity
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            Toast.makeText(this, acct.getDisplayName(), Toast.LENGTH_SHORT).show();
-
             firebaseAuthWithGoogle(acct);
-//            updateUI(true);
+
         } else {
             // Signed out, show unauthenticated UI.
 //            updateUI(false);
@@ -507,9 +533,15 @@ public class MapActivity extends AppCompatActivity
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
+
+                            if (task.getException() instanceof FirebaseAuthException) {
+                                if (((FirebaseAuthException)task.getException()).getErrorCode().equals("ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")){
+                                    Toast.makeText(MapActivity.this, R.string.different_credential, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
                             Log.w(FB_TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(MapActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+
                         } else {
                             setLogOutButton();
                         }
