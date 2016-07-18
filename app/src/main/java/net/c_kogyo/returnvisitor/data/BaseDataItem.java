@@ -1,4 +1,4 @@
-package net.c_kogyo.returnvisitor;
+package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,16 +18,24 @@ import java.util.Locale;
  */
 public abstract class BaseDataItem  implements Cloneable{
 
+    public static final String ID           = "id";
+    public static final String NAME         = "name";
+    public static final String NOTE         = "note";
     public static final String TIME_STAMP   = "time_stamp";
     public static final String TIME_STAMP_STRING = "time_stamp_string";
 
     protected String id;
+    protected String name;
+    protected String note;
+
     protected Calendar timeStamp;
 
     BaseDataItem(){
 
         this.timeStamp = Calendar.getInstance();
         this.id = generateNewId();
+        this.name = "";
+        this.note = "";
     }
 
     BaseDataItem(JSONObject object) {
@@ -35,11 +43,14 @@ public abstract class BaseDataItem  implements Cloneable{
         this();
 
         try {
-            if (object.has(getIdHeader())) {
-                this.id = object.getString(getIdHeader());
+            if (object.has(ID)) {
+                this.id = object.getString(ID);
             } else {
                 this.id = "";
             }
+
+            if (object.has(NAME)) this.name = object.getString(NAME);
+            if (object.has(NOTE)) this.note = object.getString(NOTE);
 
             if (object.has(TIME_STAMP)) {
                 this.timeStamp = Calendar.getInstance();
@@ -82,12 +93,30 @@ public abstract class BaseDataItem  implements Cloneable{
         timeStamp = Calendar.getInstance();
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     @Override
     protected Object clone() throws CloneNotSupportedException {
 
         BaseDataItem item = (BaseDataItem) super.clone();
 
         item.id = this.id;
+        item.name = this.name;
+        item.note = this.note;
         item.timeStamp = (Calendar) this.timeStamp.clone();
 
         return item;
@@ -98,7 +127,9 @@ public abstract class BaseDataItem  implements Cloneable{
         JSONObject object = new JSONObject();
 
         try {
-            object.put(getIdHeader(), this.id);
+            object.put(ID, this.id);
+            object.put(NAME, this.name);
+            object.put(NOTE, this.note);
             object.put(TIME_STAMP, this.timeStamp.getTimeInMillis());
 
             // jsonファイルを目視したときわかりやすいように。読み出しはしない。
@@ -135,8 +166,6 @@ public abstract class BaseDataItem  implements Cloneable{
 //     * @return
 //     */
 //    abstract public Calendar[] getPeriod();
-
-    abstract public Person.Interest getInterest();
 
     abstract public String toStringForSearch(Context context);
 

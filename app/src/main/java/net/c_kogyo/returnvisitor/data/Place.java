@@ -1,4 +1,4 @@
-package net.c_kogyo.returnvisitor;
+package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
 
@@ -15,11 +15,9 @@ public class Place extends BaseDataItem {
 
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
-    public static final String NAME = "name";
     public static final String ADDRESS = "address";
 
     private LatLng latLng;
-    private String name;
     private String address;
 
     public Place(LatLng latLng) {
@@ -40,7 +38,6 @@ public class Place extends BaseDataItem {
                 this.latLng = new LatLng(lat, lng);
             }
 
-            if (object.has(NAME)) this.name = object.getString(NAME);
             if (object.has(ADDRESS)) this.address = object.getString(ADDRESS);
 
         } catch (JSONException e) {
@@ -49,9 +46,8 @@ public class Place extends BaseDataItem {
     }
 
     private void initCommon() {
-        latLng = new LatLng(0, 0);
-        name = "";
-        address = "";
+        this.latLng = new LatLng(0, 0);
+        this.address = "";
     }
 
     @Override
@@ -59,7 +55,6 @@ public class Place extends BaseDataItem {
         return null;
     }
 
-    @Override
     public Person.Interest getInterest() {
         return null;
     }
@@ -77,7 +72,6 @@ public class Place extends BaseDataItem {
         try {
             object.put(LATITUDE, latLng.latitude);
             object.put(LONGITUDE, latLng.longitude);
-            object.put(NAME, name);
             object.put(ADDRESS, address);
         } catch (JSONException e) {
             e.printStackTrace();

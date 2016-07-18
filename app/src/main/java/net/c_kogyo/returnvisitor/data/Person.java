@@ -1,4 +1,4 @@
-package net.c_kogyo.returnvisitor;
+package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
 
@@ -14,10 +14,8 @@ public class Person extends BaseDataItem implements Cloneable{
 
     public static final String HOUSEHOLDER_ID       = "householder_id";
 
-    public static final String NAME     = "name";
     public static final String SEX      = "sex";
     public static final String AGE      = "age";
-    public static final String NOTE     = "note";
     public static final String INTEREST = "interest";
 
     public enum Sex {
@@ -117,10 +115,8 @@ public class Person extends BaseDataItem implements Cloneable{
 
     }
 
-    private String name;
     private Sex sex;
     private Age age;
-    private String note;
     private Interest interest;
 
     public Person() {
@@ -128,11 +124,9 @@ public class Person extends BaseDataItem implements Cloneable{
     }
 
     private void initCommon() {
-        this.name = "";
         this.sex = Sex.SEX_UNKNOWN;
         this.age = Age.AGE_UNKNOWN;
         this.interest = Interest.NONE;
-        this.note = "";
     }
 
     public Person(JSONObject object) {
@@ -140,19 +134,13 @@ public class Person extends BaseDataItem implements Cloneable{
         initCommon();
 
         try {
-            if (object.has(NAME))           this.name        = object.getString(NAME);
             if (object.has(SEX))            this.sex         = Sex.valueOf(object.get(SEX).toString());
             if (object.has(AGE))            this.age         = Age.valueOf(object.get(AGE).toString());
             if (object.has(INTEREST))       this.interest    = Interest.valueOf(object.get(INTEREST).toString());
-            if (object.has(NOTE))           this.note        = object.getString(NOTE);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Sex getSex() {
@@ -163,14 +151,6 @@ public class Person extends BaseDataItem implements Cloneable{
         return age;
     }
 
-    public String getNote() {
-        return note;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setSex(Sex sex) {
         this.sex = sex;
     }
@@ -179,11 +159,6 @@ public class Person extends BaseDataItem implements Cloneable{
         this.age = age;
     }
 
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    @Override
     public Interest getInterest() {
         return interest;
     }
@@ -216,10 +191,8 @@ public class Person extends BaseDataItem implements Cloneable{
 
         Person person = (Person) super.clone();
 
-        person.name = this.name;
         person.sex  = this.sex;
         person.age  = this.age;
-        person.note = this.note;
         person.interest = this.interest;
 
         return person;
@@ -231,11 +204,9 @@ public class Person extends BaseDataItem implements Cloneable{
         JSONObject object = super.getJSONObject();
 
         try {
-            object.put(NAME, name);
             object.put(SEX, sex);
             object.put(AGE, age);
             object.put(INTEREST, interest);
-            object.put(NOTE, note);
 
         } catch (JSONException e) {
             e.printStackTrace();
