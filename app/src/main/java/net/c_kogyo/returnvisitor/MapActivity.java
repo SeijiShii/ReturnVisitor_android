@@ -1,10 +1,15 @@
 package net.c_kogyo.returnvisitor;
 
+import android.*;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +62,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+
+import android.Manifest.permission;
 
 public class MapActivity extends AppCompatActivity
                             implements OnMapReadyCallback,
@@ -171,6 +178,7 @@ public class MapActivity extends AppCompatActivity
     }
 
 
+    private static final String MY_LOCATION_TAG = "my_location";
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -178,16 +186,22 @@ public class MapActivity extends AppCompatActivity
         mMap.getUiSettings().setZoomGesturesEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
 
-        try {
-            mMap.setMyLocationEnabled(true);
-        } catch (SecurityException e) {
+        // Permissionの扱いが変化するため
+            try {
+                mMap.setMyLocationEnabled(true);
+            } catch (SecurityException e) {
 
-        }
+                Log.d(MY_LOCATION_TAG,e.getMessage());
+            }
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            if (Build.VERSION.SDK_INT >= 23) {
+
+                setMyLocationButton();
+            }
 
         // xmlでの指定の方法が分からん
-        mMap.setPadding(0, 35, 0, 0);
+        mMap.setPadding(0, 40, 0, 0);
 
         loadCameraPosition();
 
@@ -195,6 +209,74 @@ public class MapActivity extends AppCompatActivity
                                         .position(mMap.getCameraPosition().target)
                                         .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker_blue)));
 
+    }
+
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 717;
+    private void setMyLocationButton() {
+
+        if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                Log.d(MY_LOCATION_TAG, "Permissions yet given.");
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission.ACCESS_FINE_LOCATION)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(this, permission.ACCESS_COARSE_LOCATION)) {
+
+                Log.d(MY_LOCATION_TAG, "Should show Explanation.");
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+
+                // No explanation needed, we can request the permission.
+
+
+                ActivityCompat.requestPermissions(this,
+                        new String[]{permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_ACCESS_LOCATION);
+
+                // MY_PERMISSIONS_REQUEST_ACCESS_LOCATION is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_ACCESS_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    Log.d(MY_LOCATION_TAG, "YES! permissions given.");
+
+                    try {
+                        mMap.setMyLocationEnabled(true);
+                    } catch (SecurityException e) {
+                        Log.d(MY_LOCATION_TAG,e.getMessage());
+                    }
+                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 
     private DrawerLayout navDrawer;
