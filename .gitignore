@@ -12,6 +12,7 @@ app/build/intermediates/
 app/build/generated/source/
 /intermediates/
 /.idea/
+/generated/
 app/build/outputs/
 app/app-debug.apk
 
