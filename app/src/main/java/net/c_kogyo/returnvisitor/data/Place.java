@@ -31,23 +31,23 @@ public class Place extends BaseDataItem {
         this.latLng = latLng;
     }
 
-    public Place(JSONObject object) {
-        super(object);
-        initCommon();
-
-        try {
-            if (object.has(LATITUDE) && object.has(LONGITUDE)) {
-                double lat = object.getDouble(LATITUDE);
-                double lng = object.getDouble(LONGITUDE);
-                this.latLng = new LatLng(lat, lng);
-            }
-
-            if (object.has(ADDRESS)) this.address = object.getString(ADDRESS);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+//    public Place(JSONObject object) {
+//        super(object);
+//        initCommon();
+//
+//        try {
+//            if (object.has(LATITUDE) && object.has(LONGITUDE)) {
+//                double lat = object.getDouble(LATITUDE);
+//                double lng = object.getDouble(LONGITUDE);
+//                this.latLng = new LatLng(lat, lng);
+//            }
+//
+//            if (object.has(ADDRESS)) this.address = object.getString(ADDRESS);
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void initCommon() {
         this.latLng = new LatLng(0, 0);
@@ -68,21 +68,21 @@ public class Place extends BaseDataItem {
         return null;
     }
 
-    @Override
-    public JSONObject getJSONObject() {
-
-        JSONObject object = super.getJSONObject();
-
-        try {
-            object.put(LATITUDE, latLng.latitude);
-            object.put(LONGITUDE, latLng.longitude);
-            object.put(ADDRESS, address);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return object;
-    }
+//    @Override
+//    public JSONObject getJSONObject() {
+//
+//        JSONObject object = super.getJSONObject();
+//
+//        try {
+//            object.put(LATITUDE, latLng.latitude);
+//            object.put(LONGITUDE, latLng.longitude);
+//            object.put(ADDRESS, address);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return object;
+//    }
 
     @Override
     public HashMap<String, Object> toMap() {

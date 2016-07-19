@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -136,28 +137,27 @@ public class Person extends BaseDataItem implements Cloneable{
         this.tagIds = new ArrayList<>();
     }
 
-    public Person(JSONObject object) {
-        super(object);
-        initCommon();
-
-        try {
-            if (object.has(SEX))            this.sex         = Sex.valueOf(object.get(SEX).toString());
-            if (object.has(AGE))            this.age         = Age.valueOf(object.get(AGE).toString());
-            if (object.has(INTEREST))       this.interest    = Interest.valueOf(object.get(INTEREST).toString());
-
-            //TODO  この実装方法がFirebaseと調和しているのか要検証
-            if (object.has(TAG_IDS)) {
-                this.tagIds = new ArrayList<>();
-                JSONArray array = object.getJSONArray(TAG_IDS);
-                for ( int i = 0 ; i < array.length() ; i++ ) {
-                    this.tagIds.add(array.getString(i));
-                }
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+//    public Person(JSONObject object) {
+//        super(object);
+//        initCommon();
+//
+//        try {
+//            if (object.has(SEX))            this.sex         = Sex.valueOf(object.get(SEX).toString());
+//            if (object.has(AGE))            this.age         = Age.valueOf(object.get(AGE).toString());
+//            if (object.has(INTEREST))       this.interest    = Interest.valueOf(object.get(INTEREST).toString());
+//
+//            if (object.has(TAG_IDS)) {
+//                this.tagIds = new ArrayList<>();
+//                JSONArray array = object.getJSONArray(TAG_IDS);
+//                for ( int i = 0 ; i < array.length() ; i++ ) {
+//                    this.tagIds.add(array.getString(i));
+//                }
+//            }
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public Sex getSex() {
         return sex;
@@ -233,34 +233,43 @@ public class Person extends BaseDataItem implements Cloneable{
         return person;
     }
 
-    @Override
-    public JSONObject getJSONObject() {
-
-        JSONObject object = super.getJSONObject();
-
-        try {
-            object.put(SEX, sex);
-            object.put(AGE, age);
-            object.put(INTEREST, interest);
-
-            //TODO ここもFirebaseと調和しているか検証
-            JSONArray array = new JSONArray();
-            for ( int i = 0 ; i < this.tagIds.size() ; i++ ) {
-                array.put(this.tagIds.get(i));
-            }
-            object.put(TAG_IDS, array);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return object;
-    }
+//    @Override
+//    public JSONObject getJSONObject() {
+//
+//        JSONObject object = super.getJSONObject();
+//
+//        try {
+//            object.put(SEX, sex);
+//            object.put(AGE, age);
+//            object.put(INTEREST, interest);
+//
+//            JSONArray array = new JSONArray();
+//            for ( int i = 0 ; i < this.tagIds.size() ; i++ ) {
+//                array.put(this.tagIds.get(i));
+//            }
+//            object.put(TAG_IDS, array);
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return object;
+//    }
 
     @Override
     public String toStringForSearch(Context context) {
         return null;
     }
 
+    @Override
+    public HashMap<String, Object> toMap() {
 
+        HashMap<String, Object> map = super.toMap();
+
+        map.put(SEX, sex);
+        map.put(AGE, age);
+        map.put(INTEREST, interest);
+
+        return map;
+    }
 }

@@ -40,31 +40,31 @@ public abstract class BaseDataItem  implements Cloneable{
         this.note = "";
     }
 
-    BaseDataItem(JSONObject object) {
-
-        this();
-
-        try {
-            if (object.has(ID)) {
-                this.id = object.getString(ID);
-            } else {
-                this.id = "";
-            }
-
-            if (object.has(NAME)) this.name = object.getString(NAME);
-            if (object.has(NOTE)) this.note = object.getString(NOTE);
-
-            if (object.has(TIME_STAMP)) {
-                this.timeStamp = Calendar.getInstance();
-                this.timeStamp.setTimeInMillis(object.getLong(TIME_STAMP));
-            } else {
-                this.timeStamp = Calendar.getInstance();
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
+//    BaseDataItem(JSONObject object) {
+//
+//        this();
+//
+//        try {
+//            if (object.has(ID)) {
+//                this.id = object.getString(ID);
+//            } else {
+//                this.id = "";
+//            }
+//
+//            if (object.has(NAME)) this.name = object.getString(NAME);
+//            if (object.has(NOTE)) this.note = object.getString(NOTE);
+//
+//            if (object.has(TIME_STAMP)) {
+//                this.timeStamp = Calendar.getInstance();
+//                this.timeStamp.setTimeInMillis(object.getLong(TIME_STAMP));
+//            } else {
+//                this.timeStamp = Calendar.getInstance();
+//            }
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     /**
      * カレンダーのミリ秒を文字列にした末尾に1000までの乱数を加えて初期値を生成する
@@ -124,25 +124,25 @@ public abstract class BaseDataItem  implements Cloneable{
         return item;
     }
 
-    public JSONObject getJSONObject() {
-
-        JSONObject object = new JSONObject();
-
-        try {
-            object.put(ID, this.id);
-            object.put(NAME, this.name);
-            object.put(NOTE, this.note);
-            object.put(TIME_STAMP, this.timeStamp.getTimeInMillis());
-
-            // jsonファイルを目視したときわかりやすいように。読み出しはしない。
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy,MM,dd, E, HH:mm:ss", Locale.JAPAN);
-            object.put(TIME_STAMP_STRING, sdf.format(this.timeStamp.getTime()));
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return object;
-    }
+//    public JSONObject getJSONObject() {
+//
+//        JSONObject object = new JSONObject();
+//
+//        try {
+//            object.put(ID, this.id);
+//            object.put(NAME, this.name);
+//            object.put(NOTE, this.note);
+//            object.put(TIME_STAMP, this.timeStamp.getTimeInMillis());
+//
+//            // jsonファイルを目視したときわかりやすいように。読み出しはしない。
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy,MM,dd, E, HH:mm:ss", Locale.JAPAN);
+//            object.put(TIME_STAMP_STRING, sdf.format(this.timeStamp.getTime()));
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return object;
+//    }
 
     public abstract String getIdHeader();
 
