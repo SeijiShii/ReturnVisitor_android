@@ -3,6 +3,7 @@ package net.c_kogyo.returnvisitor.data;
 import android.content.Context;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 /**
  * Created by 56255 on 2016/07/19.
@@ -73,6 +74,10 @@ public class Placement extends BaseDataItem {
 
     public static final String PLACEMENT = "Placement";
 
+    public static final String CATEGORY = "category";
+    public static final String MAGAZINE_CATEGORY = "magazine_category";
+    public static final String NUMBER = "number";
+
     private Category category;
     private MagazineCategory magCategory;
     private Calendar number;
@@ -139,5 +144,17 @@ public class Placement extends BaseDataItem {
 
         return (month + 1) / 2;
 
+    }
+
+    @Override
+    public HashMap<String, Object> toMap() {
+
+        HashMap<String, Object> map = super.toMap();
+
+        map.put(CATEGORY, category);
+        map.put(MAGAZINE_CATEGORY, magCategory);
+        map.put(NUMBER, number.getTimeInMillis());
+
+        return map;
     }
 }
