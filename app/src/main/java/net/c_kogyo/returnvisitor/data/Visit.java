@@ -13,15 +13,18 @@ public class Visit extends TimePeriodDataItem{
     public static final String VISIT = "visit";
     public static final String PLACE_ID = "place_id";
     public static final String PERSON_IDS = "person_ids";
+    public static final String PLACEMNETS = "placements";
 
     private String placeId;
     private ArrayList<String> personIds;
+    private ArrayList<Placement> placements;
 
     public Visit() {
         super();
 
         this.placeId = null;
         this.personIds = new ArrayList<>();
+        this.placements = new ArrayList<>();
     }
 
     @Override
@@ -42,6 +45,18 @@ public class Visit extends TimePeriodDataItem{
         map.put(PLACE_ID, placeId);
         map.put(PERSON_IDS, personIds);
 
+        //TODO オブジェクトのArrayListをそのままマップできるわけがないよね。
+
+        map.put(PLACEMNETS, placements);
+
         return map;
+    }
+
+    public void addPlacement(Placement placement) {
+        placements.add(placement);
+    }
+
+    public void removePlacement(Placement placement) {
+        placements.remove(placement);
     }
 }
