@@ -3,7 +3,6 @@ package net.c_kogyo.returnvisitor.data;
 import android.content.Context;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -11,7 +10,7 @@ import java.util.HashMap;
  */
 public class Visit extends TimePeriodDataItem{
 
-    public static final String VISIT_ID = "visit_id";
+    public static final String VISIT = "visit";
     public static final String PLACE_ID = "place_id";
     public static final String PERSON_IDS = "person_ids";
 
@@ -27,7 +26,7 @@ public class Visit extends TimePeriodDataItem{
 
     @Override
     public String getIdHeader() {
-        return VISIT_ID;
+        return VISIT;
     }
 
     @Override

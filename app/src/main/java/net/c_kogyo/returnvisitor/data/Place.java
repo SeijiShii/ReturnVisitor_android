@@ -15,7 +15,7 @@ import java.util.HashMap;
 
 public class Place extends BaseDataItem {
 
-    public static final String PLACE_ID = "place_id";
+    public static final String PLACE = "place";
 
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
@@ -56,7 +56,7 @@ public class Place extends BaseDataItem {
 
     @Override
     public String getIdHeader() {
-        return PLACE_ID;
+        return PLACE;
     }
 
     public Person.Interest getInterest() {

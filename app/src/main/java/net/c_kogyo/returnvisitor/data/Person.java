@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Person extends BaseDataItem implements Cloneable{
 
-    public static final String HOUSEHOLDER_ID       = "householder_id";
+    public static final String PERSON       = "person";
 
     public static final String SEX      = "sex";
     public static final String AGE      = "age";
@@ -203,7 +203,7 @@ public class Person extends BaseDataItem implements Cloneable{
 
     @Override
     public String getIdHeader() {
-        return HOUSEHOLDER_ID;
+        return PERSON;
     }
 
     //    public String getSexString(Context context) {
