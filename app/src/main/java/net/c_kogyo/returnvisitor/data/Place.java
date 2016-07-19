@@ -7,11 +7,15 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 /**
  * Created by SeijiShii on 2016/07/17.
  */
 
 public class Place extends BaseDataItem {
+
+    public static final String PLACE_ID = "place_id";
 
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
@@ -52,7 +56,7 @@ public class Place extends BaseDataItem {
 
     @Override
     public String getIdHeader() {
-        return null;
+        return PLACE_ID;
     }
 
     public Person.Interest getInterest() {
@@ -78,5 +82,17 @@ public class Place extends BaseDataItem {
         }
 
         return object;
+    }
+
+    @Override
+    public HashMap<String, Object> toMap() {
+
+        HashMap<String, Object> map = super.toMap();
+
+        map.put(LATITUDE, latLng.latitude);
+        map.put(LONGITUDE, latLng.longitude);
+        map.put(ADDRESS, address);
+
+        return map;
     }
 }

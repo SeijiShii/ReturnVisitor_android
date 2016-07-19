@@ -9,8 +9,10 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 
 /**
@@ -171,5 +173,21 @@ public abstract class BaseDataItem  implements Cloneable{
 
     public <T extends BaseDataItem>boolean equals(T o) {
         return this.getId().equals(o.getId());
+    }
+
+    public HashMap<String, Object> toMap() {
+
+        HashMap<String, Object> map = new HashMap<>();
+
+        map.put(ID, this.id);
+        map.put(NAME, this.name);
+        map.put(NOTE, this.note);
+        map.put(TIME_STAMP, this.timeStamp.getTimeInMillis());
+
+        // jsonファイルを目視したときわかりやすいように。読み出しはしない。
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy,MM,dd, E, HH:mm:ss", Locale.JAPAN);
+        map.put(TIME_STAMP_STRING, sdf.format(this.timeStamp.getTime()));
+
+        return map;
     }
 }

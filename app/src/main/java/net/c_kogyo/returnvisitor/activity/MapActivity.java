@@ -50,6 +50,8 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,6 +59,7 @@ import java.util.List;
 import android.Manifest.permission;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
 
 public class MapActivity extends AppCompatActivity
@@ -73,6 +76,7 @@ public class MapActivity extends AppCompatActivity
     static final String ZOOM_LEVEL = "zoom_level";
     static final String LATITUDE = "latitude";
     static final String LONGITUDE = "longitude";
+    static final String USER_EMAIL_ID = "user_email_id";
 
     MapView mMapView;
     GoogleMap mMap;
@@ -82,9 +86,13 @@ public class MapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        loadUserId();
+
         initFirebaseAuth();
         initGoogleSignIn();
         initFacebookLogin();
+
+        initFirebaseDatabase();
 
         setContentView(R.layout.activity_map);
 
@@ -199,10 +207,55 @@ public class MapActivity extends AppCompatActivity
 
         loadCameraPosition();
 
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                                        .position(mMap.getCameraPosition().target)
-                                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker_blue)));
+        // Firebaseのテストコード
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
 
+                mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker_blue)));
+
+                Place place = new Place(latLng);
+
+                if (userId != null) {
+                    reference.child(userId).push().setValue(place.toMap());
+                }
+            }
+        });
+
+
+    }
+
+    private DatabaseReference reference;
+    private void initFirebaseDatabase() {
+        reference = FirebaseDatabase.getInstance().getReference();
+
+    }
+
+    private String generateValidUserId(String email) {
+
+/*
+        Firebaseのkeyには禁則文字がある
+
+        * . (period)
+        * $ (dollar sign)
+        * [ (left square bracket)
+        * ] (right square bracket)
+        * # (hash or pound sign)
+        * / (forward slash)
+*/
+
+        final String RV = "_rv_";
+
+        String id = email.replaceAll("\\.", RV + "period_");
+        id = id.replaceAll("\\$", RV + "dollar_sign_");
+        id = id.replaceAll("\\[", RV + "left_square_bracket_");
+        id = id.replaceAll("]", RV + "right_square_bracket_");
+        id = id.replaceAll("#", RV + "hash_or_pound_sign_");
+        id = id.replaceAll("/", RV + "forward_slash_");
+
+        return id;
     }
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 717;
@@ -326,6 +379,13 @@ public class MapActivity extends AppCompatActivity
                     }
 
                     Toast.makeText(MapActivity.this, name, Toast.LENGTH_SHORT).show();
+
+                    String newUserId = generateValidUserId(mAuth.getCurrentUser().getEmail());
+                    if (!newUserId.equals(userId)) {
+                        userId = newUserId;
+                        getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE)
+                                .edit().putString(USER_EMAIL_ID, userId).apply();
+                    }
 
                 } else {
                     setLoginButton();
@@ -540,6 +600,12 @@ public class MapActivity extends AppCompatActivity
                 });
     }
 
+    public static String userId;
+    private void loadUserId() {
+
+        SharedPreferences prefs = getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE);
+        userId = prefs.getString(USER_EMAIL_ID, null);
+    }
 
     // Facebook Login
 
@@ -626,6 +692,7 @@ public class MapActivity extends AppCompatActivity
                     }
                 });
     }
+
 
 
 
