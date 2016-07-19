@@ -1,4 +1,4 @@
-package net.c_kogyo.returnvisitor;
+package net.c_kogyo.returnvisitor.dialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,11 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
+import net.c_kogyo.returnvisitor.activity.MapActivity;
+import net.c_kogyo.returnvisitor.R;
 
 /**
  * Created by SeijiShii on 2016/07/16.

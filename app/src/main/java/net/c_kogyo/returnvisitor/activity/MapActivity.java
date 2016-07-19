@@ -1,6 +1,5 @@
-package net.c_kogyo.returnvisitor;
+package net.c_kogyo.returnvisitor.activity;
 
-import android.*;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,8 +25,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.internal.CollectionMapper;
-import com.facebook.internal.LoginAuthorizationType;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -52,18 +49,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import android.Manifest.permission;
+
+import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
 
 public class MapActivity extends AppCompatActivity
                             implements OnMapReadyCallback,
@@ -443,9 +437,9 @@ public class MapActivity extends AppCompatActivity
     private String mPassword;
 
     private static final String EMAIL_LOG_IN_TAG = "email_login_tag";
-    class EmailLoginClickListener {
+    public class EmailLoginClickListener {
 
-        void onClick(String email, String password) {
+        public void onClick(String email, String password) {
 //            Toast.makeText(MapActivity.this, "Email Sign in Clicked", Toast.LENGTH_SHORT).show();
             navDrawer.closeDrawer(Gravity.LEFT);
 
@@ -495,9 +489,9 @@ public class MapActivity extends AppCompatActivity
     // Google Sign in
 
     private static final int GOOGLE_SIGN_IN_RC = 716;
-    class OnGoogleSignInClickListener {
+    public class OnGoogleSignInClickListener {
 
-        void onClick() {
+        public void onClick() {
 //            Toast.makeText(MapActivity.this, "Google Sign in Clicked", Toast.LENGTH_SHORT).show();
             navDrawer.closeDrawer(Gravity.LEFT);
             Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -551,7 +545,7 @@ public class MapActivity extends AppCompatActivity
 
     private static final int FB_LOG_IN_RC = 64206;
 
-    class OnFBLoinClickListener {
+    public class OnFBLoinClickListener {
 
         public void onClick() {
             navDrawer.closeDrawer(Gravity.LEFT);
