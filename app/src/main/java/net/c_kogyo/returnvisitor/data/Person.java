@@ -2,9 +2,11 @@ package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +19,7 @@ public class Person extends BaseDataItem implements Cloneable{
     public static final String SEX      = "sex";
     public static final String AGE      = "age";
     public static final String INTEREST = "interest";
+    public static final String TAG_IDS  = "tag_ids";
 
     public enum Sex {
         SEX_UNKNOWN(0),
@@ -119,6 +122,9 @@ public class Person extends BaseDataItem implements Cloneable{
     private Age age;
     private Interest interest;
 
+    // タグは個人につけるもの
+    private ArrayList<String> tagIds;
+
     public Person() {
         initCommon();
     }
@@ -127,6 +133,7 @@ public class Person extends BaseDataItem implements Cloneable{
         this.sex = Sex.SEX_UNKNOWN;
         this.age = Age.AGE_UNKNOWN;
         this.interest = Interest.NONE;
+        this.tagIds = new ArrayList<>();
     }
 
     public Person(JSONObject object) {
@@ -137,6 +144,15 @@ public class Person extends BaseDataItem implements Cloneable{
             if (object.has(SEX))            this.sex         = Sex.valueOf(object.get(SEX).toString());
             if (object.has(AGE))            this.age         = Age.valueOf(object.get(AGE).toString());
             if (object.has(INTEREST))       this.interest    = Interest.valueOf(object.get(INTEREST).toString());
+
+            //TODO  この実装方法がFirebaseと調和しているのか要検証
+            if (object.has(TAG_IDS)) {
+                this.tagIds = new ArrayList<>();
+                JSONArray array = object.getJSONArray(TAG_IDS);
+                for ( int i = 0 ; i < array.length() ; i++ ) {
+                    this.tagIds.add(array.getString(i));
+                }
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -167,6 +183,24 @@ public class Person extends BaseDataItem implements Cloneable{
         this.interest = interest;
     }
 
+    public ArrayList<String> getTagIds() {
+        return tagIds;
+    }
+
+    public void setTagIds(ArrayList<String> tagIds) {
+        this.tagIds = tagIds;
+    }
+
+    public void addTagIds(String tagId) {
+        this.tagIds.add(tagId);
+    }
+
+    public void removeTagId(String tagId) {
+        this.tagIds.remove(tagId);
+    }
+
+
+
     @Override
     public String getIdHeader() {
         return HOUSEHOLDER_ID;
@@ -194,6 +228,7 @@ public class Person extends BaseDataItem implements Cloneable{
         person.sex  = this.sex;
         person.age  = this.age;
         person.interest = this.interest;
+        person.tagIds = new ArrayList<>(this.tagIds);
 
         return person;
     }
@@ -207,6 +242,13 @@ public class Person extends BaseDataItem implements Cloneable{
             object.put(SEX, sex);
             object.put(AGE, age);
             object.put(INTEREST, interest);
+
+            //TODO ここもFirebaseと調和しているか検証
+            JSONArray array = new JSONArray();
+            for ( int i = 0 ; i < this.tagIds.size() ; i++ ) {
+                array.put(this.tagIds.get(i));
+            }
+            object.put(TAG_IDS, array);
 
         } catch (JSONException e) {
             e.printStackTrace();
