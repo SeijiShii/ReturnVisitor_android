@@ -13,11 +13,13 @@ public class Visit extends TimePeriodDataItem{
     public static final String VISIT = "visit";
     public static final String PLACE_ID = "place_id";
     public static final String PERSON_IDS = "person_ids";
-    public static final String PLACEMNETS = "placements";
+    public static final String PLACEMENTS = "placements";
+    public static final String RV_COUNT = "rv_count";
 
     private String placeId;
     private ArrayList<String> personIds;
     private ArrayList<Placement> placements;
+    private int rvCount;
 
     public Visit() {
         super();
@@ -25,6 +27,7 @@ public class Visit extends TimePeriodDataItem{
         this.placeId = null;
         this.personIds = new ArrayList<>();
         this.placements = new ArrayList<>();
+        this.rvCount = 0;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class Visit extends TimePeriodDataItem{
 
         //TODO オブジェクトのArrayListをそのままマップできるわけがないよね。
 
-        map.put(PLACEMNETS, placements);
+        map.put(PLACEMENTS, placements);
 
         return map;
     }
@@ -58,5 +61,13 @@ public class Visit extends TimePeriodDataItem{
 
     public void removePlacement(Placement placement) {
         placements.remove(placement);
+    }
+
+    public int getRvCount() {
+        return rvCount;
+    }
+
+    public void setRvCount(int rvCount) {
+        this.rvCount = rvCount;
     }
 }
