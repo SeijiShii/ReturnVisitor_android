@@ -50,7 +50,12 @@ public class Visit extends TimePeriodDataItem{
 
         //TODO オブジェクトのArrayListをそのままマップできるわけがないよね。
 
-        map.put(PLACEMENTS, placements);
+        ArrayList<HashMap<String, Object>> mapList = new ArrayList<>();
+        for ( int i = 0 ; i < placements.size() ; i++ ) {
+            mapList.add(placements.get(i).toMap());
+        }
+
+        map.put(PLACEMENTS, mapList);
 
         return map;
     }
