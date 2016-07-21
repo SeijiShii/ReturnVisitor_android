@@ -14,6 +14,7 @@ import net.c_kogyo.returnvisitor.R;
 
 /**
  * Created by SeijiShii on 2016/07/20.
+ * ラウンドなビューフレーム
  */
 
 public class TitleFrameView extends RelativeLayout {
@@ -72,10 +73,10 @@ public class TitleFrameView extends RelativeLayout {
         }
     }
 
-    public void addView(View child) {
-
-        frame.addView(child);
-    }
+//    public void addView(View child) {
+//
+//        frame.addView(child);
+//    }
 
     public void showPlaceholder(boolean show) {
 
@@ -83,6 +84,21 @@ public class TitleFrameView extends RelativeLayout {
             frame.setBackgroundColor(0);
         } else {
             frame.setBackgroundColor(Color.WHITE);
+        }
+    }
+
+    @Override
+    protected void onFinishInflate() {
+
+        for ( int i = 0 ; i < getChildCount() ; i++ ) {
+            View view = getChildAt(i);
+            removeViewAt(i);
+            frame.addView(view);
+
+            // 子ビューが1個以上あるとき1回だけ実行される。プレースホルダを見えなくする
+            if (i == 0) {
+                showPlaceholder(false);
+            }
         }
 
     }
