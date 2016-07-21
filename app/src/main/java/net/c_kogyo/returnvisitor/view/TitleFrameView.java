@@ -90,13 +90,14 @@ public class TitleFrameView extends RelativeLayout {
     @Override
     protected void onFinishInflate() {
 
-        for ( int i = 0 ; i < getChildCount() ; i++ ) {
+        // getChildAt(0)にはルートビューが入ってくると思う
+        for ( int i = 1 ; i < getChildCount() ; i++ ) {
             View view = getChildAt(i);
             removeViewAt(i);
             frame.addView(view);
 
             // 子ビューが1個以上あるとき1回だけ実行される。プレースホルダを見えなくする
-            if (i == 0) {
+            if (i == 1) {
                 showPlaceholder(false);
             }
         }
