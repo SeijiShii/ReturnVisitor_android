@@ -86,7 +86,7 @@ public class MapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        loadUserId();
+//        loadUserId();
 
         initFirebaseAuth();
         initGoogleSignIn();
@@ -212,15 +212,19 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onMapLongClick(LatLng latLng) {
 
-                mMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker_blue)));
+                if (mAuth.getCurrentUser() != null) {
 
-                Place place = new Place(latLng);
+                    mMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker_blue)));
 
-                if (userId != null) {
+                    Place place = new Place(latLng);
+
+                    String userId = mAuth.getCurrentUser().getUid();
                     reference.child(userId).push().setValue(place.toMap());
+
                 }
+
             }
         });
 
@@ -233,30 +237,30 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    private String generateValidUserId(String email) {
-
-/*
-        Firebaseのkeyには禁則文字がある
-
-        * . (period)
-        * $ (dollar sign)
-        * [ (left square bracket)
-        * ] (right square bracket)
-        * # (hash or pound sign)
-        * / (forward slash)
-*/
-
-        final String RV = "_rv_";
-
-        String id = email.replaceAll("\\.", RV + "period_");
-        id = id.replaceAll("\\$", RV + "dollar_sign_");
-        id = id.replaceAll("\\[", RV + "left_square_bracket_");
-        id = id.replaceAll("]", RV + "right_square_bracket_");
-        id = id.replaceAll("#", RV + "hash_or_pound_sign_");
-        id = id.replaceAll("/", RV + "forward_slash_");
-
-        return id;
-    }
+//    private String generateValidUserId(String email) {
+//
+///*
+//        Firebaseのkeyには禁則文字がある
+//
+//        * . (period)
+//        * $ (dollar sign)
+//        * [ (left square bracket)
+//        * ] (right square bracket)
+//        * # (hash or pound sign)
+//        * / (forward slash)
+//*/
+//
+//        final String RV = "_rv_";
+//
+//        String id = email.replaceAll("\\.", RV + "period_");
+//        id = id.replaceAll("\\$", RV + "dollar_sign_");
+//        id = id.replaceAll("\\[", RV + "left_square_bracket_");
+//        id = id.replaceAll("]", RV + "right_square_bracket_");
+//        id = id.replaceAll("#", RV + "hash_or_pound_sign_");
+//        id = id.replaceAll("/", RV + "forward_slash_");
+//
+//        return id;
+//    }
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 717;
     private void setMyLocationButton() {
@@ -380,12 +384,12 @@ public class MapActivity extends AppCompatActivity
 
                     Toast.makeText(MapActivity.this, name, Toast.LENGTH_SHORT).show();
 
-                    String newUserId = generateValidUserId(mAuth.getCurrentUser().getEmail());
-                    if (!newUserId.equals(userId)) {
-                        userId = newUserId;
-                        getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE)
-                                .edit().putString(USER_EMAIL_ID, userId).apply();
-                    }
+//                    String newUserId = generateValidUserId(mAuth.getCurrentUser().getEmail());
+//                    if (!newUserId.equals(userId)) {
+//                        userId = newUserId;
+//                        getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE)
+//                                .edit().putString(USER_EMAIL_ID, userId).apply();
+//                    }
 
                 } else {
                     setLoginButton();
@@ -600,12 +604,12 @@ public class MapActivity extends AppCompatActivity
                 });
     }
 
-    public static String userId;
-    private void loadUserId() {
-
-        SharedPreferences prefs = getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE);
-        userId = prefs.getString(USER_EMAIL_ID, null);
-    }
+//    public static String userId;
+//    private void loadUserId() {
+//
+//        SharedPreferences prefs = getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE);
+//        userId = prefs.getString(USER_EMAIL_ID, null);
+//    }
 
     // Facebook Login
 
