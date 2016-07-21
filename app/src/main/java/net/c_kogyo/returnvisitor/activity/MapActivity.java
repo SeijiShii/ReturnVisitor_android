@@ -214,21 +214,37 @@ public class MapActivity extends AppCompatActivity
 
                 if (mAuth.getCurrentUser() != null) {
 
-                    mMap.addMarker(new MarkerOptions()
-                            .position(latLng)
-                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker_blue)));
+//                    mMap.addMarker(new MarkerOptions()
+//                            .position(latLng)
+//                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker_blue)));
 
-                    Place place = new Place(latLng);
+//                    Place place = new Place(latLng);
 
-                    String userId = mAuth.getCurrentUser().getUid();
-                    reference.child(userId).push().setValue(place.toMap());
+//                    String userId = mAuth.getCurrentUser().getUid();
+//                    reference.child(userId).push().setValue(place.toMap());
+                    startRecorVisitActivity(latLng);
 
+                } else {
+
+                    Toast.makeText(MapActivity.this, R.string.login_needed, Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
 
 
+    }
+
+    private void startRecorVisitActivity(LatLng latLng) {
+
+        Intent recordVisitIntent = new Intent(this, RecordVisitActivity.class);
+        if (latLng != null) {
+
+            recordVisitIntent.putExtra(LATITUDE, latLng.latitude);
+            recordVisitIntent.putExtra(LONGITUDE, latLng.longitude);
+        }
+
+        startActivity(recordVisitIntent);
     }
 
     private DatabaseReference reference;
