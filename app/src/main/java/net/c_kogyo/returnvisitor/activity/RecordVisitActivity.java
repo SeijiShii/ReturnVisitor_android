@@ -13,6 +13,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.Visit;
+import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 
 import static com.google.android.gms.auth.account.WorkAccount.API;
@@ -47,6 +49,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         initBroadcastingForAddress();
         initPlace();
 
+        initPlaceText();
 
 
     }
@@ -65,9 +68,6 @@ public class RecordVisitActivity extends AppCompatActivity {
 
         }
     }
-
-
-    protected Location mLastLocation;
 
     public static final String LAT_LNG_EXTRA = "lat_lng_extra";
 
@@ -89,12 +89,32 @@ public class RecordVisitActivity extends AppCompatActivity {
 
                 String addressString = intent.getStringExtra(FetchAddressIntentService.ADDRESS_DATA);
                 mPlace.setAddress(addressString);
-                ((TextView) findViewById(R.id.place_text)).setText(mPlace.getAddress());
-
+                placeText.setText(mPlace.getAddress());
             }
         };
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(FetchAddressIntentService.SEND_ADDRESS));
 
+    }
+
+    private TextView placeText;
+    private void initPlaceText() {
+
+        placeText = (TextView) findViewById(R.id.place_text);
+
+        if (mPlace != null) {
+            if (mPlace.getName().equals("")) {
+                placeText.setText(mPlace.getName());
+            } else if (mPlace.getAddress() != null){
+                placeText.setText(mPlace.getAddress());
+            }
+        }
+
+        placeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlaceDialog.getInstance(RecordVisitActivity.this, mPlace).show(getFragmentManager(), "");
+            }
+        });
     }
 }
