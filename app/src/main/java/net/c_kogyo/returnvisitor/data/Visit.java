@@ -75,4 +75,12 @@ public class Visit extends TimePeriodDataItem{
     public void setRvCount(int rvCount) {
         this.rvCount = rvCount;
     }
+
+    public String getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(String placeId) {
+        this.placeId = placeId;
+    }
 }
