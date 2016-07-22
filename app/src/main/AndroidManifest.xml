@@ -40,6 +40,10 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_name" />
 
+        <service
+            android:name=".service.FetchAddressIntentService"
+            android:exported="false"/>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/GM_API_KEY"/>

@@ -1,15 +1,31 @@
 package net.c_kogyo.returnvisitor.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.Visit;
+import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
+
+import static com.google.android.gms.auth.account.WorkAccount.API;
 
 /**
  * Created by SeijiShii on 2016/07/20.
@@ -28,7 +44,9 @@ public class RecordVisitActivity extends AppCompatActivity {
 
         mVisit = new Visit();
 
+        initBroadcastingForAddress();
         initPlace();
+
 
 
     }
@@ -42,10 +60,41 @@ public class RecordVisitActivity extends AppCompatActivity {
         if ( latitude < 1000 && longitude < 1000 ) {
             mPlace = new Place(new LatLng(latitude, longitude));
             mVisit.setPlaceId(mPlace.getId());
+
+            startFetchAddressIntentService();
+
         }
     }
 
-    private void reverseGeocoding() {
+
+    protected Location mLastLocation;
+
+    public static final String LAT_LNG_EXTRA = "lat_lng_extra";
+
+    private void startFetchAddressIntentService() {
+
+        Intent intent = new Intent(this, FetchAddressIntentService.class);
+        intent.putExtra(LAT_LNG_EXTRA, mPlace.getLatLng());
+        startService(intent);
+
+        // ドラッグで家を動かした後の処理も考えておく
+        // addressTextをnullにすればもう一度リクエストする
+    }
+
+    private void initBroadcastingForAddress() {
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                String addressString = intent.getStringExtra(FetchAddressIntentService.ADDRESS_DATA);
+                mPlace.setAddress(addressString);
+                ((TextView) findViewById(R.id.place_text)).setText(mPlace.getAddress());
+
+            }
+        };
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(FetchAddressIntentService.SEND_ADDRESS));
 
     }
 }

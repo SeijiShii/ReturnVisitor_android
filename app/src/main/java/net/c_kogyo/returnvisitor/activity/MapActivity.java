@@ -58,6 +58,7 @@ import java.util.List;
 
 import android.Manifest.permission;
 
+import net.c_kogyo.returnvisitor.Enum.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
@@ -81,12 +82,13 @@ public class MapActivity extends AppCompatActivity
     MapView mMapView;
     GoogleMap mMap;
 
+    public static AddressTextLanguage addressTextLang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        loadUserId();
+        addressTextLang = AddressTextLanguage.USE_DEVICE_LOCALE;
 
         initFirebaseAuth();
         initGoogleSignIn();
