@@ -68,7 +68,7 @@ public class PlaceDialog extends DialogFragment {
 
         nameText = (EditText) v.findViewById(R.id.name_text);
         nameText.setText(mPlace.getName());
-        nameText.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 40));
+
     }
 
     private EditText addressText;
@@ -79,14 +79,16 @@ public class PlaceDialog extends DialogFragment {
         if (mPlace.getAddress() != null)
             addressText.setText(mPlace.getAddress());
 
-        addressText.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, 40));
     }
 
     private void initCoordinateText() {
 
-        TextView coorText = (TextView) v.findViewById(R.id.coordinate_text);
+        TextView latText = (TextView) v.findViewById(R.id.lat_text);
         String latS = mContext.getResources().getString(R.string.latitude, String.valueOf(mPlace.getLatLng().latitude));
+        latText.setText(latS);
+
+        TextView lngText = (TextView) v.findViewById(R.id.lng_text);
         String lngS = mContext.getResources().getString(R.string.longitude, String.valueOf(mPlace.getLatLng().longitude));
-        coorText.setText(latS + " " + lngS);
+        lngText.setText(lngS);
     }
 }

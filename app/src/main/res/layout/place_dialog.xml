@@ -6,59 +6,44 @@
     android:layout_height="match_parent">
 
     <!-- Name Text -->
-    <net.c_kogyo.returnvisitor.view.TitleFrameView
+
+    <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        TitleFrame:Title="@string/name">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/name_text"
-            android:textSize="15sp"
-            android:inputType="textNoSuggestions|textMultiLine"
-            android:background="#0000"
-            android:minHeight="60dp"/>
-
-    </net.c_kogyo.returnvisitor.view.TitleFrameView>
+        android:layout_height="40dp"
+        android:id="@+id/name_text"
+        android:textSize="15sp"
+        android:inputType="textNoSuggestions"
+        android:gravity="center_vertical"
+        android:background="@drawable/gray_trans_circle"
+        android:hint="@string/name"
+        android:layout_margin="5dp"/>
 
     <!-- Address Text -->
-    <net.c_kogyo.returnvisitor.view.TitleFrameView
+
+    <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        TitleFrame:Title="@string/address">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/address_text"
-            android:textSize="15sp"
-            android:inputType="textNoSuggestions|textMultiLine"
-            android:background="#0000"
-            android:minHeight="60dp"/>
-
-    </net.c_kogyo.returnvisitor.view.TitleFrameView>
+        android:layout_height="80dp"
+        android:id="@+id/address_text"
+        android:textSize="15sp"
+        android:inputType="textNoSuggestions|textMultiLine"
+        android:gravity="center_vertical"
+        android:background="@drawable/gray_trans_circle"
+        android:hint="@string/address"
+        android:layout_margin="5dp"/>
 
     <!-- Coordinate -->
-    <RelativeLayout
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="30dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/coordinate"
-            android:textSize="12sp"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentLeft="true"/>
-
-    </RelativeLayout>
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:id="@+id/lat_text"
+        android:textSize="12sp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:id="@+id/coordinate_text"
+        android:id="@+id/lng_text"
         android:textSize="12sp"/>
 
 
