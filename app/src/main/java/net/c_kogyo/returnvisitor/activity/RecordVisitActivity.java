@@ -101,20 +101,30 @@ public class RecordVisitActivity extends AppCompatActivity {
     private void initPlaceText() {
 
         placeText = (TextView) findViewById(R.id.place_text);
+        setPlaceText();
+        placeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PlaceDialog.getInstance(RecordVisitActivity.this, mPlace, new OnPlaceOkListener()).show(getFragmentManager(), "");
+            }
+        });
+    }
 
+    public class OnPlaceOkListener {
+
+        public void onPlaceOk() {
+            setPlaceText();
+        }
+
+    }
+
+    private void setPlaceText() {
         if (mPlace != null) {
-            if (mPlace.getName().equals("")) {
+            if (!mPlace.getName().equals("")) {
                 placeText.setText(mPlace.getName());
             } else if (mPlace.getAddress() != null){
                 placeText.setText(mPlace.getAddress());
             }
         }
-
-        placeText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PlaceDialog.getInstance(RecordVisitActivity.this, mPlace).show(getFragmentManager(), "");
-            }
-        });
     }
 }

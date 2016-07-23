@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
 import net.c_kogyo.returnvisitor.data.Place;
 
 import org.w3c.dom.Text;
@@ -27,11 +28,13 @@ public class PlaceDialog extends DialogFragment {
 
     private static Context mContext;
     private static Place mPlace;
+    private static RecordVisitActivity.OnPlaceOkListener mOnPlaceOkListener;
 
-    public static PlaceDialog getInstance(Context context, Place place){
+    public static PlaceDialog getInstance(Context context, Place place, RecordVisitActivity.OnPlaceOkListener onPlaceOkListener){
 
         mContext = context;
         mPlace = place;
+        mOnPlaceOkListener = onPlaceOkListener;
         return new PlaceDialog();
     }
 
@@ -56,6 +59,7 @@ public class PlaceDialog extends DialogFragment {
 
                 mPlace.setName(nameText.getText().toString());
                 mPlace.setAddress(addressText.getText().toString());
+                mOnPlaceOkListener.onPlaceOk();
             }
         });
         builder.setNegativeButton(R.string.cancel_text, null);
