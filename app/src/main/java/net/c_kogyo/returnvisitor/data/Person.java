@@ -21,6 +21,7 @@ public class Person extends BaseDataItem implements Cloneable{
     public static final String AGE      = "age";
     public static final String INTEREST = "interest";
     public static final String TAG_IDS  = "tag_ids";
+    public static final String PLACE_IDS  = "place_ids";
 
     public enum Sex {
         SEX_UNKNOWN(0),
@@ -126,6 +127,8 @@ public class Person extends BaseDataItem implements Cloneable{
     // タグは個人につけるもの
     private ArrayList<String> tagIds;
 
+    private ArrayList<String> placeId;
+
     public Person() {
         initCommon();
     }
@@ -135,6 +138,7 @@ public class Person extends BaseDataItem implements Cloneable{
         this.age = Age.AGE_UNKNOWN;
         this.interest = Interest.NONE;
         this.tagIds = new ArrayList<>();
+        this.placeId= new ArrayList<>();
     }
 
 //    public Person(JSONObject object) {
@@ -229,6 +233,7 @@ public class Person extends BaseDataItem implements Cloneable{
         person.age  = this.age;
         person.interest = this.interest;
         person.tagIds = new ArrayList<>(this.tagIds);
+        person.placeId = new ArrayList<>(this.placeId);
 
         return person;
     }
@@ -269,6 +274,9 @@ public class Person extends BaseDataItem implements Cloneable{
         map.put(SEX, sex);
         map.put(AGE, age);
         map.put(INTEREST, interest);
+
+        map.put(TAG_IDS, tagIds);
+        map.put(PLACE_IDS, placeId);
 
         return map;
     }
