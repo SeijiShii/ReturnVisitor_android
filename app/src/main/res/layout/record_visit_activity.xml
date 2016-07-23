@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/tool_bar_height"
         android:background="@color/colorPrimary"
-        android:theme="@style/AppTheme"
-        android:title="@string/record_visit"/>
+        android:theme="@style/AppTheme"/>
 
     <ScrollView
         android:layout_width="match_parent"
