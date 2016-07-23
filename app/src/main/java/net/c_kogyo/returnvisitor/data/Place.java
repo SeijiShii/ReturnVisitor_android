@@ -7,6 +7,8 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -20,9 +22,11 @@ public class Place extends BaseDataItem {
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String ADDRESS = "address";
+    public static final String PERSON_IDS = "person_Ids";
 
     private LatLng latLng;
     private String address;
+    private ArrayList<String> personIds;
 
     public Place(LatLng latLng) {
         super();
@@ -52,6 +56,7 @@ public class Place extends BaseDataItem {
     private void initCommon() {
         this.latLng = new LatLng(0, 0);
         this.address = "";
+        this.personIds = new ArrayList<>();
     }
 
     @Override
@@ -93,6 +98,8 @@ public class Place extends BaseDataItem {
         map.put(LONGITUDE, latLng.longitude);
         map.put(ADDRESS, address);
 
+        map.put(PERSON_IDS, personIds);
+
         return map;
     }
 
@@ -114,5 +121,13 @@ public class Place extends BaseDataItem {
 
     public void setLatLng(LatLng latLng) {
         this.latLng = latLng;
+    }
+
+    public ArrayList<String> getPersonIds() {
+        return personIds;
+    }
+
+    public void setPersonIds(ArrayList<String> personIds) {
+        this.personIds = personIds;
     }
 }
