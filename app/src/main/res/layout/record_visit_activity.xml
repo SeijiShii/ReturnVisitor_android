@@ -37,7 +37,22 @@
                     android:id="@+id/place_text"
                     android:textSize="15sp"/>
 
-                </net.c_kogyo.returnvisitor.view.TitleFrameView>
+            </net.c_kogyo.returnvisitor.view.TitleFrameView>
+
+            <net.c_kogyo.returnvisitor.view.TitleFrameView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                titleFrame:Title="@string/person"
+                titleFrame:PlaceholderText="@string/touch_here"
+                titleFrame:ShowPlaceholder="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/person_container"
+                    android:orientation="vertical"/>
+
+            </net.c_kogyo.returnvisitor.view.TitleFrameView>
 
         </LinearLayout>
 

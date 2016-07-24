@@ -15,6 +15,7 @@ import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -26,6 +27,7 @@ import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
+import net.c_kogyo.returnvisitor.dialog.SeenPersonDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 
 import static com.google.android.gms.auth.account.WorkAccount.API;
@@ -52,7 +54,7 @@ public class RecordVisitActivity extends AppCompatActivity {
 
         initToolBar();
         initPlaceText();
-
+        initPersonContainer();
 
     }
 
@@ -136,6 +138,27 @@ public class RecordVisitActivity extends AppCompatActivity {
             } else if (mPlace.getAddress() != null){
                 placeText.setText(mPlace.getAddress());
             }
+        }
+    }
+
+    private LinearLayout personContainer;
+    private void initPersonContainer() {
+
+        personContainer = (LinearLayout) findViewById(R.id.person_container);
+        personContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SeenPersonDialog.getInstance(RecordVisitActivity.this,
+                        new SeenPersonDialogListener()).show(getFragmentManager(), null);
+            }
+        });
+    }
+
+    public class SeenPersonDialogListener {
+
+        public void onOkCLick() {
+
         }
     }
 }
