@@ -2,6 +2,8 @@ package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
 
+import net.c_kogyo.returnvisitor.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -277,5 +279,29 @@ public class Person extends BaseDataItem implements Cloneable{
         return map;
     }
 
+    public String toString(Context context) {
 
+        StringBuilder builder = new StringBuilder();
+
+        if (name.length() > 0) {
+            builder.append(name).append(" ");
+        }
+
+        String[] sexArray = context.getResources().getStringArray(R.array.sex_array);
+        if (sex != Sex.SEX_UNKNOWN) {
+            builder.append(sexArray[sex.num()]).append(" ");
+        }
+
+        String[] ageArray = context.getResources().getStringArray(R.array.age_array);
+        builder.append(ageArray[age.num()]).append(" ");
+
+        String[] interestArray = context.getResources().getStringArray(R.array.interest_array);
+        if (interest != Interest.NONE) {
+            builder.append(interestArray[interest.num()]).append(" ");
+        }
+
+        builder.append(note);
+
+        return builder.toString();
+    }
 }

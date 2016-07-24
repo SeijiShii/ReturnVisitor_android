@@ -17,4 +17,14 @@ public class Constants {
             R.mipmap.button_yellow,
             R.mipmap.button_orange
     } ;
+
+    public static final int[] markerRes = {
+            R.mipmap.marker,
+            R.mipmap.marker_red,
+            R.mipmap.marker_purple,
+            R.mipmap.marker_blue,
+            R.mipmap.marker_green,
+            R.mipmap.marker_yellow,
+            R.mipmap.marker_orange
+    };
 }

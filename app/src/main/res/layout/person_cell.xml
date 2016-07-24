@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/gray_trans_circle"
+    android:padding="3dp"
+    android:layout_margin="2dp">
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="match_parent"
+        android:id="@+id/rater_mark"
+        android:contentDescription="@string/rater_marker"/>
+
+    <View
+        android:layout_width="20dp"
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:id="@+id/person_text"/>
 
 </LinearLayout>

@@ -15,6 +15,10 @@ import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
 import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Visit;
+import net.c_kogyo.returnvisitor.view.BaseAnimateView;
+import net.c_kogyo.returnvisitor.view.PersonCell;
+
+import java.util.ArrayList;
 
 /**
  * Created by SeijiShii on 2016/07/23.
@@ -25,6 +29,9 @@ public class SeenPersonDialog extends DialogFragment {
     private Context mContext;
     private static Visit mVisit;
     private static RecordVisitActivity.SeenPersonDialogListener mListener;
+
+    private ArrayList<String> pastPersonIds;
+    private ArrayList<String> createdPersonIds;
 
     public static SeenPersonDialog getInstance(Visit visit, RecordVisitActivity.SeenPersonDialogListener listener) {
 
@@ -41,6 +48,9 @@ public class SeenPersonDialog extends DialogFragment {
 
         mContext = getActivity();
 
+        initPastPersonIds();
+        createdPersonIds = new ArrayList<>();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.seen_person_dialog);
 
@@ -56,6 +66,7 @@ public class SeenPersonDialog extends DialogFragment {
 
         builder.setNegativeButton(R.string.cancel_text, null);
 
+        initSeenPersonContainer();
         initNewPersonButton();
 
         return builder.create();
@@ -72,9 +83,27 @@ public class SeenPersonDialog extends DialogFragment {
                     @Override
                     public void onClick(Person person) {
 
+                        createdPersonIds.add(person.getId());
+                        addPersonToContainer(person);
                     }
                 }).show(getFragmentManager(), null);
             }
         });
+    }
+
+    private void initPastPersonIds() {
+
+        pastPersonIds = new ArrayList<>();
+    }
+
+    private LinearLayout seenPersonContainer;
+    private void initSeenPersonContainer() {
+
+        seenPersonContainer = (LinearLayout) v.findViewById(R.id.seen_person_container);
+    }
+
+    private void addPersonToContainer(Person person) {
+
+        seenPersonContainer.addView(new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.FROM_0));
     }
 }

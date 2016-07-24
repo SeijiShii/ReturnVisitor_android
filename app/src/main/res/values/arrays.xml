@@ -23,5 +23,11 @@
         <item>Strongly Interested</item>
     </array>
 
+    <array name="sex_array">
+        <item>Unknown</item>
+        <item>Male</item>
+        <item>Female</item>
+    </array>
+
 
 </resources>

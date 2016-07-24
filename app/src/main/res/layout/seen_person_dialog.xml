@@ -12,14 +12,17 @@
         android:textSize="12sp"
         android:gravity="left|bottom"/>
 
+
+    <!-- Seen Persons -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:id="@+id/seen_person_container"
         android:orientation="vertical"
         android:background="@drawable/gray_trans_circle"
         android:padding="5dp"
-        android:layout_margin="5dp"/>
+        android:layout_margin="5dp"
+        android:minHeight="50dp"/>
 
     <EditText
         android:layout_width="match_parent"

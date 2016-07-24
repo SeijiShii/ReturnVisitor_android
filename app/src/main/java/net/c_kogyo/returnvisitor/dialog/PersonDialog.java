@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -18,17 +17,18 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.google.firebase.database.FirebaseDatabase;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.activity.Constants;
 import net.c_kogyo.returnvisitor.activity.MapActivity;
 import net.c_kogyo.returnvisitor.data.Person;
-import net.c_kogyo.returnvisitor.data.Visit;
 
 import java.util.ArrayList;
+
+import static net.c_kogyo.returnvisitor.activity.Constants.buttonRes;
 
 /**
  * Created by SeijiShii on 2016/07/23.
@@ -162,15 +162,7 @@ public class PersonDialog extends DialogFragment {
 
     }
 
-    private int[] buttonRes = {
-            R.mipmap.button_gray,
-            R.mipmap.button_red,
-            R.mipmap.button_purple,
-            R.mipmap.button_blue,
-            R.mipmap.button_green,
-            R.mipmap.button_yellow,
-            R.mipmap.button_orange
-    } ;
+
 
 
     private void initInterestRater() {
@@ -205,11 +197,11 @@ public class PersonDialog extends DialogFragment {
                     interestStateText.setText(mContext.getResources().getStringArray(R.array.interest_array)[mPerson.getInterest().num()]);
 
                     for (int i = 0 ; i <= tag ; i++) {
-                        raterButtons[i].setBackgroundResource(buttonRes[tag]);
+                        raterButtons[i].setBackgroundResource(Constants.buttonRes[tag]);
                     }
 
                     for (int i = tag + 1 ; i < 7 ; i++ ) {
-                        raterButtons[i].setBackgroundResource(buttonRes[0]);
+                        raterButtons[i].setBackgroundResource(Constants.buttonRes[0]);
                     }
                 }
             });
