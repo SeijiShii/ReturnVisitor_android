@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
+import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Visit;
 
 /**
@@ -67,7 +68,12 @@ public class SeenPersonDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
 
-                PersonDialog.getInstance(null, mVisit).show(getFragmentManager(), null);
+                PersonDialog.getInstance(null, new PersonDialog.OnOkClickListener() {
+                    @Override
+                    public void onClick(Person person) {
+
+                    }
+                }).show(getFragmentManager(), null);
             }
         });
     }

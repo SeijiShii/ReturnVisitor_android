@@ -28,13 +28,13 @@ public class PlaceDialog extends DialogFragment {
 
     private static Context mContext;
     private static Place mPlace;
-    private static RecordVisitActivity.OnPlaceOkListener mOnPlaceOkListener;
+    private static PlaceDialog.OnOkClickListener mLlstener;
 
-    public static PlaceDialog getInstance(Context context, Place place, RecordVisitActivity.OnPlaceOkListener onPlaceOkListener){
+    public static PlaceDialog getInstance(Context context, Place place, PlaceDialog.OnOkClickListener listener){
 
         mContext = context;
         mPlace = place;
-        mOnPlaceOkListener = onPlaceOkListener;
+        mLlstener = listener;
         return new PlaceDialog();
     }
 
@@ -59,7 +59,7 @@ public class PlaceDialog extends DialogFragment {
 
                 mPlace.setName(nameText.getText().toString());
                 mPlace.setAddress(addressText.getText().toString());
-                mOnPlaceOkListener.onPlaceOk();
+                mLlstener.onOkClick(mPlace);
             }
         });
         builder.setNegativeButton(R.string.cancel_text, null);
@@ -94,5 +94,10 @@ public class PlaceDialog extends DialogFragment {
         TextView lngText = (TextView) v.findViewById(R.id.lng_text);
         String lngS = mContext.getResources().getString(R.string.longitude, String.valueOf(mPlace.getLatLng().longitude));
         lngText.setText(lngS);
+    }
+
+    public interface OnOkClickListener {
+
+        public void onOkClick(Place place);
     }
 }

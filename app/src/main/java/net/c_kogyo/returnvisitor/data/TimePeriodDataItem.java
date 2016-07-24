@@ -46,4 +46,20 @@ public class TimePeriodDataItem extends BaseDataItem{
     public String toStringForSearch(Context context) {
         return null;
     }
+
+    public Calendar getStart() {
+        return start;
+    }
+
+    public void setStart(Calendar start) {
+        this.start = start;
+    }
+
+    public Calendar getEnd() {
+        return end;
+    }
+
+    public void setEnd(Calendar end) {
+        this.end = end;
+    }
 }

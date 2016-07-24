@@ -83,4 +83,6 @@ public class Visit extends TimePeriodDataItem{
     public void setPlaceId(String placeId) {
         this.placeId = placeId;
     }
+
+
 }

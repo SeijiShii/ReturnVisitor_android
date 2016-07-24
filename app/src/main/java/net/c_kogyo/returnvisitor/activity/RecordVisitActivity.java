@@ -30,6 +30,8 @@ import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
 import net.c_kogyo.returnvisitor.dialog.SeenPersonDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 
+import java.text.DateFormat;
+
 import static com.google.android.gms.auth.account.WorkAccount.API;
 
 /**
@@ -38,6 +40,7 @@ import static com.google.android.gms.auth.account.WorkAccount.API;
 
 public class RecordVisitActivity extends AppCompatActivity {
 
+    // Visitが保存されるタイミングはOKが押されるとき
     private Visit mVisit;
     private Place mPlace;
 
@@ -54,6 +57,8 @@ public class RecordVisitActivity extends AppCompatActivity {
 
         initToolBar();
         initPlaceText();
+        initDateText();
+        initTimeText();
         initPersonContainer();
 
     }
@@ -118,17 +123,14 @@ public class RecordVisitActivity extends AppCompatActivity {
         placeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlaceDialog.getInstance(RecordVisitActivity.this, mPlace, new OnPlaceOkListener()).show(getFragmentManager(), "");
+                PlaceDialog.getInstance(RecordVisitActivity.this, mPlace, new PlaceDialog.OnOkClickListener() {
+                    @Override
+                    public void onOkClick(Place place) {
+                        setPlaceText();
+                    }
+                }).show(getFragmentManager(), "");
             }
         });
-    }
-
-    public class OnPlaceOkListener {
-
-        public void onPlaceOk() {
-            setPlaceText();
-        }
-
     }
 
     private void setPlaceText() {
@@ -139,6 +141,28 @@ public class RecordVisitActivity extends AppCompatActivity {
                 placeText.setText(mPlace.getAddress());
             }
         }
+    }
+
+    private TextView dateText;
+    private void initDateText() {
+
+        dateText = (TextView) findViewById(R.id.date_text);
+
+        DateFormat format = android.text.format.DateFormat.getDateFormat(getApplicationContext());
+        String dateString = format.format(mVisit.getStart().getTime());
+        dateText.setText(dateString);
+
+    }
+
+    private TextView timeText;
+    private void initTimeText() {
+
+        timeText = (TextView) findViewById(R.id.time_text);
+
+        DateFormat format = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
+        String timeString = format.format(mVisit.getStart().getTime());
+        timeText.setText(timeString);
+
     }
 
     private LinearLayout personContainer;

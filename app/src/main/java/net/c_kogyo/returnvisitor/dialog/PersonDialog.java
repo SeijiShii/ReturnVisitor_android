@@ -34,16 +34,16 @@ import java.util.ArrayList;
 public class PersonDialog extends DialogFragment {
 
     private static Person mPerson;
-    private static Visit mVisit;
     private Context mContext;
 
-    public static PersonDialog getInstance(Person person, Visit visit) {
+    private static OnOkClickListener mListener;
+
+    public static PersonDialog getInstance(Person person, OnOkClickListener listener) {
 
         mPerson = person;
+        mListener = listener;
 
         if ( mPerson == null ) mPerson = new Person();
-
-        mVisit = visit;
 
         return new PersonDialog();
 
@@ -65,6 +65,7 @@ public class PersonDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
+                mListener.onClick(mPerson);
             }
         });
         builder.setNegativeButton(R.string.cancel_text, null);
@@ -73,6 +74,8 @@ public class PersonDialog extends DialogFragment {
         initSexRadio();
         initAgeSpinner();
         initInterestRater();
+        initInterestStateText();
+        initNoteText();
 
         return builder.create();
     }
@@ -203,7 +206,15 @@ public class PersonDialog extends DialogFragment {
 
         interestStateText = (TextView) v.findViewById(R.id.interest_state_text);
 
+    }
 
+    private EditText noteText;
+    private void initNoteText() {
 
+        noteText = (EditText) v.findViewById(R.id.note_text);
+    }
+
+    interface OnOkClickListener {
+        public void onClick(Person person);
     }
 }
