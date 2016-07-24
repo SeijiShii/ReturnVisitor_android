@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.activity;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +17,10 @@ import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,6 +35,7 @@ import net.c_kogyo.returnvisitor.dialog.SeenPersonDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 
 import static com.google.android.gms.auth.account.WorkAccount.API;
 
@@ -152,6 +157,31 @@ public class RecordVisitActivity extends AppCompatActivity {
         String dateString = format.format(mVisit.getStart().getTime());
         dateText.setText(dateString);
 
+        initDatePicker();
+
+    }
+
+    private void initDatePicker() {
+
+        dateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DatePickerDialog(RecordVisitActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+
+                                mVisit.getStart().set(Calendar.YEAR, i);
+                                mVisit.getStart().set(Calendar.MONTH, i1);
+                                mVisit.getStart().set(Calendar.DAY_OF_MONTH, i2);
+                                initDateText();
+                            }
+                        },
+                        mVisit.getStart().get(Calendar.YEAR),
+                        mVisit.getStart().get(Calendar.MONTH),
+                        mVisit.getStart().get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
     }
 
     private TextView timeText;
@@ -162,6 +192,32 @@ public class RecordVisitActivity extends AppCompatActivity {
         DateFormat format = android.text.format.DateFormat.getTimeFormat(getApplicationContext());
         String timeString = format.format(mVisit.getStart().getTime());
         timeText.setText(timeString);
+
+        initTimePicker();
+
+    }
+
+    private void initTimePicker() {
+
+        timeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new TimePickerDialog(RecordVisitActivity.this,
+                        new TimePickerDialog.OnTimeSetListener(){
+                            @Override
+                            public void onTimeSet(TimePicker timePicker, int i, int i1) {
+
+                                mVisit.getStart().set(Calendar.HOUR_OF_DAY, i);
+                                mVisit.getStart().set(Calendar.MINUTE, i1);
+                                initTimeText();
+                            }
+                        },
+                        mVisit.getStart().get(Calendar.HOUR_OF_DAY),
+                        mVisit.getStart().get(Calendar.MINUTE),
+                        true).show();
+            }
+        });
 
     }
 
