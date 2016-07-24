@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
+import net.c_kogyo.returnvisitor.data.Visit;
 
 /**
  * Created by SeijiShii on 2016/07/23.
@@ -20,11 +21,14 @@ import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
 
 public class SeenPersonDialog extends DialogFragment {
 
+    private Context mContext;
+    private static Visit mVisit;
     private static RecordVisitActivity.SeenPersonDialogListener mListener;
 
-    public static SeenPersonDialog getInstance(Context context, RecordVisitActivity.SeenPersonDialogListener listener) {
+    public static SeenPersonDialog getInstance(Visit visit, RecordVisitActivity.SeenPersonDialogListener listener) {
 
         mListener = listener;
+        mVisit = visit;
 
         return new SeenPersonDialog();
     }
@@ -34,7 +38,9 @@ public class SeenPersonDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        mContext = getActivity();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.seen_person_dialog);
 
         v = LayoutInflater.from(getActivity()).inflate(R.layout.seen_person_dialog, null);
@@ -61,6 +67,7 @@ public class SeenPersonDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
 
+                PersonDialog.getInstance(null, mVisit).show(getFragmentManager(), null);
             }
         });
     }

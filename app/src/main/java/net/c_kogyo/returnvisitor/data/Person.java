@@ -62,7 +62,8 @@ public class Person extends BaseDataItem implements Cloneable{
         AGE_41_50(5),
         AGE_51_60(6),
         AGE_61_70(7),
-        AGE_71_(8);
+        AGE_71_80(8),
+        AGE_80_(9);
 
         final int num;
 
