@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.Person;
@@ -174,13 +175,15 @@ public class PersonDialog extends DialogFragment {
                 view.setLayoutParams(params2);
                 raterContainer.addView(view);
             }
-
-
             raterButtons[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     int tag = Integer.parseInt(view.getTag().toString());
+
+                    mPerson.setInterest(Person.Interest.getEnum(tag));
+
+                    interestStateText.setText(mContext.getResources().getStringArray(R.array.interest_array)[mPerson.getInterest().num()]);
 
                     for (int i = 0 ; i <= tag ; i++) {
                         raterButtons[i].setBackgroundResource(buttonRes[tag]);
@@ -192,6 +195,13 @@ public class PersonDialog extends DialogFragment {
                 }
             });
         }
+
+    }
+
+    private TextView interestStateText;
+    private void initInterestStateText() {
+
+        interestStateText = (TextView) v.findViewById(R.id.interest_state_text);
 
 
 
