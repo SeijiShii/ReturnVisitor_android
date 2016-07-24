@@ -37,10 +37,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -60,7 +57,6 @@ import android.Manifest.permission;
 
 import net.c_kogyo.returnvisitor.Enum.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
-import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
 
 public class MapActivity extends AppCompatActivity
@@ -126,7 +122,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        firebaseAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
@@ -134,7 +130,7 @@ public class MapActivity extends AppCompatActivity
         super.onStop();
 
         if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
+            firebaseAuth.removeAuthStateListener(mAuthListener);
         }
 
     }
@@ -214,7 +210,7 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onMapLongClick(LatLng latLng) {
 
-                if (mAuth.getCurrentUser() != null) {
+                if (firebaseAuth.getCurrentUser() != null) {
 
 //                    mMap.addMarker(new MarkerOptions()
 //                            .position(latLng)
@@ -222,9 +218,9 @@ public class MapActivity extends AppCompatActivity
 
 //                    Place place = new Place(latLng);
 
-//                    String userId = mAuth.getCurrentUser().getUid();
+//                    String userId = firebaseAuth.getCurrentUser().getUid();
 //                    reference.child(userId).push().setValue(place.toMap());
-                    startRecorVisitActivity(latLng);
+                    startRecordVisitActivity(latLng);
 
                 } else {
 
@@ -237,7 +233,7 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    private void startRecorVisitActivity(LatLng latLng) {
+    private void startRecordVisitActivity(LatLng latLng) {
 
         Intent recordVisitIntent = new Intent(this, RecordVisitActivity.class);
         if (latLng != null) {
@@ -384,10 +380,10 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    private FirebaseAuth mAuth;
+    public static FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private void initFirebaseAuth() {
-        mAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -402,7 +398,7 @@ public class MapActivity extends AppCompatActivity
 
                     Toast.makeText(MapActivity.this, name, Toast.LENGTH_SHORT).show();
 
-//                    String newUserId = generateValidUserId(mAuth.getCurrentUser().getEmail());
+//                    String newUserId = generateValidUserId(firebaseAuth.getCurrentUser().getEmail());
 //                    if (!newUserId.equals(userId)) {
 //                        userId = newUserId;
 //                        getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE)
@@ -421,12 +417,12 @@ public class MapActivity extends AppCompatActivity
 
          loginOutButton = (Button) findViewById(R.id.login_button);
         
-        if (mAuth == null) {
+        if (firebaseAuth == null) {
 
             setLoginButton();
 
         } else {
-            if (mAuth.getCurrentUser() == null) {
+            if (firebaseAuth.getCurrentUser() == null) {
 
                 setLoginButton();
 
@@ -460,10 +456,10 @@ public class MapActivity extends AppCompatActivity
 
         String name = "";
         try {
-            name = mAuth.getCurrentUser().getDisplayName();
+            name = firebaseAuth.getCurrentUser().getDisplayName();
 
             if (name == null) {
-                name = mAuth.getCurrentUser().getEmail();
+                name = firebaseAuth.getCurrentUser().getEmail();
             }
 
         } catch (NullPointerException e) {
@@ -528,7 +524,7 @@ public class MapActivity extends AppCompatActivity
             mEmail = email;
             mPassword = password;
 
-            mAuth.createUserWithEmailAndPassword(email, password)
+            firebaseAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(MapActivity.this, MapActivity.this);
 
         }
@@ -550,7 +546,7 @@ public class MapActivity extends AppCompatActivity
 //                Toast.makeText(MapActivity.this, e.getErrorCode(), Toast.LENGTH_SHORT).show();
 
                 if (e.getErrorCode().equals("ERROR_EMAIL_ALREADY_IN_USE")) {
-                    mAuth.signInWithEmailAndPassword(mEmail, mPassword).addOnCompleteListener(MapActivity.this, MapActivity.this);
+                    firebaseAuth.signInWithEmailAndPassword(mEmail, mPassword).addOnCompleteListener(MapActivity.this, MapActivity.this);
                 } else if (e.getErrorCode().equals("ERROR_WRONG_PASSWORD")) {
                     Toast.makeText(MapActivity.this, R.string.wrong_password, Toast.LENGTH_SHORT).show();
                 } else if (e.getErrorCode().equals("ERROR_WEAK_PASSWORD")) {
@@ -601,7 +597,7 @@ public class MapActivity extends AppCompatActivity
         Log.d(FIREBASE_TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
+        firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -687,7 +683,7 @@ public class MapActivity extends AppCompatActivity
         Log.d(FB_TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
+        firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

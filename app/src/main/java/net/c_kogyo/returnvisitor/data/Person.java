@@ -2,13 +2,8 @@ package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by sayjey on 2015/06/18.
@@ -128,7 +123,7 @@ public class Person extends BaseDataItem implements Cloneable{
     // タグは個人につけるもの
     private ArrayList<String> tagIds;
 
-    private ArrayList<String> placeId;
+    private ArrayList<String> placeIds;
 
     public Person() {
         initCommon();
@@ -139,7 +134,7 @@ public class Person extends BaseDataItem implements Cloneable{
         this.age = Age.AGE_UNKNOWN;
         this.interest = Interest.NONE;
         this.tagIds = new ArrayList<>();
-        this.placeId= new ArrayList<>();
+        this.placeIds = new ArrayList<>();
     }
 
 //    public Person(JSONObject object) {
@@ -225,19 +220,19 @@ public class Person extends BaseDataItem implements Cloneable{
 //
 //    }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-
-        Person person = (Person) super.clone();
-
-        person.sex  = this.sex;
-        person.age  = this.age;
-        person.interest = this.interest;
-        person.tagIds = new ArrayList<>(this.tagIds);
-        person.placeId = new ArrayList<>(this.placeId);
-
-        return person;
-    }
+//    @Override
+//    protected Object clone() throws CloneNotSupportedException {
+//
+//        Person person = (Person) super.clone();
+//
+//        person.sex  = this.sex;
+//        person.age  = this.age;
+//        person.interest = this.interest;
+//        person.tagIds = new ArrayList<>(this.tagIds);
+//        person.placeIds = new ArrayList<>(this.placeIds);
+//
+//        return person;
+//    }
 
 //    @Override
 //    public JSONObject getJSONObject() {
@@ -272,13 +267,15 @@ public class Person extends BaseDataItem implements Cloneable{
 
         HashMap<String, Object> map = super.toMap();
 
-        map.put(SEX, sex);
-        map.put(AGE, age);
-        map.put(INTEREST, interest);
+        map.put(SEX, sex.toString());
+        map.put(AGE, age.toString());
+        map.put(INTEREST, interest.toString());
 
         map.put(TAG_IDS, tagIds);
-        map.put(PLACE_IDS, placeId);
+        map.put(PLACE_IDS, placeIds);
 
         return map;
     }
+
+
 }

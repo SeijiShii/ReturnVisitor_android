@@ -21,7 +21,10 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.activity.MapActivity;
 import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Visit;
 
@@ -65,7 +68,20 @@ public class PersonDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
+                mPerson.setName(nameText.getText().toString());
+                mPerson.setNote(noteText.getText().toString());
+
                 mListener.onClick(mPerson);
+
+                // Save to Firebase
+                String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
+                FirebaseDatabase.getInstance().getReference()
+                        .child(userId)
+                        .child(Person.PERSON)
+                        .child(mPerson.getId())
+                        .setValue(mPerson.toMap());
+
+                dismiss();
             }
         });
         builder.setNegativeButton(R.string.cancel_text, null);
