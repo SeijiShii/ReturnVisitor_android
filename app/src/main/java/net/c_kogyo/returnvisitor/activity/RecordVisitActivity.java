@@ -149,8 +149,7 @@ public class RecordVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                SeenPersonDialog.getInstance(RecordVisitActivity.this,
-                        new SeenPersonDialogListener()).show(getFragmentManager(), null);
+                SeenPersonDialog.getInstance(mVisit, new SeenPersonDialogListener()).show(getFragmentManager(), null);
             }
         });
     }
