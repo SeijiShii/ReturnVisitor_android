@@ -20,12 +20,10 @@ import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
 
 public class SeenPersonDialog extends DialogFragment {
 
-    private static Context mContext;
     private static RecordVisitActivity.SeenPersonDialogListener mListener;
 
     public static SeenPersonDialog getInstance(Context context, RecordVisitActivity.SeenPersonDialogListener listener) {
 
-        mContext = context;
         mListener = listener;
 
         return new SeenPersonDialog();
@@ -36,10 +34,10 @@ public class SeenPersonDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.seen_person_dialog);
 
-        v = LayoutInflater.from(mContext).inflate(R.layout.seen_person_dialog, null);
+        v = LayoutInflater.from(getActivity()).inflate(R.layout.seen_person_dialog, null);
         builder.setView(v);
 
         builder.setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener() {

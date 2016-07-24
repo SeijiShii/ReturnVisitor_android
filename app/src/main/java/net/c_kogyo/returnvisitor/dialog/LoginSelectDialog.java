@@ -21,20 +21,18 @@ import net.c_kogyo.returnvisitor.R;
 
 public class LoginSelectDialog extends DialogFragment {
 
-    private static Context mContext;
     private static MapActivity.OnGoogleSignInClickListener mOnGoogleSignInListener;
     private static MapActivity.OnFBLoinClickListener mOnFBLoinClickListener;
     private static MapActivity.EmailLoginClickListener mEmailLoginClickListener;
 
     private View view;
+    private Context mContext;
 
 
-    public static LoginSelectDialog newInstance(Context context,
-                                                MapActivity.OnGoogleSignInClickListener onGoogleSignInListener,
+    public static LoginSelectDialog newInstance(MapActivity.OnGoogleSignInClickListener onGoogleSignInListener,
                                                 MapActivity.OnFBLoinClickListener onFBLoinClickListener,
                                                 MapActivity.EmailLoginClickListener emailLoginClickListener) {
 
-        mContext = context;
         mOnGoogleSignInListener = onGoogleSignInListener;
         mOnFBLoinClickListener = onFBLoinClickListener;
         mEmailLoginClickListener = emailLoginClickListener;
@@ -46,6 +44,8 @@ public class LoginSelectDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 //        FacebookSdk.sdkInitialize(mContext);
+
+        mContext = getActivity();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         view = LayoutInflater.from(mContext).inflate(R.layout.login_select_dialog, null);

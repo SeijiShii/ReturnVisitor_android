@@ -447,7 +447,7 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                LoginSelectDialog.newInstance(MapActivity.this,
+                LoginSelectDialog.newInstance(
                         new OnGoogleSignInClickListener(),
                         new OnFBLoinClickListener(),
                         new EmailLoginClickListener())
