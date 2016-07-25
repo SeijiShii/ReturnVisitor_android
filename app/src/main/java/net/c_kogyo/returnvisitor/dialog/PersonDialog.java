@@ -19,14 +19,10 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.firebase.database.FirebaseDatabase;
-
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.activity.Constants;
-import net.c_kogyo.returnvisitor.activity.MapActivity;
 import net.c_kogyo.returnvisitor.data.Person;
-
-import java.util.ArrayList;
+import net.c_kogyo.returnvisitor.data.RVData;
 
 import static net.c_kogyo.returnvisitor.activity.Constants.buttonRes;
 
@@ -73,13 +69,7 @@ public class PersonDialog extends DialogFragment {
 
                 mListener.onClick(mPerson);
 
-                // Save to Firebase
-                String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
-                FirebaseDatabase.getInstance().getReference()
-                        .child(userId)
-                        .child(Person.PERSON)
-                        .child(mPerson.getId())
-                        .setValue(mPerson.toMap());
+                RVData.getInstance().personList.set(mPerson);
 
                 dismiss();
             }

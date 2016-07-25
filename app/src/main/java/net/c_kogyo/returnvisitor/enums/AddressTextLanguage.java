@@ -1,4 +1,4 @@
-package net.c_kogyo.returnvisitor.Enum;
+package net.c_kogyo.returnvisitor.enums;
 
 /**
  * Created by SeijiShii on 2016/07/21.

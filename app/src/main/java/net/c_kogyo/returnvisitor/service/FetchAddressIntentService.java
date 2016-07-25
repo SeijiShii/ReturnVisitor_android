@@ -10,7 +10,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import net.c_kogyo.returnvisitor.Enum.AddressTextLanguage;
+import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.activity.MapActivity;
 import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;

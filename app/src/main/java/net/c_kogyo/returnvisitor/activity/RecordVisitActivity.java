@@ -6,14 +6,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -23,25 +18,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.FirebaseDatabase;
 
 import net.c_kogyo.returnvisitor.R;
-import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Place;
+import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
 import net.c_kogyo.returnvisitor.dialog.SeenPersonDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
-import net.c_kogyo.returnvisitor.view.PersonCell;
 
 import java.text.DateFormat;
 import java.util.Calendar;
-
-import static com.google.android.gms.auth.account.WorkAccount.API;
 
 /**
  * Created by SeijiShii on 2016/07/20.
@@ -250,6 +238,8 @@ public class RecordVisitActivity extends AppCompatActivity {
         for ( String id : mVisit.getPersonIds() ) {
 
 
+
+
         }
     }
 
@@ -259,23 +249,14 @@ public class RecordVisitActivity extends AppCompatActivity {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveVisit();
+
+                RVData.getInstance().visitList.set(mVisit);
                 finish();
             }
         });
     }
 
-    private void saveVisit() {
 
-        // Save to Firebase
-        String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
-        FirebaseDatabase.getInstance().getReference()
-                .child(userId)
-                .child(Visit.VISIT)
-                .child(mVisit.getId())
-                .setValue(mVisit.toMap());
-
-    }
 
     private void initCancelButton() {
 
@@ -287,5 +268,7 @@ public class RecordVisitActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 }

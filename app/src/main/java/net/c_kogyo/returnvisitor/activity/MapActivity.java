@@ -55,7 +55,7 @@ import java.util.List;
 
 import android.Manifest.permission;
 
-import net.c_kogyo.returnvisitor.Enum.AddressTextLanguage;
+import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
 

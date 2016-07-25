@@ -147,7 +147,7 @@
                 android:textSize="15sp"
                 android:background="@drawable/gray_trans_circle"
                 android:padding="5dp"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp" />
 
             <!-- OK -->
             <RelativeLayout
