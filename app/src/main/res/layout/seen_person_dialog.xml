@@ -12,7 +12,6 @@
         android:textSize="12sp"
         android:gravity="left|bottom"/>
 
-
     <!-- Seen Persons -->
     <LinearLayout
         android:layout_width="match_parent"

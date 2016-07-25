@@ -17,6 +17,7 @@ import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,13 +27,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.FirebaseDatabase;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
 import net.c_kogyo.returnvisitor.dialog.SeenPersonDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
+import net.c_kogyo.returnvisitor.view.PersonCell;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -65,6 +69,10 @@ public class RecordVisitActivity extends AppCompatActivity {
         initDateText();
         initTimeText();
         initPersonContainer();
+
+
+        initOkButton();
+        initCancelButton();
 
     }
 
@@ -229,15 +237,55 @@ public class RecordVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                SeenPersonDialog.getInstance(mVisit, new SeenPersonDialogListener()).show(getFragmentManager(), null);
+                SeenPersonDialog.getInstance(mVisit, new SeenPersonDialog.OnOkClickListener() {
+                    @Override
+                    public void onOkClick() {
+                        initPersonContainer();
+                    }
+                }).show(getFragmentManager(), null);
+            }
+        });
+
+        //TODO 会えた人を列挙する
+        for ( String id : mVisit.getPersonIds() ) {
+
+
+        }
+    }
+
+    private void initOkButton() {
+
+        Button okButton = (Button) findViewById(R.id.ok_button);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveVisit();
+                finish();
             }
         });
     }
 
-    public class SeenPersonDialogListener {
+    private void saveVisit() {
 
-        public void onOkCLick() {
+        // Save to Firebase
+        String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
+        FirebaseDatabase.getInstance().getReference()
+                .child(userId)
+                .child(Visit.VISIT)
+                .child(mVisit.getId())
+                .setValue(mVisit.toMap());
 
-        }
     }
+
+    private void initCancelButton() {
+
+        Button cancelButton = (Button) findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+    }
+
 }

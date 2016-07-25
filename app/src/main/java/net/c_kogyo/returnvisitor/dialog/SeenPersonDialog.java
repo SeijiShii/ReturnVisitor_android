@@ -28,12 +28,12 @@ public class SeenPersonDialog extends DialogFragment {
 
     private Context mContext;
     private static Visit mVisit;
-    private static RecordVisitActivity.SeenPersonDialogListener mListener;
+    private static OnOkClickListener mListener;
 
     private ArrayList<String> pastPersonIds;
     private ArrayList<String> createdPersonIds;
 
-    public static SeenPersonDialog getInstance(Visit visit, RecordVisitActivity.SeenPersonDialogListener listener) {
+    public static SeenPersonDialog getInstance(Visit visit, OnOkClickListener listener) {
 
         mListener = listener;
         mVisit = visit;
@@ -60,7 +60,7 @@ public class SeenPersonDialog extends DialogFragment {
         builder.setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                mListener.onOkCLick();
+                mListener.onOkClick();
             }
         });
 
@@ -68,6 +68,7 @@ public class SeenPersonDialog extends DialogFragment {
 
         initSeenPersonContainer();
         initNewPersonButton();
+        initSuggestedPersonContainer();
 
         return builder.create();
     }
@@ -83,6 +84,8 @@ public class SeenPersonDialog extends DialogFragment {
                     @Override
                     public void onClick(Person person) {
 
+                        // 新規作成したということは「会えた」ということ
+                        mVisit.addPersonId(person.getId());
                         createdPersonIds.add(person.getId());
                         addPersonToContainer(person);
                     }
@@ -105,5 +108,28 @@ public class SeenPersonDialog extends DialogFragment {
     private void addPersonToContainer(Person person) {
 
         seenPersonContainer.addView(new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.FROM_0));
+    }
+
+    private LinearLayout suggestedPersonContainer;
+    private void initSuggestedPersonContainer() {
+
+        suggestedPersonContainer = (LinearLayout) v.findViewById(R.id.suggested_persons_container);
+
+        // TODO 過去にこの場所で会えた人を追加する
+        for ( String id : pastPersonIds ) {
+
+        }
+
+        // TODO 今回作成した人が「会えた人リスト」に追加されていないならここに追加する
+        for (String id : createdPersonIds) {
+            if (!mVisit.getPersonIds().contains(id)) {
+
+            }
+        }
+    }
+
+    public interface OnOkClickListener {
+
+        void onOkClick();
     }
 }

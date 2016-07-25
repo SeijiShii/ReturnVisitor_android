@@ -24,6 +24,7 @@
             android:orientation="vertical"
             android:layout_margin="5dp">
 
+            <!-- Place -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
@@ -42,6 +43,7 @@
                 android:background="@drawable/gray_trans_circle"
                 android:layout_margin="5dp"/>
 
+            <!-- Date Time -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,8 +73,7 @@
 
             </LinearLayout>
 
-
-
+            <!-- Persons -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
@@ -103,6 +104,101 @@
 
             </FrameLayout>
 
+            <!-- Placements -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:textSize="15sp"
+                android:gravity="left"
+                android:text="@string/placement"
+                android:textColor="@color/text_color_normal"/>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/gray_trans_circle"
+                android:layout_margin="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/placement_container"
+                    android:orientation="vertical"
+                    android:minHeight="@dimen/button_height"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="#888"
+                    android:text="@string/touch_here"
+                    android:gravity="center"/>
+
+            </FrameLayout>
+
+            <!-- Note -->
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/button_height"
+                android:inputType="textMultiLine"
+                android:hint="@string/note"
+                android:gravity="left|top"
+                android:textColor="@color/text_color_normal"
+                android:textSize="15sp"
+                android:background="@drawable/gray_trans_circle"
+                android:padding="5dp"
+                android:layout_margin="5dp"/>
+
+            <!-- OK -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="@string/ok_text"
+                    android:background="@drawable/trans_green_selector"
+                    android:textColor="@color/text_color_normal"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/ok_button"/>
+
+            </RelativeLayout>
+
+            <!-- Cancel -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="@string/cancel_text"
+                    android:background="@drawable/trans_orange_selector"
+                    android:textColor="@color/text_color_normal"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/cancel_button"/>
+
+            </RelativeLayout>
+
+            <!-- Delete -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="@string/delete"
+                    android:background="@drawable/trans_red_selector"
+                    android:textColor="@color/text_color_normal"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/delete_button"/>
+
+            </RelativeLayout>
 
         </LinearLayout>
 

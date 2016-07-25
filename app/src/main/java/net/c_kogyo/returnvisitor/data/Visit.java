@@ -84,5 +84,11 @@ public class Visit extends TimePeriodDataItem{
         this.placeId = placeId;
     }
 
+    public void addPersonId(String personId) {
+        personIds.add(personId);
+    }
 
+    public ArrayList<String> getPersonIds() {
+        return personIds;
+    }
 }
