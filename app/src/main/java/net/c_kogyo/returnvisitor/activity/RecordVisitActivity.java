@@ -1,5 +1,6 @@
 package net.c_kogyo.returnvisitor.activity;
 
+import android.animation.Animator;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
@@ -21,14 +22,18 @@ import android.widget.TimePicker;
 import com.google.android.gms.maps.model.LatLng;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
 import net.c_kogyo.returnvisitor.dialog.SeenPersonDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
+import net.c_kogyo.returnvisitor.view.BaseAnimateView;
+import net.c_kogyo.returnvisitor.view.PersonCell;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -228,7 +233,7 @@ public class RecordVisitActivity extends AppCompatActivity {
                 SeenPersonDialog.getInstance(mVisit, new SeenPersonDialog.OnOkClickListener() {
                     @Override
                     public void onOkClick() {
-                        initPersonContainer();
+                        updatePersonContainer();
                     }
                 }).show(getFragmentManager(), null);
             }
@@ -237,11 +242,85 @@ public class RecordVisitActivity extends AppCompatActivity {
         //TODO 会えた人を列挙する
         for ( String id : mVisit.getPersonIds() ) {
 
+            Person person = RVData.getInstance().personList.getById(id);
+            if (person != null) {
 
-
-
+                PersonCell cell = new PersonCell(this, person, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT);
+                personContainer.addView(cell);
+            }
         }
     }
+
+    private void updatePersonContainer() {
+
+        // TODO SeenPersonDialogから帰ってきたときの処理
+
+        ArrayList<String> addedIds = new ArrayList<>(mVisit.getPersonIds());
+        addedIds.removeAll(getPersonIdsInContainer());
+
+        ArrayList<String> removedIds = new ArrayList<>(getPersonIdsInContainer());
+        removedIds.removeAll(mVisit.getPersonIds());
+
+        for ( String id : addedIds ) {
+
+            Person person = RVData.getInstance().personList.getById(id);
+            if (person != null) {
+
+                PersonCell cell = new PersonCell(this, person, BaseAnimateView.InitialHeightCondition.FROM_0);
+                personContainer.addView(cell);
+            }
+        }
+
+        for ( String id : removedIds ) {
+
+            for ( int i = 0 ; i < personContainer.getChildCount() ; i++ ) {
+
+                final PersonCell cell = (PersonCell) personContainer.getChildAt(i);
+                if (cell.getPerson().getId().equals(id)) {
+                    cell.changeViewHeight(BaseAnimateView.AnimateCondition.FROM_HEIGHT_TO_O, true,
+                            new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animator) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animator) {
+
+                                    personContainer.removeView(cell);
+
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animator) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animator) {
+
+                                }
+                            }, 5);
+                }
+            }
+        }
+
+
+    }
+
+    private ArrayList<String> getPersonIdsInContainer() {
+
+        ArrayList<String> ids = new ArrayList<>();
+
+        for ( int i = 0 ; i < personContainer.getChildCount() ; i++ ) {
+
+            PersonCell cell = (PersonCell) personContainer.getChildAt(i);
+            ids.add(cell.getPerson().getId());
+        }
+        return ids;
+    }
+
+
 
     private void initOkButton() {
 
@@ -250,7 +329,11 @@ public class RecordVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                mPlace.addPersonIds(mVisit.getPersonIds());
+
                 RVData.getInstance().visitList.add(mVisit);
+                RVData.getInstance().placeList.addIfNotContained(mPlace);
+
                 finish();
             }
         });

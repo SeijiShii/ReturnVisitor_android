@@ -1,7 +1,10 @@
 package net.c_kogyo.returnvisitor.view;
 
 import android.content.Context;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
@@ -50,4 +53,10 @@ public class PersonCell extends BaseAnimateView {
     public void onUpdateHeight() {
 
     }
+
+    public Person getPerson() {
+        return mPerson;
+    }
+
+
 }

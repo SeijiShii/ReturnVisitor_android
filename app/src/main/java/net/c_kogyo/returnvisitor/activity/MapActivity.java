@@ -55,6 +55,7 @@ import java.util.List;
 
 import android.Manifest.permission;
 
+import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
@@ -91,6 +92,9 @@ public class MapActivity extends AppCompatActivity
         initFacebookLogin();
 
         initFirebaseDatabase();
+
+        // リモートのデータを読み込むためだけに一度getInstanceを実行する
+        RVData.getInstance();
 
         setContentView(R.layout.activity_map);
 

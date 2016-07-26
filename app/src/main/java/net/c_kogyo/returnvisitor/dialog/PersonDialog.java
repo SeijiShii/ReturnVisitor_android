@@ -67,9 +67,10 @@ public class PersonDialog extends DialogFragment {
                 mPerson.setName(nameText.getText().toString());
                 mPerson.setNote(noteText.getText().toString());
 
-                mListener.onClick(mPerson);
-
                 RVData.getInstance().personList.add(mPerson);
+
+                // 自分のデータリストに追加してからでないとgetByIdでnullが戻る
+                mListener.onClick(mPerson);
 
                 dismiss();
             }

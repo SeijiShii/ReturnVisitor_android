@@ -1,5 +1,6 @@
 package net.c_kogyo.returnvisitor.dialog;
 
+import android.animation.Animator;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
 import net.c_kogyo.returnvisitor.data.Person;
+import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.view.BaseAnimateView;
 import net.c_kogyo.returnvisitor.view.PersonCell;
@@ -30,8 +32,9 @@ public class SeenPersonDialog extends DialogFragment {
     private static Visit mVisit;
     private static OnOkClickListener mListener;
 
-    private ArrayList<String> pastPersonIds;
-    private ArrayList<String> createdPersonIds;
+    private View.OnClickListener seenCellOnClickListener, suggCellOnClickListener;
+
+    private ArrayList<String> suggestedPersonIds;
 
     public static SeenPersonDialog getInstance(Visit visit, OnOkClickListener listener) {
 
@@ -48,8 +51,7 @@ public class SeenPersonDialog extends DialogFragment {
 
         mContext = getActivity();
 
-        initPastPersonIds();
-        createdPersonIds = new ArrayList<>();
+        initSuggestedIds();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle(R.string.seen_person_dialog);
@@ -86,28 +88,118 @@ public class SeenPersonDialog extends DialogFragment {
 
                         // 新規作成したということは「会えた」ということ
                         mVisit.addPersonId(person.getId());
-                        createdPersonIds.add(person.getId());
-                        addPersonToContainer(person);
+
+                        // 提案リストに追加
+                        suggestedPersonIds.add(person.getId());
+
+                        addPersonToContainer(person.getId());
                     }
                 }).show(getFragmentManager(), null);
             }
         });
     }
 
-    private void initPastPersonIds() {
+    private void initSuggestedIds() {
 
-        pastPersonIds = new ArrayList<>();
+        suggestedPersonIds = new ArrayList<>();
+        // TODO ここに過去にこの場所で会えた人のIDをセットする
     }
 
     private LinearLayout seenPersonContainer;
     private void initSeenPersonContainer() {
 
+        seenCellOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final PersonCell cell1 = (PersonCell) view;
+                String personId = cell1.getPerson().getId();
+
+                mVisit.getPersonIds().remove(personId);
+                cell1.changeViewHeight(BaseAnimateView.AnimateCondition.FROM_HEIGHT_TO_O, true, new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+
+                        seenPersonContainer.removeView(cell1);
+
+                        String personId = cell1.getPerson().getId();
+                        addToSuggestedContainer(personId);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+
+                    }
+                }, 5);
+            }
+        };
+
+        suggCellOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final PersonCell cell1 = (PersonCell) view;
+                String personId = cell1.getPerson().getId();
+
+                mVisit.getPersonIds().remove(personId);
+                cell1.changeViewHeight(BaseAnimateView.AnimateCondition.FROM_HEIGHT_TO_O, true, new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+
+                        suggestedPersonContainer.removeView(cell1);
+
+                        String personId = cell1.getPerson().getId();
+                        addPersonToContainer(personId);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+
+                    }
+                }, 5);
+            }
+        };
+
         seenPersonContainer = (LinearLayout) v.findViewById(R.id.seen_person_container);
+
+        for ( String id : mVisit.getPersonIds() ) {
+
+            Person person = RVData.getInstance().personList.getById(id);
+            if (person != null) {
+
+                PersonCell cell = new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT);
+                seenPersonContainer.addView(cell);
+                cell.setOnClickListener(seenCellOnClickListener);
+            }
+        }
     }
 
-    private void addPersonToContainer(Person person) {
+    private void addPersonToContainer(String personId) {
 
-        seenPersonContainer.addView(new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.FROM_0));
+        Person person = RVData.getInstance().personList.getById(personId);
+        if ( person == null ) return;
+
+        PersonCell cell = new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.FROM_0);
+        seenPersonContainer.addView(cell);
+        cell.setOnClickListener(seenCellOnClickListener);
     }
 
     private LinearLayout suggestedPersonContainer;
@@ -115,17 +207,22 @@ public class SeenPersonDialog extends DialogFragment {
 
         suggestedPersonContainer = (LinearLayout) v.findViewById(R.id.suggested_persons_container);
 
-        // TODO 過去にこの場所で会えた人を追加する
-        for ( String id : pastPersonIds ) {
+        // TODO 提案リストにある人を追加する
+        for ( String id : suggestedPersonIds ) {
 
         }
+    }
 
-        // TODO 今回作成した人が「会えた人リスト」に追加されていないならここに追加する
-        for (String id : createdPersonIds) {
-            if (!mVisit.getPersonIds().contains(id)) {
+    private void addToSuggestedContainer(String personId) {
 
-            }
-        }
+        // 会えた人に含まれるなら描画しない
+        if ( mVisit.getPersonIds().contains(personId)) return;
+
+        Person person = RVData.getInstance().personList.getById(personId);
+
+        PersonCell cell = new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.FROM_0);
+        suggestedPersonContainer.addView(cell);
+        cell.setOnClickListener(suggCellOnClickListener);
     }
 
     public interface OnOkClickListener {

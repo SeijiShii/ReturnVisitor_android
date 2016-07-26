@@ -44,6 +44,6 @@
         android:id="@+id/add_person_button"
         android:text="@string/add_person"
         android:background="@drawable/trans_green_selector"
-        android:textColor="@color/text_color_normal"/>
+        android:textColor="@color/colorPrimaryDark"/>
 
 </LinearLayout>

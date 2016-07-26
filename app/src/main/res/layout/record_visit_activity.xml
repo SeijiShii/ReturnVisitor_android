@@ -160,7 +160,7 @@
                     android:padding="5dp"
                     android:text="@string/ok_text"
                     android:background="@drawable/trans_green_selector"
-                    android:textColor="@color/text_color_normal"
+                    android:textColor="@color/colorPrimaryDark"
                     android:layout_alignParentRight="true"
                     android:id="@+id/ok_button"/>
 
@@ -177,7 +177,7 @@
                     android:padding="5dp"
                     android:text="@string/cancel_text"
                     android:background="@drawable/trans_orange_selector"
-                    android:textColor="@color/text_color_normal"
+                    android:textColor="@color/colorAccent"
                     android:layout_alignParentRight="true"
                     android:id="@+id/cancel_button"/>
 
@@ -194,7 +194,7 @@
                     android:padding="5dp"
                     android:text="@string/delete"
                     android:background="@drawable/trans_red_selector"
-                    android:textColor="@color/text_color_normal"
+                    android:textColor="#F00"
                     android:layout_alignParentRight="true"
                     android:id="@+id/delete_button"/>
 

@@ -101,6 +101,9 @@ public abstract class DataList<T extends BaseDataItem>{
 
         if ( indexOf(data) < 0 ) {
             list.add(data);
+
+            DatabaseReference node = reference.child(data.getId());
+            node.setValue(data.toMap());
         }
     }
 

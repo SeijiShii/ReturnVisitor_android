@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -38,8 +39,10 @@ public abstract class BaseAnimateView extends FrameLayout{
 
         if (initCondition == InitialHeightCondition.FROM_0) {
 
+            this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0));
             animatePostDrawn();
-
+        } else {
+            this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getViewHeight()));
         }
     }
 
