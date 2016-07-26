@@ -28,6 +28,11 @@ public class Place extends BaseDataItem {
     private String address;
     private ArrayList<String> personIds;
 
+    public Place() {
+        super();
+        initCommon();
+    }
+
     public Place(LatLng latLng) {
         super();
         initCommon();
@@ -101,6 +106,22 @@ public class Place extends BaseDataItem {
         map.put(PERSON_IDS, personIds);
 
         return map;
+    }
+
+    @Override
+    public void setMap(HashMap<String, Object> map) {
+        super.setMap(map);
+
+        double lat = Double.valueOf(map.get(LATITUDE).toString());
+        double lng = Double.valueOf(map.get(LONGITUDE).toString());
+
+        this.latLng = new LatLng(lat, lng);
+
+        this.address = map.get(ADDRESS).toString();
+
+        // TODO Pending HashMap to ArrayList
+//        this.personIds = new ArrayList<String>(map.);
+
     }
 
     public String getAddress() {

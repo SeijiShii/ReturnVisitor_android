@@ -37,8 +37,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -55,6 +58,7 @@ import java.util.List;
 
 import android.Manifest.permission;
 
+import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
@@ -209,21 +213,12 @@ public class MapActivity extends AppCompatActivity
 
         loadCameraPosition();
 
-        // Firebaseのテストコード
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
 
                 if (firebaseAuth.getCurrentUser() != null) {
 
-//                    mMap.addMarker(new MarkerOptions()
-//                            .position(latLng)
-//                            .icon(BitmapDescriptorFactory.fromResource(R.mipmap.marker_blue)));
-
-//                    Place place = new Place(latLng);
-
-//                    String userId = firebaseAuth.getCurrentUser().getUid();
-//                    reference.child(userId).push().setValue(place.toMap());
                     startRecordVisitActivity(latLng);
 
                 } else {
@@ -234,6 +229,7 @@ public class MapActivity extends AppCompatActivity
             }
         });
 
+        showAllMarkers();
 
     }
 
@@ -715,6 +711,17 @@ public class MapActivity extends AppCompatActivity
                 });
     }
 
+    private void showAllMarkers() {
+
+        for ( Place place : RVData.getInstance().placeList ) {
+
+            MarkerOptions options = new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(Constants.markerRes[4]))
+                    .position(place.getLatLng());
+
+            Marker marker = mMap.addMarker(options);
+        }
+    }
 
 
 

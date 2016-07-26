@@ -21,6 +21,7 @@ public class RVData {
             public void onDataChanged(Place data) {
 
             }
+
         };
         personList = new DataList<Person>(Person.class) {
             @Override

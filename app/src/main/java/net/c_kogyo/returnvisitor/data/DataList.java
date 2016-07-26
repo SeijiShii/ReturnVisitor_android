@@ -11,12 +11,15 @@ import net.c_kogyo.returnvisitor.activity.MapActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
 /**
  * Created by SeijiShii on 2016/07/24.
  */
 
-public abstract class DataList<T extends BaseDataItem>{
+public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
     private ArrayList<T> list;
     private Class<T> klass;
@@ -33,7 +36,7 @@ public abstract class DataList<T extends BaseDataItem>{
                 .child(userId)
                 .child(className);
 
-        // TODO　リスト全体を読みだす処理
+        // リスト全体を読みだす処理
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -165,6 +168,12 @@ public abstract class DataList<T extends BaseDataItem>{
 
         remove(data);
     }
+
+    @Override
+    public Iterator<T> iterator() {
+        return list.iterator();
+    }
+
 
 }
 
