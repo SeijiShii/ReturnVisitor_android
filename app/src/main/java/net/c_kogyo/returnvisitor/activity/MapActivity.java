@@ -93,7 +93,7 @@ public class MapActivity extends AppCompatActivity
 
         initFirebaseDatabase();
 
-        // リモートのデータを読み込むためだけに一度getInstanceを実行する
+        // リモートのデータを読み込むためだけに一度getInstanceを実行
         RVData.getInstance();
 
         setContentView(R.layout.activity_map);

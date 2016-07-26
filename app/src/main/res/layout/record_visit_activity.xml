@@ -100,7 +100,8 @@
                     android:layout_height="match_parent"
                     android:textColor="#888"
                     android:text="@string/touch_here"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:id="@+id/person_touch_text"/>
 
             </FrameLayout>
 

@@ -305,6 +305,13 @@ public class RecordVisitActivity extends AppCompatActivity {
             }
         }
 
+        // PersonがいればTouch Hereが消えるようにする
+        TextView touchText = (TextView) findViewById(R.id.person_touch_text);
+        if (mVisit.getPersonIds().size() > 0) {
+            touchText.setVisibility(View.INVISIBLE);
+        } else {
+            touchText.setVisibility(View.VISIBLE);
+        }
 
     }
 
@@ -319,8 +326,6 @@ public class RecordVisitActivity extends AppCompatActivity {
         }
         return ids;
     }
-
-
 
     private void initOkButton() {
 
@@ -338,8 +343,6 @@ public class RecordVisitActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void initCancelButton() {
 
