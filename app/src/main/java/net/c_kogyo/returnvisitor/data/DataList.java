@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
+import android.util.Log;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -9,7 +11,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.c_kogyo.returnvisitor.activity.MapActivity;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by SeijiShii on 2016/07/24.
@@ -24,44 +29,9 @@ public class DataList<T extends BaseDataItem>{
         list = new ArrayList<>();
         this.klass = klass;
 
-        String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
-        String className = klass.getSimpleName();
-
-        FirebaseDatabase.getInstance().getReference()
-                .child(userId)
-                .child(className)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                        T data = dataSnapshot.getValue(klass);
-                        list.add(data);
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-
     }
 
-    public void set(T data) {
+    public void set(final T data) {
 
         int index = indexOf(data);
 
@@ -74,11 +44,41 @@ public class DataList<T extends BaseDataItem>{
         String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
         String className = klass.getSimpleName();
 
-        FirebaseDatabase.getInstance().getReference()
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
                 .child(userId)
                 .child(className)
-                .child(data.getId())
-                .setValue(data.toMap());
+                .child(data.getId());
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Object o = dataSnapshot.getValue();
+                HashMap<String, Object> map = (HashMap<String, Object>) o;
+                T data1 = null;
+
+                try {
+                    data1 =  klass.newInstance();
+                    data1.setMap(map);
+
+                    set(data1);
+
+                } catch (IllegalAccessException e) {
+                    //
+                } catch (InstantiationException e) {
+                    //
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        ref.setValue(data.toMap());
     }
 
 

@@ -304,4 +304,12 @@ public class Person extends BaseDataItem implements Cloneable{
 
         return builder.toString();
     }
+
+    public ArrayList<String> getPlaceIds() {
+        return placeIds;
+    }
+
+    public void setPlaceIds(ArrayList<String> placeIds) {
+        this.placeIds = placeIds;
+    }
 }

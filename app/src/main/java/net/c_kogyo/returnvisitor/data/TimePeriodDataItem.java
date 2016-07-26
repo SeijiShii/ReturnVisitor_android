@@ -1,5 +1,6 @@
 package net.c_kogyo.returnvisitor.data;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 
 import java.util.Calendar;
@@ -61,5 +62,16 @@ public class TimePeriodDataItem extends BaseDataItem{
 
     public void setEnd(Calendar end) {
         this.end = end;
+    }
+
+    @Override
+    public void setMap(HashMap<String, Object> map) {
+        super.setMap(map);
+
+        this.start = Calendar.getInstance();
+        this.start.setTimeInMillis(Long.valueOf(map.get(START).toString()));
+
+        this.end = Calendar.getInstance();
+        this.end.setTimeInMillis(Long.valueOf(map.get(END).toString()));
     }
 }

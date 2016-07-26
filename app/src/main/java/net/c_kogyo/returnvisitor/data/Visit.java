@@ -47,6 +47,7 @@ public class Visit extends TimePeriodDataItem{
 
         map.put(PLACE_ID, placeId);
         map.put(PERSON_IDS, personIds);
+        map.put(RV_COUNT, rvCount);
 
         //TODO オブジェクトのArrayListをそのままマップできるわけがないよね。
 
@@ -90,5 +91,29 @@ public class Visit extends TimePeriodDataItem{
 
     public ArrayList<String> getPersonIds() {
         return personIds;
+    }
+
+    public void setPersonIds(ArrayList<String> personIds) {
+        this.personIds = personIds;
+    }
+
+    public ArrayList<Placement> getPlacements() {
+        return placements;
+    }
+
+    public void setPlacements(ArrayList<Placement> placements) {
+        this.placements = placements;
+    }
+
+    @Override
+    public void setMap(HashMap<String, Object> map) {
+        super.setMap(map);
+
+        this.placeId = map.get(PLACE_ID).toString();
+        this.rvCount = Integer.valueOf(map.get(RV_COUNT).toString());
+
+        // TODO personIds, placementsのHashMapからのデータ回収
+
+
     }
 }

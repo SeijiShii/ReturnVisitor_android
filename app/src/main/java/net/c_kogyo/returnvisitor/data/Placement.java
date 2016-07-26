@@ -156,5 +156,10 @@ public class Placement extends BaseDataItem {
         map.put(NUMBER, number.getTimeInMillis());
 
         return map;
+  }
+
+
+    public void setNumber(Calendar number) {
+        this.number = number;
     }
 }

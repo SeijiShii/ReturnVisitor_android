@@ -74,4 +74,9 @@ public class Tag extends BaseDataItem implements Cloneable {
 
         return map;
     }
+
+
+    public void setMutated(boolean mutated) {
+        isMutated = mutated;
+    }
 }

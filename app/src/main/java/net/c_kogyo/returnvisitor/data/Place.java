@@ -130,4 +130,6 @@ public class Place extends BaseDataItem {
     public void setPersonIds(ArrayList<String> personIds) {
         this.personIds = personIds;
     }
+
+
 }

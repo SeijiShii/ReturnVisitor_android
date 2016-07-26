@@ -40,32 +40,6 @@ public abstract class BaseDataItem  implements Cloneable{
         this.note = "";
     }
 
-//    BaseDataItem(JSONObject object) {
-//
-//        this();
-//
-//        try {
-//            if (object.has(ID)) {
-//                this.id = object.getString(ID);
-//            } else {
-//                this.id = "";
-//            }
-//
-//            if (object.has(NAME)) this.name = object.getString(NAME);
-//            if (object.has(NOTE)) this.note = object.getString(NOTE);
-//
-//            if (object.has(TIME_STAMP)) {
-//                this.timeStamp = Calendar.getInstance();
-//                this.timeStamp.setTimeInMillis(object.getLong(TIME_STAMP));
-//            } else {
-//                this.timeStamp = Calendar.getInstance();
-//            }
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     /**
      * カレンダーのミリ秒を文字列にした末尾に1000までの乱数を加えて初期値を生成する
      * @return String id
@@ -124,52 +98,18 @@ public abstract class BaseDataItem  implements Cloneable{
         return item;
     }
 
-//    public JSONObject getJSONObject() {
-//
-//        JSONObject object = new JSONObject();
-//
-//        try {
-//            object.put(ID, this.id);
-//            object.put(NAME, this.name);
-//            object.put(NOTE, this.note);
-//            object.put(TIME_STAMP, this.timeStamp.getTimeInMillis());
-//
-//            // jsonファイルを目視したときわかりやすいように。読み出しはしない。
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy,MM,dd, E, HH:mm:ss", Locale.JAPAN);
-//            object.put(TIME_STAMP_STRING, sdf.format(this.timeStamp.getTime()));
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return object;
-//    }
-
     public abstract String getIdHeader();
 
-//    static public boolean isDataType(String idHeader, PendingData data) {
-//
-//        int idHeaderCount = idHeader.length();
-//        String dataId = data.getId().substring(0, idHeaderCount - 1);
-//
-//        return (dataId.equals(idHeader));
-//
-//    }
-
-    // for Test
-//    public BaseDataItem(int idNum, Calendar timeStampCalendar) {
-//
-//        id = getIdHeader() + String.format("%018d", idNum);
-//        timeStamp = (Calendar) timeStampCalendar.clone();
-//    }
-//
-//    /**
-//     * If has period, returns 2 sized array [0] beginning, [1] end
-//     * If not returns same object in both
-//     * @return
-//     */
-//    abstract public Calendar[] getPeriod();
-
     abstract public String toStringForSearch(Context context);
+
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setTimeStamp(Calendar timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public <T extends BaseDataItem>boolean equals(T o) {
         return this.getId().equals(o.getId());
@@ -184,11 +124,20 @@ public abstract class BaseDataItem  implements Cloneable{
         map.put(NOTE, this.note);
         map.put(TIME_STAMP, this.timeStamp.getTimeInMillis());
 
-        // jsonファイルを目視したときわかりやすいように。読み出しはしない。
+        // 目視したときわかりやすいように。読み出しはしない。
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy,MM,dd, E, HH:mm:ss", Locale.JAPAN);
         map.put(TIME_STAMP_STRING, sdf.format(this.timeStamp.getTime()));
 
         return map;
+    }
+
+    public void setMap(HashMap<String, Object> map){
+
+        this.id = map.get(ID).toString();
+        this.name = map.get(NAME).toString();
+        this.note = map.get(NOTE).toString();
+        this.timeStamp = Calendar.getInstance();
+        this.timeStamp.setTimeInMillis(Long.valueOf(map.get(TIME_STAMP).toString()));
     }
 
 }
