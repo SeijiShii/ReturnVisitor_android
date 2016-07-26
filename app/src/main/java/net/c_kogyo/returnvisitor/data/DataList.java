@@ -1,7 +1,5 @@
 package net.c_kogyo.returnvisitor.data;
 
-import android.util.Log;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -10,8 +8,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import net.c_kogyo.returnvisitor.activity.MapActivity;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,36 +34,42 @@ public abstract class DataList<T extends BaseDataItem>{
                 .child(className);
 
         // TODO　リスト全体を読みだす処理
-
-    }
-
-    public void add(T data) {
-
-        list.add(data);
-
-        DatabaseReference node = reference.child(data.getId());
-
-        node.setValue(data.toMap());
-        node.addValueEventListener(new ValueEventListener() {
+        reference.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-                Object o = dataSnapshot.getValue();
-                HashMap<String, Object> map = (HashMap<String, Object>) o;
-                T data1 = null;
+                // すべてのchildに対して一回は呼ばれるらしいのだ。
+                // その後はデータの追加があるたびに呼ばれるらしい
 
-                try {
-                    data1 =  klass.newInstance();
-                    data1.setMap(map);
+                T data1 = getInstance(dataSnapshot);
+                if ( data1 == null ) return;
 
-                    set(data1);
-                    onDataChanged(data1);
+                addIfNotContained(data1);
 
-                } catch (IllegalAccessException e) {
-                    //
-                } catch (InstantiationException e) {
-                    //
-                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                T data1 = getInstance(dataSnapshot);
+                if ( data1 == null ) return;
+
+                set(data1);
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                if ( dataSnapshot.getValue() != null ) return;
+                String key = dataSnapshot.getKey();
+
+                removeById(key);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
             }
 
             @Override
@@ -75,6 +77,39 @@ public abstract class DataList<T extends BaseDataItem>{
 
             }
         });
+    }
+
+    private T getInstance(DataSnapshot dataSnapshot) {
+
+        Object o = dataSnapshot.getValue();
+        HashMap<String, Object> map = (HashMap<String, Object>) o;
+        T data1 = null;
+
+        try {
+            data1 =  klass.newInstance();
+            data1.setMap(map);
+
+        } catch (IllegalAccessException e) {
+            //
+        } catch (InstantiationException e) {
+            //
+        }
+        return data1;
+    }
+
+    public void addIfNotContained(T data) {
+
+        if ( indexOf(data) < 0 ) {
+            list.add(data);
+        }
+    }
+
+    public void add(T data) {
+
+        list.add(data);
+
+        DatabaseReference node = reference.child(data.getId());
+        node.setValue(data.toMap());
     }
 
     public void set(T data) {
@@ -107,6 +142,26 @@ public abstract class DataList<T extends BaseDataItem>{
     }
 
     public abstract void onDataChanged(T data);
+
+    public void removeFromBoth(T data) {
+
+        list.remove(data);
+
+        DatabaseReference node = reference.child(data.getId());
+        node.setValue(null);
+    }
+
+    public void remove(T data) {
+        list.remove(data);
+    }
+
+    public void removeById(String id) {
+
+        T data = getById(id);
+        if ( data == null ) return;
+
+        remove(data);
+    }
 
 }
 

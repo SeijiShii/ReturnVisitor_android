@@ -69,7 +69,7 @@ public class PersonDialog extends DialogFragment {
 
                 mListener.onClick(mPerson);
 
-                RVData.getInstance().personList.set(mPerson);
+                RVData.getInstance().personList.add(mPerson);
 
                 dismiss();
             }
