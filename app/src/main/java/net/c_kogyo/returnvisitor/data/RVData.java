@@ -16,8 +16,27 @@ public class RVData {
 
     private RVData() {
 
-        placeList = new DataList<>(Place.class);
-        personList = new DataList<>(Person.class);
-        visitList = new DataList<>(Visit.class);
+        placeList = new DataList<Place>(Place.class){
+            @Override
+            public void onDataChanged(Place data) {
+
+            }
+        };
+        personList = new DataList<Person>(Person.class) {
+            @Override
+            public void onDataChanged(Person data) {
+
+            }
+        };
+        visitList = new DataList<Visit>(Visit.class) {
+            @Override
+            public void onDataChanged(Visit data) {
+
+            }
+        };
+    }
+
+    public interface OnDataChangeListener {
+        public abstract void onDataChange();
     }
 }

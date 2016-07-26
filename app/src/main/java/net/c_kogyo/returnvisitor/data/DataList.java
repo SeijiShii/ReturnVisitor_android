@@ -20,36 +20,35 @@ import java.util.HashMap;
  * Created by SeijiShii on 2016/07/24.
  */
 
-public class DataList<T extends BaseDataItem>{
+public abstract class DataList<T extends BaseDataItem>{
 
     private ArrayList<T> list;
     private Class<T> klass;
+    private DatabaseReference reference;
 
     DataList(final Class<T> klass) {
         list = new ArrayList<>();
         this.klass = klass;
 
-    }
-
-    public void set(final T data) {
-
-        int index = indexOf(data);
-
-        if ( index < 0 ) {
-            list.add(data);
-        } else {
-            list.set(index, data);
-        }
-
         String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
         String className = klass.getSimpleName();
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference()
+        reference = FirebaseDatabase.getInstance().getReference()
                 .child(userId)
-                .child(className)
-                .child(data.getId());
+                .child(className);
 
-        ref.addValueEventListener(new ValueEventListener() {
+        // TODO　リスト全体を読みだす処理
+
+    }
+
+    public void add(T data) {
+
+        list.add(data);
+
+        DatabaseReference node = reference.child(data.getId());
+
+        node.setValue(data.toMap());
+        node.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -62,14 +61,13 @@ public class DataList<T extends BaseDataItem>{
                     data1.setMap(map);
 
                     set(data1);
+                    onDataChanged(data1);
 
                 } catch (IllegalAccessException e) {
                     //
                 } catch (InstantiationException e) {
                     //
                 }
-
-
             }
 
             @Override
@@ -77,10 +75,12 @@ public class DataList<T extends BaseDataItem>{
 
             }
         });
-
-        ref.setValue(data.toMap());
     }
 
+    public void set(T data) {
+
+        list.set(indexOf(data), data);
+    }
 
     public int indexOf(T data) {
 
@@ -106,5 +106,7 @@ public class DataList<T extends BaseDataItem>{
         return null;
     }
 
+    public abstract void onDataChanged(T data);
 
 }
+

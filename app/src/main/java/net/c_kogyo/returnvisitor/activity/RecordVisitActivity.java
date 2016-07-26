@@ -250,7 +250,7 @@ public class RecordVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                RVData.getInstance().visitList.set(mVisit);
+                RVData.getInstance().visitList.add(mVisit);
                 finish();
             }
         });
