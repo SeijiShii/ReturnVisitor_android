@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -52,6 +53,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Transaction;
 
 import java.util.Arrays;
 import java.util.List;
@@ -80,8 +82,10 @@ public class MapActivity extends AppCompatActivity
     static final String LONGITUDE = "longitude";
     static final String USER_EMAIL_ID = "user_email_id";
 
-    MapView mMapView;
-    GoogleMap mMap;
+    private MapView mMapView;
+    private GoogleMap mMap;
+
+    private boolean isDataRaedy;
 
     public static AddressTextLanguage addressTextLang;
 
@@ -98,7 +102,19 @@ public class MapActivity extends AppCompatActivity
         initFirebaseDatabase();
 
         // リモートのデータを読み込むためだけに一度getInstanceを実行
-        RVData.getInstance();
+        RVData.init(new RVData.OnDataReadyListener() {
+                               @Override
+                               public void onDataReady() {
+
+                                   isDataRaedy = true;
+                               }
+                           },
+                new RVData.OnDataChangedListener() {
+                    @Override
+                    public void onDataChanged(Class clazz) {
+
+                    }
+                });
 
         setContentView(R.layout.activity_map);
 
@@ -229,7 +245,29 @@ public class MapActivity extends AppCompatActivity
             }
         });
 
-        showAllMarkers();
+        final Handler handler = new Handler();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while (!isDataRaedy) {
+
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        //
+                    }
+                }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        showAllMarkers();
+                    }
+                });
+            }
+        }).start();
+
 
     }
 
@@ -713,6 +751,7 @@ public class MapActivity extends AppCompatActivity
 
     private void showAllMarkers() {
 
+        // TODO 起動時、データを読み込んだ後に表示するよう調整する必要あり
         for ( Place place : RVData.getInstance().placeList ) {
 
             MarkerOptions options = new MarkerOptions()

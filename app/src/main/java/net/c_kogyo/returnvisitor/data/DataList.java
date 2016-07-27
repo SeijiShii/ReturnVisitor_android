@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
+import android.util.Log;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -12,18 +14,22 @@ import net.c_kogyo.returnvisitor.activity.MapActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
 /**
  * Created by SeijiShii on 2016/07/24.
  */
 
+
 public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
+
+    public static final String DATA_LIST_TAG = "DataList";
 
     private ArrayList<T> list;
     private Class<T> klass;
     private DatabaseReference reference;
+
+    private long childCounter = 0;
+    private boolean isDataOver = false;
 
     DataList(final Class<T> klass) {
         list = new ArrayList<>();
@@ -36,38 +42,39 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
                 .child(userId)
                 .child(className);
 
-        // リスト全体を読みだす処理
+        // こちらは一度呼ばれたら取り外されるリスナ。起動時のデータの読み出し等に用いる
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Log.d(DATA_LIST_TAG, "Child Count = " + String.valueOf(dataSnapshot.getChildrenCount()));
+                Log.d(DATA_LIST_TAG, dataSnapshot.toString());
+                Log.d(DATA_LIST_TAG, "Child Added! called in addListenerForSingleValueEvent, Class: " + klass.getSimpleName());
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-                // すべてのchildに対して一回は呼ばれるらしいのだ。
-                // その後はデータの追加があるたびに呼ばれるらしい
-
-                T data1 = getInstance(dataSnapshot);
-                if ( data1 == null ) return;
-
-                addIfNotContained(data1);
+                Log.d(DATA_LIST_TAG, "Child Added! called in addChildEventListener, Class: " + klass.getSimpleName());
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                T data1 = getInstance(dataSnapshot);
-                if ( data1 == null ) return;
-
-                set(data1);
-
+                Log.d(DATA_LIST_TAG, "Child Changed!");
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                if ( dataSnapshot.getValue() != null ) return;
-                String key = dataSnapshot.getKey();
-
-                removeById(key);
             }
 
             @Override
@@ -80,6 +87,51 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
             }
         });
+
+        // リスト全体を読みだす処理
+//        reference.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//                // すべてのchildに対して一回は呼ばれるらしいのだ。
+//                // その後はデータの追加があるたびに呼ばれるらしい
+//
+//                T data1 = getInstance(dataSnapshot);
+//                if ( data1 == null ) return;
+//
+//                addIfNotContained(data1);
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//                T data1 = getInstance(dataSnapshot);
+//                if ( data1 == null ) return;
+//
+//                set(data1);
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                if ( dataSnapshot.getValue() != null ) return;
+//                String key = dataSnapshot.getKey();
+//
+//                removeById(key);
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
     private T getInstance(DataSnapshot dataSnapshot) {
@@ -147,8 +199,6 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
         return null;
     }
 
-    public abstract void onDataChanged(T data);
-
     public void removeFromBoth(T data) {
 
         list.remove(data);
@@ -173,6 +223,12 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
     public Iterator<T> iterator() {
         return list.iterator();
     }
+
+//    public abstract void onDataReady();
+
+    public abstract void onDataChanged(T data);
+
+
 
 
 }
