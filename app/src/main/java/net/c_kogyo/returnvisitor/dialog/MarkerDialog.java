@@ -3,6 +3,7 @@ package net.c_kogyo.returnvisitor.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import net.c_kogyo.returnvisitor.R;
 public class MarkerDialog extends DialogFragment {
 
     private View v;
+    private AlertDialog dialog;
 
     public static MarkerDialog getInstance() {
         return new MarkerDialog();
@@ -37,7 +39,7 @@ public class MarkerDialog extends DialogFragment {
         initDeleteButton();
         initCancelButton();
 
-        AlertDialog dialog = builder.create();
+        dialog = builder.create();
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
         params.y = 200;
 
@@ -83,6 +85,23 @@ public class MarkerDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
 
+                AlertDialog.Builder builder1  = new AlertDialog.Builder(getActivity());
+                builder1.setTitle(R.string.delete);
+                builder1.setMessage(R.string.delete_place_message);
+                builder1.setNegativeButton(R.string.cancel_text, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialog.dismiss();
+                    }
+                });
+                builder1.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        dialog.dismiss();
+                    }
+                });
+                builder1.create().show();
             }
         });
     }
