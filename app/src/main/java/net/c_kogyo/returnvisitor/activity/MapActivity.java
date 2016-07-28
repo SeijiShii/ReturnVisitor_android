@@ -754,7 +754,7 @@ public class MapActivity extends AppCompatActivity
         for ( Place place : RVData.getInstance().placeList ) {
 
             MarkerOptions options = new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(Constants.markerRes[4]))
+                    .icon(BitmapDescriptorFactory.fromResource(Constants.markerRes[place.getInterest().num()]))
                     .position(place.getLatLng());
 
             Marker marker = mMap.addMarker(options);

@@ -70,10 +70,6 @@ public class Place extends BaseDataItem {
         return PLACE;
     }
 
-    public Person.Interest getInterest() {
-        return null;
-    }
-
     @Override
     public String toStringForSearch(Context context) {
         return null;
@@ -156,6 +152,22 @@ public class Place extends BaseDataItem {
     public void addPersonIds(ArrayList<String> personIds) {
 
         this.personIds.addAll(personIds);
+    }
+
+    public Person.Interest getInterest() {
+
+        Person.Interest interest = Person.Interest.NONE;
+
+        for ( String id : personIds ) {
+
+            Person person = RVData.getInstance().personList.getById(id);
+            if (person != null) {
+                if (person.getInterest().num() > interest.num()) {
+                    interest = person.getInterest();
+                }
+            }
+        }
+        return interest;
     }
 
 
