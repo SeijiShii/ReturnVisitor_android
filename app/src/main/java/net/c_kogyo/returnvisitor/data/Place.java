@@ -2,6 +2,7 @@ package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -116,8 +117,13 @@ public class Place extends BaseDataItem {
 
         this.address = map.get(ADDRESS).toString();
 
-        // TODO Pending HashMap to ArrayList
-//        this.personIds = new ArrayList<String>(map.);
+        // HashMap to ArrayList
+        Object o = map.get(PERSON_IDS);
+        if ( o != null ) {
+
+            this.personIds = (ArrayList<String>) o;
+            o = null;
+        }
 
     }
 

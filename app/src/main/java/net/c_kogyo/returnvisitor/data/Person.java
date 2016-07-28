@@ -1,6 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import net.c_kogyo.returnvisitor.R;
 
@@ -277,6 +278,25 @@ public class Person extends BaseDataItem implements Cloneable{
         map.put(PLACE_IDS, placeIds);
 
         return map;
+    }
+
+    @Override
+    public void setMap(@NonNull HashMap<String, Object> map) {
+        super.setMap(map);
+
+        this.sex = Sex.valueOf(map.get(SEX).toString());
+        this.age = Age.valueOf(map.get(AGE).toString());
+        this.interest = Interest.valueOf(map.get(INTEREST).toString());
+
+        Object tagO = map.get(TAG_IDS);
+        if (tagO != null) {
+            this.tagIds = (ArrayList<String>) tagO;
+        }
+
+        Object placeO = map.get(PLACE_IDS);
+        if (placeO != null) {
+            this.placeIds = (ArrayList<String>) placeO;
+        }
     }
 
     public String toString(Context context) {

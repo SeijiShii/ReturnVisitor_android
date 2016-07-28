@@ -750,7 +750,7 @@ public class MapActivity extends AppCompatActivity
 
     private void showAllMarkers() {
 
-        // TODO 起動時、データを読み込んだ後に表示するよう調整する必要あり
+        // 起動時、データを読み込んだ後に表示するよう調整
         for ( Place place : RVData.getInstance().placeList ) {
 
             MarkerOptions options = new MarkerOptions()
