@@ -21,7 +21,7 @@ public class RVData {
         return ourInstance;
     }
 
-    public static DataList<Place> placeList;
+    public static PlaceList placeList;
     public static DataList<Person> personList;
     public static DataList<Visit> visitList;
 
@@ -31,7 +31,7 @@ public class RVData {
 
     private RVData() {
 
-        placeList = new DataList<Place>(Place.class){
+        placeList = new PlaceList(){
             @Override
             public void onDataChanged(Place data) {
 

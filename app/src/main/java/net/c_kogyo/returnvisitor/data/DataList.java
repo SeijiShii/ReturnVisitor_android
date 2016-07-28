@@ -24,7 +24,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
     public static final String DATA_LIST_TAG = "DataList";
 
-    private ArrayList<T> list;
+    protected ArrayList<T> list;
     private Class<T> klass;
     private DatabaseReference reference;
     private long childCount = 0;

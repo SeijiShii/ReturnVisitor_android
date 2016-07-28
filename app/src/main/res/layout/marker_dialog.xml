@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="250dp"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:id="@+id/record_visit_button"
+        android:textColor="@color/colorPrimaryDark"
+        android:background="@drawable/trans_green_selector"
+        android:text="@string/record_visit"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:id="@+id/delete_place_button"
+        android:textColor="#F00"
+        android:background="@drawable/trans_red_selector"
+        android:text="@string/delete_place"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:id="@+id/cancel_button"
+        android:textColor="@color/colorAccent"
+        android:background="@drawable/trans_orange_selector"
+        android:text="@string/cancel_text"/>
+
+
+
+</LinearLayout>

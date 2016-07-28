@@ -29,6 +29,7 @@ public class Place extends BaseDataItem {
     private LatLng latLng;
     private String address;
     private ArrayList<String> personIds;
+    private String markerId;
 
     public Place() {
         super();
@@ -64,6 +65,7 @@ public class Place extends BaseDataItem {
         this.latLng = new LatLng(0, 0);
         this.address = "";
         this.personIds = new ArrayList<>();
+        this.markerId = null;
     }
 
     @Override
@@ -76,7 +78,15 @@ public class Place extends BaseDataItem {
         return null;
     }
 
-//    @Override
+    public String getMarkerId() {
+        return markerId;
+    }
+
+    public void setMarkerId(String markerId) {
+        this.markerId = markerId;
+    }
+
+    //    @Override
 //    public JSONObject getJSONObject() {
 //
 //        JSONObject object = super.getJSONObject();

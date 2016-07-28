@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.PopupMenuCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -61,6 +63,7 @@ import android.Manifest.permission;
 
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
+import net.c_kogyo.returnvisitor.dialog.MarkerDialog;
 import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
@@ -267,8 +270,19 @@ public class MapActivity extends AppCompatActivity
             }
         }).start();
 
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                MarkerDialog.getInstance().show(getFragmentManager(), null);
+
+                return false;
+            }
+        });
+
 
     }
+
 
     private void startRecordVisitActivity(LatLng latLng) {
 
@@ -751,13 +765,15 @@ public class MapActivity extends AppCompatActivity
     private void showAllMarkers() {
 
         // 起動時、データを読み込んだ後に表示するよう調整
-        for ( Place place : RVData.getInstance().placeList ) {
+        for ( Object o : RVData.getInstance().placeList ) {
 
+            Place place = (Place) o;
             MarkerOptions options = new MarkerOptions()
                     .icon(BitmapDescriptorFactory.fromResource(Constants.markerRes[place.getInterest().num()]))
                     .position(place.getLatLng());
 
             Marker marker = mMap.addMarker(options);
+            place.setMarkerId(marker.getId());
         }
     }
 
