@@ -3,6 +3,7 @@ package net.c_kogyo.returnvisitor.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -131,7 +132,7 @@ public abstract class BaseDataItem  implements Cloneable{
         return map;
     }
 
-    public void setMap(HashMap<String, Object> map){
+    public void setMap(@NonNull HashMap<String, Object> map){
 
         this.id = map.get(ID).toString();
         this.name = map.get(NAME).toString();

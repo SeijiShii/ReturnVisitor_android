@@ -337,7 +337,7 @@ public class RecordVisitActivity extends AppCompatActivity {
                 mPlace.addPersonIds(mVisit.getPersonIds());
 
                 RVData.getInstance().visitList.add(mVisit);
-                RVData.getInstance().placeList.addIfNotContained(mPlace);
+                RVData.getInstance().placeList.add(mPlace);
 
                 finish();
             }

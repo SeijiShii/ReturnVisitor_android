@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
+import android.util.Log;
+
 /**
  * Created by SeijiShii on 2016/07/24.
  */
@@ -8,14 +10,11 @@ public class RVData {
     private static OnDataChangedListener mOnDataChangedListener;
     private static OnDataReadyListener mOnDataReadyListener;
 
-    public static void init(OnDataReadyListener onDataReadyListener, OnDataChangedListener onDataChangedListener) {
-        if (onDataReadyListener != null) {
-            mOnDataReadyListener = onDataReadyListener;
-        }
+    public static void setListeners(OnDataReadyListener onDataReadyListener, OnDataChangedListener onDataChangedListener) {
 
-        if (onDataChangedListener != null){
-            mOnDataChangedListener = onDataChangedListener;
-        }
+        mOnDataReadyListener = onDataReadyListener;
+        mOnDataChangedListener = onDataChangedListener;
+
     }
 
     public static RVData getInstance() {
@@ -26,6 +25,10 @@ public class RVData {
     public static DataList<Person> personList;
     public static DataList<Visit> visitList;
 
+    private boolean isPlaceLoaded = false;
+    private boolean isPersonLoaded = false;
+    private boolean isVisitLoaded = false;
+
     private RVData() {
 
         placeList = new DataList<Place>(Place.class){
@@ -35,10 +38,12 @@ public class RVData {
                 if ( mOnDataChangedListener != null ) {
                     mOnDataChangedListener.onDataChanged(Place.class);
                 }
-
-
             }
 
+            @Override
+            public void onDataLoaded() {
+                isPlaceLoaded = true;
+            }
         };
         personList = new DataList<Person>(Person.class) {
             @Override
@@ -47,6 +52,11 @@ public class RVData {
                 if ( mOnDataChangedListener != null ) {
                     mOnDataChangedListener.onDataChanged(Person.class);
                 }
+            }
+
+            @Override
+            public void onDataLoaded() {
+                isPersonLoaded = true;
             }
         };
         visitList = new DataList<Visit>(Visit.class) {
@@ -57,11 +67,31 @@ public class RVData {
                     mOnDataChangedListener.onDataChanged(Visit.class);
                 }
             }
+
+            @Override
+            public void onDataLoaded() {
+                isVisitLoaded = true;
+            }
         };
 
-        if (mOnDataReadyListener != null) {
-            mOnDataReadyListener.onDataReady();
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while ( !isPlaceLoaded || !isPersonLoaded || !isVisitLoaded) {
+                    try {
+                        Thread.sleep(50);
+                        Log.d("RVData", "WAIT!");
+                    } catch (InterruptedException e) {
+                        Log.d("RVData", e.getMessage());
+                    }
+                }
+                if (mOnDataReadyListener != null) {
+                    mOnDataReadyListener.onDataReady();
+                }
+            }
+        }).start();
+
     }
 
     public interface OnDataChangedListener {

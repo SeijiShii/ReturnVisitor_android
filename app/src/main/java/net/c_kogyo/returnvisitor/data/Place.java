@@ -1,6 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -109,7 +110,7 @@ public class Place extends BaseDataItem {
     }
 
     @Override
-    public void setMap(HashMap<String, Object> map) {
+    public void setMap(@NonNull HashMap<String, Object> map) {
         super.setMap(map);
 
         double lat = Double.valueOf(map.get(LATITUDE).toString());

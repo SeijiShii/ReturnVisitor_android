@@ -53,7 +53,6 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Transaction;
 
 import java.util.Arrays;
 import java.util.List;
@@ -85,7 +84,7 @@ public class MapActivity extends AppCompatActivity
     private MapView mMapView;
     private GoogleMap mMap;
 
-    private boolean isDataRaedy;
+    private boolean isDataReady = false;
 
     public static AddressTextLanguage addressTextLang;
 
@@ -102,11 +101,11 @@ public class MapActivity extends AppCompatActivity
         initFirebaseDatabase();
 
         // リモートのデータを読み込むためだけに一度getInstanceを実行
-        RVData.init(new RVData.OnDataReadyListener() {
+        RVData.setListeners(new RVData.OnDataReadyListener() {
                                @Override
                                public void onDataReady() {
 
-                                   isDataRaedy = true;
+                                   isDataReady = true;
                                }
                            },
                 new RVData.OnDataChangedListener() {
@@ -251,7 +250,7 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void run() {
 
-                while (!isDataRaedy) {
+                while (!isDataReady) {
 
                     try {
                         Thread.sleep(50);

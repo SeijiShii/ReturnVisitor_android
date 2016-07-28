@@ -27,16 +27,15 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
     private ArrayList<T> list;
     private Class<T> klass;
     private DatabaseReference reference;
-
+    private long childCount = 0;
     private long childCounter = 0;
-    private boolean isDataOver = false;
 
     DataList(final Class<T> klass) {
         list = new ArrayList<>();
         this.klass = klass;
 
         String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
-        String className = klass.getSimpleName();
+        final String className = klass.getSimpleName();
 
         reference = FirebaseDatabase.getInstance().getReference()
                 .child(userId)
@@ -47,10 +46,14 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Log.d(DATA_LIST_TAG, "Child Count = " + String.valueOf(dataSnapshot.getChildrenCount()));
-                Log.d(DATA_LIST_TAG, dataSnapshot.toString());
-                Log.d(DATA_LIST_TAG, "Child Added! called in addListenerForSingleValueEvent, Class: " + klass.getSimpleName());
+                // Childリスナではないので指定したノードそのものを読み込む
+                // ここではデータ数だけを読み取る
+                childCount = dataSnapshot.getChildrenCount();
+                if (childCount == 0) {
+                    onDataLoaded();
+                }
 
+                addChildEventListener();
             }
 
             @Override
@@ -59,10 +62,30 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
             }
         });
 
+
+    }
+
+    private void addChildEventListener() {
+
         reference.addChildEventListener(new ChildEventListener() {
+
+            // 呼ばれるタイミング
+            // リスナがセットされた直後
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(DATA_LIST_TAG, "Child Added! called in addChildEventListener, Class: " + klass.getSimpleName());
+                // 呼ばれるタイミング
+                // クライアント側でデータを追加したとき
+                // リモート側でデータが追加されたときにクライアントにそれを通知する
+
+                T data1 = getInstance(dataSnapshot);
+                if ( data1 == null ) return;
+
+                addToListIfNotContained(data1);
+                childCounter++;
+
+                if (childCounter >= childCount) {
+                    onDataLoaded();
+                }
 
             }
 
@@ -70,11 +93,20 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
                 Log.d(DATA_LIST_TAG, "Child Changed!");
+                // 呼ばれるタイミング
+                // set(data)の後
+                // リモート側で変更されたらPushされてくる
+                T data1 = getInstance(dataSnapshot);
+                if ( data1 == null ) return;
+
+                setToList(data1);
+                // ローカル側で変更された場合は結果2回setすることになるけど仕方ないと思う
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
+                Log.d(DATA_LIST_TAG, "Child Removed!");
             }
 
             @Override
@@ -88,50 +120,8 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
             }
         });
 
-        // リスト全体を読みだす処理
-//        reference.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//
-//                // すべてのchildに対して一回は呼ばれるらしいのだ。
-//                // その後はデータの追加があるたびに呼ばれるらしい
-//
-//                T data1 = getInstance(dataSnapshot);
-//                if ( data1 == null ) return;
-//
-//                addIfNotContained(data1);
-//
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//                T data1 = getInstance(dataSnapshot);
-//                if ( data1 == null ) return;
-//
-//                set(data1);
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//                if ( dataSnapshot.getValue() != null ) return;
-//                String key = dataSnapshot.getKey();
-//
-//                removeById(key);
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
+
+
     }
 
     private T getInstance(DataSnapshot dataSnapshot) {
@@ -142,8 +132,10 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
         try {
             data1 =  klass.newInstance();
-            data1.setMap(map);
 
+            if ( map != null ) {
+                data1.setMap(map);
+            }
         } catch (IllegalAccessException e) {
             //
         } catch (InstantiationException e) {
@@ -152,13 +144,10 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
         return data1;
     }
 
-    public void addIfNotContained(T data) {
+    private void addToListIfNotContained(T data) {
 
         if ( indexOf(data) < 0 ) {
             list.add(data);
-
-            DatabaseReference node = reference.child(data.getId());
-            node.setValue(data.toMap());
         }
     }
 
@@ -173,9 +162,18 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
     public void set(T data) {
 
         list.set(indexOf(data), data);
+
+        DatabaseReference node = reference.child(data.getId());
+        node.setValue(data.toMap());
+        // この後onChildChangedが呼ばれる
     }
 
-    public int indexOf(T data) {
+    private void setToList(T data) {
+
+        list.set(indexOf(data), data);
+    }
+
+    private int indexOf(T data) {
 
         for ( int i = 0 ; i < list.size() ; i++ ) {
 
@@ -228,6 +226,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
     public abstract void onDataChanged(T data);
 
+    public abstract void onDataLoaded();
 
 
 
