@@ -42,7 +42,12 @@ public class MarkerDialog extends DialogFragment {
         params.y = 200;
 
         dialog.getWindow().setAttributes(params);
+
+        // 背景のオーバレイを透明にする
         dialog.getWindow().setFlags(0, WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+
+        // 背景画像の下に白い枠が出ないように
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
 
         return dialog;
