@@ -332,4 +332,18 @@ public class Person extends BaseDataItem implements Cloneable{
     public void setPlaceIds(ArrayList<String> placeIds) {
         this.placeIds = placeIds;
     }
+
+//    public boolean hasPlaceId(String placeId) {
+//
+//        for (String id : placeIds) {
+//            if (id.equals(placeId))
+//                return true;
+//        }
+//        return false;
+//    }
+//
+//    // これをすべてのデータにやってもいいよね
+//    public void removePlaceId(String placeId) {
+//        placeIds.remove(placeId);
+//    }
 }

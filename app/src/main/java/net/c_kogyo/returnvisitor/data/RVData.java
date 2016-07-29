@@ -22,8 +22,8 @@ public class RVData {
     }
 
     public static PlaceList placeList;
-    public static DataList<Person> personList;
-    public static DataList<Visit> visitList;
+    public static PersonList personList;
+    public static VisitList visitList;
 
     private boolean isPlaceLoaded = false;
     private boolean isPersonLoaded = false;
@@ -45,7 +45,7 @@ public class RVData {
                 isPlaceLoaded = true;
             }
         };
-        personList = new DataList<Person>(Person.class) {
+        personList = new PersonList() {
             @Override
             public void onDataChanged(Person data) {
 
@@ -59,7 +59,7 @@ public class RVData {
                 isPersonLoaded = true;
             }
         };
-        visitList = new DataList<Visit>(Visit.class) {
+        visitList = new VisitList() {
             @Override
             public void onDataChanged(Visit data) {
 

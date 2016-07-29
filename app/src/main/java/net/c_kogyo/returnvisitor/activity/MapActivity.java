@@ -56,6 +56,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -115,6 +116,7 @@ public class MapActivity extends AppCompatActivity
                     @Override
                     public void onDataChanged(Class clazz) {
 
+                        showAllMarkers();
                     }
                 });
 
@@ -274,7 +276,22 @@ public class MapActivity extends AppCompatActivity
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                MarkerDialog.getInstance().show(getFragmentManager(), null);
+                Place place = RVData.getInstance().placeList.getByMarkerId(marker.getId());
+
+                if (place != null) {
+
+                    MarkerDialog.getInstance(place, new MarkerDialog.OnPlaceRemoveListener() {
+                        @Override
+                        public void onPlaceRemoved(Place place) {
+                            showAllMarkers();
+                        }
+                    }).show(getFragmentManager(), null);
+                } else {
+
+                    // TODO マーカーをクリックしたものの該当する場所が見つからない場合はマーカーを削除
+                }
+
+
 
                 return false;
             }
@@ -762,7 +779,16 @@ public class MapActivity extends AppCompatActivity
                 });
     }
 
+    ArrayList<Marker> markers;
     private void showAllMarkers() {
+
+        if (markers != null) {
+            for (Marker marker : markers) {
+                marker.remove();
+            }
+        }
+
+        markers = new ArrayList<>();
 
         // 起動時、データを読み込んだ後に表示するよう調整
         for ( Object o : RVData.getInstance().placeList ) {
@@ -774,6 +800,7 @@ public class MapActivity extends AppCompatActivity
 
             Marker marker = mMap.addMarker(options);
             place.setMarkerId(marker.getId());
+            markers.add(marker);
         }
     }
 

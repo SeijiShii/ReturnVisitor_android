@@ -7,7 +7,7 @@ import java.util.Iterator;
  * Created by SeijiShii on 2016/07/27.
  */
 
-public abstract class PlaceList extends DataList {
+public abstract class PlaceList extends DataList<Place> {
 
     PlaceList() {
         super(Place.class);
@@ -26,14 +26,7 @@ public abstract class PlaceList extends DataList {
     }
 
     @Override
-    public void onDataChanged(BaseDataItem data) {
-        onDataChanged((Place) data);
-    }
-
-    abstract void onDataChanged(Place place);
-
-    @Override
     public Iterator iterator() {
-        return ((ArrayList<Place>)list).iterator();
+        return list.iterator();
     }
 }

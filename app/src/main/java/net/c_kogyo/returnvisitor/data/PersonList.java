@@ -1,10 +1,16 @@
 package net.c_kogyo.returnvisitor.data;
 
-import DataList;
+import net.c_kogyo.returnvisitor.data.DataList;
 
 /**
  * Created by SeijiShii on 2016/07/28.
  */
 
-public class PersonList extends DataList {
+public abstract class PersonList extends DataList<Person> {
+
+    PersonList() {
+        super(Person.class);
+    }
+
+
 }

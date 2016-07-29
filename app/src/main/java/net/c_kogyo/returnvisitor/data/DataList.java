@@ -31,7 +31,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
     private long childCounter = 0;
 
     DataList(final Class<T> klass) {
-        list = new ArrayList<>();
+        list = new ArrayList<T>();
         this.klass = klass;
 
         String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
@@ -107,6 +107,9 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
             public void onChildRemoved(DataSnapshot dataSnapshot) {
 
                 Log.d(DATA_LIST_TAG, "Child Removed!");
+                String id = dataSnapshot.getKey();
+                removeByIdIfContained(id);
+
             }
 
             @Override
@@ -203,9 +206,10 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
         DatabaseReference node = reference.child(data.getId());
         node.setValue(null);
+        // この後onChildRemovedが呼ばれる
     }
 
-    public void remove(T data) {
+    private void remove(T data) {
         list.remove(data);
     }
 
@@ -217,9 +221,18 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
         remove(data);
     }
 
+    private void removeByIdIfContained(String id) {
+
+        T data = getById(id);
+        if ( data == null ) return;
+
+        list.remove(data);
+        onDataChanged(data);
+    }
+
     @Override
     public Iterator<T> iterator() {
-        return list.iterator();
+        return ((ArrayList<T>) list).iterator();
     }
 
 //    public abstract void onDataReady();

@@ -12,6 +12,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.data.Place;
+import net.c_kogyo.returnvisitor.data.RVData;
 
 
 /**
@@ -22,8 +24,14 @@ public class MarkerDialog extends DialogFragment {
 
     private View v;
     private AlertDialog dialog;
+    static private Place mPlace;
+    static private OnPlaceRemoveListener mListener;
 
-    public static MarkerDialog getInstance() {
+    public static MarkerDialog getInstance(Place place, OnPlaceRemoveListener listener) {
+
+        mPlace = place;
+        mListener = listener;
+
         return new MarkerDialog();
     }
 
@@ -99,10 +107,28 @@ public class MarkerDialog extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         dialog.dismiss();
+                        deletePlace();
                     }
                 });
                 builder1.create().show();
             }
         });
+    }
+
+    private void deletePlace() {
+
+        //TODO 実際のdelete処理を実装
+        // Personからその場所のidを削除
+        // その場所のidを持つVisitを削除
+        // と思ったけど上記2つはやらなくてもよいと思う。単に「不明な場所になるだけ
+
+        // Placeを削除
+        RVData.getInstance().placeList.removeFromBoth(mPlace);
+        mListener.onPlaceRemoved(mPlace);
+
+    }
+
+    public interface OnPlaceRemoveListener {
+        void onPlaceRemoved(Place place);
     }
 }
