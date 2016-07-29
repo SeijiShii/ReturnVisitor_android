@@ -72,16 +72,26 @@ public class RecordVisitActivity extends AppCompatActivity {
     private void initPlace() {
 
         Intent intent = getIntent();
-        double latitude = intent.getDoubleExtra(MapActivity.LATITUDE, 1000);
-        double longitude = intent.getDoubleExtra(MapActivity.LONGITUDE, 1000);
 
-        if ( latitude < 1000 && longitude < 1000 ) {
-            mPlace = new Place(new LatLng(latitude, longitude));
+        String placeId = intent.getStringExtra(Place.PLACE);
+        if (placeId != null) {
+            // マーカのクリックから来た場合
+            mPlace = RVData.getInstance().placeList.getById(placeId);
             mVisit.setPlaceId(mPlace.getId());
+        } else {
+            // 地図上のロングクリックから来た場合
+            double latitude = intent.getDoubleExtra(MapActivity.LATITUDE, 1000);
+            double longitude = intent.getDoubleExtra(MapActivity.LONGITUDE, 1000);
 
-            startFetchAddressIntentService();
+            if ( latitude < 1000 && longitude < 1000 ) {
+                mPlace = new Place(new LatLng(latitude, longitude));
+                mVisit.setPlaceId(mPlace.getId());
 
+                startFetchAddressIntentService();
+
+            }
         }
+
     }
 
     public static final String LAT_LNG_EXTRA = "lat_lng_extra";

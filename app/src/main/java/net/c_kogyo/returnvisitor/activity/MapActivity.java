@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.PopupMenuCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,7 +19,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -239,7 +237,7 @@ public class MapActivity extends AppCompatActivity
 
                 if (firebaseAuth.getCurrentUser() != null) {
 
-                    startRecordVisitActivity(latLng);
+                    startRecordVisitActivityByPosition(latLng);
 
                 } else {
 
@@ -280,11 +278,18 @@ public class MapActivity extends AppCompatActivity
 
                 if (place != null) {
 
-                    MarkerDialog.getInstance(place, new MarkerDialog.OnPlaceRemoveListener() {
-                        @Override
-                        public void onPlaceRemoved(Place place) {
-                            showAllMarkers();
-                        }
+                    MarkerDialog.getInstance(place,
+                            new MarkerDialog.OnVisitRecordClickListener() {
+                                @Override
+                                public void onVisitRecordClick(Place place) {
+                                    startRecordVisitByPlaceId(place.getId());
+                                }
+                            },
+                            new MarkerDialog.OnPlaceRemoveListener() {
+                                @Override
+                                public void onPlaceRemoved(Place place) {
+                                    showAllMarkers();
+                                }
                     }).show(getFragmentManager(), null);
                 } else {
 
@@ -301,7 +306,7 @@ public class MapActivity extends AppCompatActivity
     }
 
 
-    private void startRecordVisitActivity(LatLng latLng) {
+    private void startRecordVisitActivityByPosition(LatLng latLng) {
 
         Intent recordVisitIntent = new Intent(this, RecordVisitActivity.class);
         if (latLng != null) {
@@ -310,6 +315,13 @@ public class MapActivity extends AppCompatActivity
             recordVisitIntent.putExtra(LONGITUDE, latLng.longitude);
         }
 
+        startActivity(recordVisitIntent);
+    }
+
+
+    private void startRecordVisitByPlaceId(String id) {
+        Intent recordVisitIntent = new Intent(this, RecordVisitActivity.class);
+        recordVisitIntent.putExtra(Place.PLACE, id);
         startActivity(recordVisitIntent);
     }
 

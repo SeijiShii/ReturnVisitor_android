@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -25,12 +24,16 @@ public class MarkerDialog extends DialogFragment {
     private View v;
     private AlertDialog dialog;
     static private Place mPlace;
-    static private OnPlaceRemoveListener mListener;
+    static private OnPlaceRemoveListener mRemoveListener;
+    static private OnVisitRecordClickListener mRecordListener;
 
-    public static MarkerDialog getInstance(Place place, OnPlaceRemoveListener listener) {
+    public static MarkerDialog getInstance(Place place,
+                                           OnVisitRecordClickListener recordListener,
+                                           OnPlaceRemoveListener removeListener) {
 
         mPlace = place;
-        mListener = listener;
+        mRecordListener = recordListener;
+        mRemoveListener = removeListener;
 
         return new MarkerDialog();
     }
@@ -70,6 +73,8 @@ public class MarkerDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
 
+                mRecordListener.onVisitRecordClick(mPlace);
+                dismiss();
             }
         });
     }
@@ -124,11 +129,16 @@ public class MarkerDialog extends DialogFragment {
 
         // Placeを削除
         RVData.getInstance().placeList.removeFromBoth(mPlace);
-        mListener.onPlaceRemoved(mPlace);
+        mRemoveListener.onPlaceRemoved(mPlace);
 
+    }
+
+    public interface OnVisitRecordClickListener {
+        void onVisitRecordClick(Place place);
     }
 
     public interface OnPlaceRemoveListener {
         void onPlaceRemoved(Place place);
     }
+
 }
