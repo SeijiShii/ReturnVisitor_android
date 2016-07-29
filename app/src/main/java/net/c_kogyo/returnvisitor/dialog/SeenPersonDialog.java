@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import net.c_kogyo.returnvisitor.R;
-import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
 import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
@@ -31,6 +30,7 @@ public class SeenPersonDialog extends DialogFragment {
     private Context mContext;
     private static Visit mVisit;
     private static OnOkClickListener mListener;
+    private ArrayList<String> createdPersonIds;
 
     private View.OnClickListener seenCellOnClickListener, suggCellOnClickListener;
 
@@ -50,6 +50,8 @@ public class SeenPersonDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         mContext = getActivity();
+
+        createdPersonIds = new ArrayList<>();
 
         initSuggestedIds();
 
@@ -90,7 +92,8 @@ public class SeenPersonDialog extends DialogFragment {
                         mVisit.addPersonId(person.getId());
 
                         // 提案リストに追加
-                        suggestedPersonIds.add(person.getId());
+                        createdPersonIds.add(person.getId());
+                        initSuggestedIds();
 
                         addPersonToContainer(person.getId());
                     }
@@ -101,8 +104,11 @@ public class SeenPersonDialog extends DialogFragment {
 
     private void initSuggestedIds() {
 
-        suggestedPersonIds = new ArrayList<>();
-        // TODO ここに過去にこの場所で会えた人のIDをセットする
+        // 過去のあえた人たちのid
+        suggestedPersonIds = RVData.getInstance().placeList.getHistoricalPersonIds(mVisit.getPlaceId());
+        // 今回作成された人を追加
+        suggestedPersonIds.addAll(createdPersonIds);
+
     }
 
     private LinearLayout seenPersonContainer;
@@ -127,7 +133,7 @@ public class SeenPersonDialog extends DialogFragment {
                         seenPersonContainer.removeView(cell1);
 
                         String personId = cell1.getPerson().getId();
-                        addToSuggestedContainer(personId);
+                        addToSuggestedContainer(personId, BaseAnimateView.InitialHeightCondition.FROM_0);
                     }
 
                     @Override
@@ -149,7 +155,6 @@ public class SeenPersonDialog extends DialogFragment {
                 final PersonCell cell1 = (PersonCell) view;
                 String personId = cell1.getPerson().getId();
 
-                mVisit.getPersonIds().remove(personId);
                 cell1.changeViewHeight(BaseAnimateView.AnimateCondition.FROM_HEIGHT_TO_O, true, new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animator) {
@@ -197,6 +202,8 @@ public class SeenPersonDialog extends DialogFragment {
         Person person = RVData.getInstance().personList.getById(personId);
         if ( person == null ) return;
 
+        mVisit.getPersonIds().add(personId);
+
         PersonCell cell = new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.FROM_0);
         seenPersonContainer.addView(cell);
         cell.setOnClickListener(seenCellOnClickListener);
@@ -210,19 +217,23 @@ public class SeenPersonDialog extends DialogFragment {
         // TODO 提案リストにある人を追加する
         for ( String id : suggestedPersonIds ) {
 
+            addToSuggestedContainer(id, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT);
         }
     }
 
-    private void addToSuggestedContainer(String personId) {
+    private void addToSuggestedContainer(String personId, BaseAnimateView.InitialHeightCondition initCondition) {
 
         // 会えた人に含まれるなら描画しない
         if ( mVisit.getPersonIds().contains(personId)) return;
 
         Person person = RVData.getInstance().personList.getById(personId);
+        if ( person != null ) {
 
-        PersonCell cell = new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.FROM_0);
-        suggestedPersonContainer.addView(cell);
-        cell.setOnClickListener(suggCellOnClickListener);
+            PersonCell cell = new PersonCell(mContext, person, initCondition);
+            suggestedPersonContainer.addView(cell);
+            cell.setOnClickListener(suggCellOnClickListener);
+        }
+
     }
 
     public interface OnOkClickListener {

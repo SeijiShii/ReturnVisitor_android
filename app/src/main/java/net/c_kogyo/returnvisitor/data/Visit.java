@@ -114,6 +114,13 @@ public class Visit extends TimePeriodDataItem{
 
         // TODO personIds, placementsのHashMapからのデータ回収
 
+        // HashMap to ArrayList
+        Object o = map.get(PERSON_IDS);
+        if ( o != null ) {
+
+            this.personIds = (ArrayList<String>) o;
+            o = null;
+        }
 
     }
 
