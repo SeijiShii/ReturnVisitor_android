@@ -28,20 +28,21 @@ public class PersonCell extends BaseAnimateView {
 
         initRaterMark();
         initPersonText();
+        setPerson(null);
     }
 
     private ImageView raterMark;
     private void initRaterMark() {
 
         raterMark = (ImageView) getViewById(R.id.rater_mark);
-        raterMark.setBackgroundResource(Constants.buttonRes[mPerson.getInterest().num()]);
+
     }
 
     private TextView personText;
     private void initPersonText() {
 
         personText = (TextView) getViewById(R.id.person_text);
-        personText.setText(mPerson.toString(mContext));
+
     }
 
     @Override
@@ -56,6 +57,17 @@ public class PersonCell extends BaseAnimateView {
 
     public Person getPerson() {
         return mPerson;
+    }
+
+    public void setPerson(Person person) {
+
+        if (person != null) {
+            mPerson = person;
+        }
+
+        raterMark.setBackgroundResource(Constants.buttonRes[mPerson.getInterest().num()]);
+        personText.setText(mPerson.toString(mContext));
+
     }
 
 

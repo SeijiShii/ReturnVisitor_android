@@ -165,6 +165,10 @@ public class Place extends BaseDataItem {
         this.personIds = personIds;
     }
 
+    public void addPersonId (String personId) {
+        this.personIds.add(personId);
+    }
+
     public void addPersonIds(ArrayList<String> personIds) {
 
         this.personIds.addAll(personIds);

@@ -25,22 +25,9 @@ public abstract class PlaceList extends DataList<Place> {
         return null;
     }
 
-    public ArrayList<String> getHistoricalPersonIds(String placeId) {
-
-        ArrayList<String> personIds = new ArrayList<>();
-        for ( Place place : list ) {
-
-            if (place.getId().equals(placeId)) {
-                for ( String id : place.getPersonIds() ) {
-                    if (!personIds.contains(id)) personIds.add(id);
-                }
-            }
-        }
-        return personIds;
-    }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<Place> iterator() {
         return list.iterator();
     }
 }

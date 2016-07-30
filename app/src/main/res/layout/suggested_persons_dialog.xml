@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:padding="5dp"
+        android:background="@drawable/gray_trans_circle"
+        android:id="@+id/search_text"
+        android:layout_margin="10dp"
+        android:hint="@string/search"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/persons_list"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:id="@+id/add_person_button"
+        android:background="@drawable/trans_green_selector">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/add_person"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginRight="10dp"/>
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+               android:src="@drawable/green_plus"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

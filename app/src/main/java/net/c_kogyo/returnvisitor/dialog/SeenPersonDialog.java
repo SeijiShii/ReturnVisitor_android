@@ -104,10 +104,10 @@ public class SeenPersonDialog extends DialogFragment {
 
     private void initSuggestedIds() {
 
-        // 過去のあえた人たちのid
-        suggestedPersonIds = RVData.getInstance().placeList.getHistoricalPersonIds(mVisit.getPlaceId());
-        // 今回作成された人を追加
-        suggestedPersonIds.addAll(createdPersonIds);
+//        // 過去のあえた人たちのid
+//        suggestedPersonIds = RVData.getInstance().placeList.getHistoricalPersonIds(mVisit.getPlaceId());
+//        // 今回作成された人を追加
+//        suggestedPersonIds.addAll(createdPersonIds);
 
     }
 
