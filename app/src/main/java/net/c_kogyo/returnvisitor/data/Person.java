@@ -262,7 +262,15 @@ public class Person extends BaseDataItem implements Cloneable{
 
     @Override
     public String toStringForSearch(Context context) {
-        return null;
+
+        StringBuilder builder = new StringBuilder(super.toStringForSearch(context));
+        builder.append(context.getResources().getStringArray(R.array.sex_array)[this.sex.num()]).append(" ");
+        builder.append(context.getResources().getStringArray(R.array.age_array)[this.age.num()]).append(" ");
+        builder.append(context.getResources().getStringArray(R.array.interest_array)[this.interest.num()]).append(" ");
+
+        // TODO Tag, Placementを実装したらそれらもappendする。
+
+        return builder.toString();
     }
 
     @Override
@@ -333,17 +341,4 @@ public class Person extends BaseDataItem implements Cloneable{
         this.placeIds = placeIds;
     }
 
-//    public boolean hasPlaceId(String placeId) {
-//
-//        for (String id : placeIds) {
-//            if (id.equals(placeId))
-//                return true;
-//        }
-//        return false;
-//    }
-//
-//    // これをすべてのデータにやってもいいよね
-//    public void removePlaceId(String placeId) {
-//        placeIds.remove(placeId);
-//    }
 }

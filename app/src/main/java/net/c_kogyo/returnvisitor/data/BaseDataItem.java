@@ -101,8 +101,11 @@ public abstract class BaseDataItem  implements Cloneable{
 
     public abstract String getIdHeader();
 
-    abstract public String toStringForSearch(Context context);
+    public String toStringForSearch(Context context){
 
+        return name + " " + note + " ";
+
+    }
 
     public void setId(String id) {
         this.id = id;

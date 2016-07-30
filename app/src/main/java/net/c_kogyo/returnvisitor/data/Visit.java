@@ -112,8 +112,6 @@ public class Visit extends TimePeriodDataItem{
         this.placeId = map.get(PLACE_ID).toString();
         this.rvCount = Integer.valueOf(map.get(RV_COUNT).toString());
 
-        // TODO personIds, placementsのHashMapからのデータ回収
-
         // HashMap to ArrayList
         Object o = map.get(PERSON_IDS);
         if ( o != null ) {
@@ -121,6 +119,8 @@ public class Visit extends TimePeriodDataItem{
             this.personIds = (ArrayList<String>) o;
             o = null;
         }
+
+        // TODO placementsのHashMapからのデータ回収
 
     }
 

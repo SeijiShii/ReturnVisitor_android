@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +56,7 @@ public class SuggestedPersonsDialog extends DialogFragment {
 
         initSearchText();
         initPersonList();
-        refreshSuggestedPersons();
+        refreshSuggestedPersons(null);
         initAddPersonButton();
 
         return builder.create();
@@ -63,8 +65,24 @@ public class SuggestedPersonsDialog extends DialogFragment {
     private void initSearchText() {
 
         EditText searchText = (EditText) v.findViewById(R.id.search_text);
-    }
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                refreshSuggestedPersons(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
 
     private ListView personList;
     private void initPersonList() {
@@ -81,14 +99,32 @@ public class SuggestedPersonsDialog extends DialogFragment {
     }
 
     private ArrayList<Person> persons;
-    private void refreshSuggestedPersons() {
 
-        ArrayList<String> personIds = mPlace.getPersonIds();
+    /**
+     *
+     * @param searchString nullまたは空白ならPlaceの過去履歴の人をセット
+     */
+    private void refreshSuggestedPersons(String searchString) {
+
+        ArrayList<String> personIds;
+
+        if (searchString == null || isStringAllBlank(searchString)) {
+            personIds = mPlace.getPersonIds();
+        } else {
+            personIds = RVData.getInstance().personList.getSearchedPersonIds(searchString, getActivity());
+
+        }
         personIds.removeAll(mVisit.getPersonIds());
 
         persons = RVData.getInstance().personList.getPersons(personIds);
 
         personList.setAdapter(new SuggestedPersonAdapter(persons));
+    }
+
+    private boolean isStringAllBlank(String string) {
+
+        return string.trim().length() <= 0;
+
     }
 
     private void initAddPersonButton() {
@@ -118,7 +154,7 @@ public class SuggestedPersonsDialog extends DialogFragment {
         void onAdded(String personId);
     }
 
-    class SuggestedPersonAdapter extends BaseAdapter {
+    private class SuggestedPersonAdapter extends BaseAdapter {
 
         private ArrayList<Person> mPersons;
 

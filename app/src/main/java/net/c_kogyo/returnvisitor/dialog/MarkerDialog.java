@@ -122,7 +122,7 @@ public class MarkerDialog extends DialogFragment {
 
     private void deletePlace() {
 
-        //TODO 実際のdelete処理を実装
+        //実際のdelete処理を実装
         // Personからその場所のidを削除
         // その場所のidを持つVisitを削除
         // と思ったけど上記2つはやらなくてもよいと思う。単に「不明な場所になるだけ

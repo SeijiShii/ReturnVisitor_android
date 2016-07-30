@@ -27,7 +27,6 @@ import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
-import net.c_kogyo.returnvisitor.dialog.SeenPersonDialog;
 import net.c_kogyo.returnvisitor.dialog.SuggestedPersonsDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 import net.c_kogyo.returnvisitor.view.BaseAnimateView;
@@ -255,7 +254,7 @@ public class RecordVisitActivity extends AppCompatActivity {
             }
         });
 
-        //TODO 会えた人を列挙する
+        //会えた人を列挙する
         for ( String id : mVisit.getPersonIds() ) {
 
             Person person = RVData.getInstance().personList.getById(id);
@@ -279,7 +278,7 @@ public class RecordVisitActivity extends AppCompatActivity {
 
     private void updatePersonContainer() {
 
-        // TODO SeenPersonDialogから帰ってきたときの処理
+        // SeenPersonDialogから帰ってきたときの処理
 
         ArrayList<String> addedIds = new ArrayList<>(mVisit.getPersonIds());
         addedIds.removeAll(getPersonIdsInContainer());
