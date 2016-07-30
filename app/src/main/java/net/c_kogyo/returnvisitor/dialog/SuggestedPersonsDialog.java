@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -28,11 +29,13 @@ import java.util.ArrayList;
 
 public class SuggestedPersonsDialog extends DialogFragment {
 
-    private static Place mPlace;
+    private static Visit mVisit; // すでにVisitに追加されている人を除外するため
+    private static Place mPlace; // この場所で今までに出会った人を取得するため
     private static OnSeenPersonAddedListener mListener;
 
-    public static SuggestedPersonsDialog getInstance(Place place, OnSeenPersonAddedListener listener) {
+    public static SuggestedPersonsDialog getInstance(Visit visit, Place place, OnSeenPersonAddedListener listener) {
 
+        mVisit = visit;
         mPlace = place;
         mListener = listener;
 
@@ -67,13 +70,23 @@ public class SuggestedPersonsDialog extends DialogFragment {
     private void initPersonList() {
 
         personList = (ListView) v.findViewById(R.id.persons_list);
+        personList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mListener.onAdded(persons.get(i).getId());
+                dismiss();
+            }
+        });
 
     }
 
-
+    private ArrayList<Person> persons;
     private void refreshSuggestedPersons() {
 
-        ArrayList<Person> persons = RVData.getInstance().personList.getPersons(mPlace.getPersonIds());
+        ArrayList<String> personIds = mPlace.getPersonIds();
+        personIds.removeAll(mVisit.getPersonIds());
+
+        persons = RVData.getInstance().personList.getPersons(personIds);
 
         personList.setAdapter(new SuggestedPersonAdapter(persons));
     }
@@ -133,7 +146,10 @@ public class SuggestedPersonsDialog extends DialogFragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             if (view == null) {
-                view = new PersonCell(getActivity(), (Person)getItem(i), BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT);
+                view = new PersonCell(getActivity(),
+                        (Person) getItem(i),
+                        BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT,
+                        null);
             } else {
                 ((PersonCell) view).setPerson((Person) getItem(i));
             }

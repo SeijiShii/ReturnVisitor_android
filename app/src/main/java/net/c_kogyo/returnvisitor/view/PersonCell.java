@@ -1,10 +1,10 @@
 package net.c_kogyo.returnvisitor.view;
 
+import android.animation.Animator;
 import android.content.Context;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
@@ -20,7 +20,10 @@ public class PersonCell extends BaseAnimateView {
     private Person mPerson;
     private Context mContext;
 
-    public PersonCell(Context context, Person person, InitialHeightCondition initCondition) {
+    public PersonCell(Context context,
+                      Person person,
+                      InitialHeightCondition initCondition,
+                      PostRemoveAnimationListener listener) {
         super(context, initCondition, R.layout.person_cell);
 
         mContext = context;
@@ -29,6 +32,7 @@ public class PersonCell extends BaseAnimateView {
         initRaterMark();
         initPersonText();
         setPerson(null);
+        initRemoveButton(listener);
     }
 
     private ImageView raterMark;
@@ -70,5 +74,50 @@ public class PersonCell extends BaseAnimateView {
 
     }
 
+    private void initRemoveButton(final PostRemoveAnimationListener listener) {
+
+        Button removeButton = (Button) getViewById(R.id.remove_button);
+
+        if (listener == null) {
+            removeButton.setVisibility(INVISIBLE);
+        } else {
+            removeButton.setVisibility(VISIBLE);
+            removeButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    PersonCell.this.changeViewHeight(AnimateCondition.FROM_HEIGHT_TO_O,
+                            true,
+                            new Animator.AnimatorListener() {
+                                @Override
+                                public void onAnimationStart(Animator animator) {
+
+                                }
+
+                                @Override
+                                public void onAnimationEnd(Animator animator) {
+
+                                    listener.postAnimation(PersonCell.this);
+                                }
+
+                                @Override
+                                public void onAnimationCancel(Animator animator) {
+
+                                }
+
+                                @Override
+                                public void onAnimationRepeat(Animator animator) {
+
+                                }
+                            },
+                    5);
+                }
+            });
+        }
+    }
+
+    public interface PostRemoveAnimationListener {
+        void postAnimation(PersonCell cell);
+    }
 
 }

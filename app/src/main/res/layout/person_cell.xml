@@ -23,4 +23,17 @@
         android:layout_height="match_parent"
         android:id="@+id/person_text"/>
 
+    <RelativeLayout
+        android:layout_width="30dp"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/remove_button_selector"
+            android:id="@+id/remove_button"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
 </LinearLayout>

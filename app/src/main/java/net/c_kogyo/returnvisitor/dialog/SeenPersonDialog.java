@@ -190,9 +190,9 @@ public class SeenPersonDialog extends DialogFragment {
             Person person = RVData.getInstance().personList.getById(id);
             if (person != null) {
 
-                PersonCell cell = new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT);
-                seenPersonContainer.addView(cell);
-                cell.setOnClickListener(seenCellOnClickListener);
+//                PersonCell cell = new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT);
+//                seenPersonContainer.addView(cell);
+//                cell.setOnClickListener(seenCellOnClickListener);
             }
         }
     }
@@ -204,9 +204,9 @@ public class SeenPersonDialog extends DialogFragment {
 
         mVisit.getPersonIds().add(personId);
 
-        PersonCell cell = new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.FROM_0);
-        seenPersonContainer.addView(cell);
-        cell.setOnClickListener(seenCellOnClickListener);
+//        PersonCell cell = new PersonCell(mContext, person, BaseAnimateView.InitialHeightCondition.FROM_0);
+//        seenPersonContainer.addView(cell);
+//        cell.setOnClickListener(seenCellOnClickListener);
     }
 
     private LinearLayout suggestedPersonContainer;
@@ -229,9 +229,9 @@ public class SeenPersonDialog extends DialogFragment {
         Person person = RVData.getInstance().personList.getById(personId);
         if ( person != null ) {
 
-            PersonCell cell = new PersonCell(mContext, person, initCondition);
-            suggestedPersonContainer.addView(cell);
-            cell.setOnClickListener(suggCellOnClickListener);
+//            PersonCell cell = new PersonCell(mContext, person, initCondition);
+//            suggestedPersonContainer.addView(cell);
+//            cell.setOnClickListener(suggCellOnClickListener);
         }
 
     }

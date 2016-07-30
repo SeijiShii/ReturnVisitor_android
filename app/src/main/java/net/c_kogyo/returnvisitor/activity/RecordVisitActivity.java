@@ -241,7 +241,7 @@ public class RecordVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                SuggestedPersonsDialog.getInstance(mPlace, new SuggestedPersonsDialog.OnSeenPersonAddedListener() {
+                SuggestedPersonsDialog.getInstance(mVisit, mPlace, new SuggestedPersonsDialog.OnSeenPersonAddedListener() {
                     @Override
                     public void onAdded(String personId) {
 
@@ -261,11 +261,21 @@ public class RecordVisitActivity extends AppCompatActivity {
             Person person = RVData.getInstance().personList.getById(id);
             if (person != null) {
 
-                PersonCell cell = new PersonCell(this, person, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT);
+                PersonCell cell = new PersonCell(this,
+                        person,
+                        BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT,
+                        new PersonCell.PostRemoveAnimationListener() {
+                            @Override
+                            public void postAnimation(PersonCell cell1) {
+                                removePersonCellFromContainer(cell1);
+                            }
+                        });
                 personContainer.addView(cell);
             }
         }
     }
+
+
 
     private void updatePersonContainer() {
 
@@ -282,7 +292,15 @@ public class RecordVisitActivity extends AppCompatActivity {
             Person person = RVData.getInstance().personList.getById(id);
             if (person != null) {
 
-                PersonCell cell = new PersonCell(this, person, BaseAnimateView.InitialHeightCondition.FROM_0);
+                PersonCell cell = new PersonCell(this,
+                        person,
+                        BaseAnimateView.InitialHeightCondition.FROM_0,
+                        new PersonCell.PostRemoveAnimationListener() {
+                            @Override
+                            public void postAnimation(PersonCell cell1) {
+                                removePersonCellFromContainer(cell1);
+                            }
+                        });
                 personContainer.addView(cell);
             }
         }
@@ -329,6 +347,11 @@ public class RecordVisitActivity extends AppCompatActivity {
             touchText.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    private void removePersonCellFromContainer(PersonCell cell) {
+        personContainer.removeView(cell);
+        mVisit.getPersonIds().remove(cell.getPerson().getId());
     }
 
     private ArrayList<String> getPersonIdsInContainer() {
