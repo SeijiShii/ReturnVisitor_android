@@ -95,6 +95,7 @@
                     android:orientation="vertical"
                     android:minHeight="@dimen/button_height"/>
 
+                <!-- Person Container Placeholder-->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

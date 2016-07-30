@@ -274,8 +274,6 @@ public class RecordVisitActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void updatePersonContainer() {
 
         // SeenPersonDialogから帰ってきたときの処理
@@ -338,6 +336,12 @@ public class RecordVisitActivity extends AppCompatActivity {
             }
         }
 
+        updatePersonTouchText();
+
+    }
+
+    private void updatePersonTouchText() {
+
         // PersonがいればTouch Hereが消えるようにする
         TextView touchText = (TextView) findViewById(R.id.person_touch_text);
         if (mVisit.getPersonIds().size() > 0) {
@@ -345,12 +349,12 @@ public class RecordVisitActivity extends AppCompatActivity {
         } else {
             touchText.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void removePersonCellFromContainer(PersonCell cell) {
         personContainer.removeView(cell);
         mVisit.getPersonIds().remove(cell.getPerson().getId());
+        updatePersonTouchText();
     }
 
     private ArrayList<String> getPersonIdsInContainer() {
