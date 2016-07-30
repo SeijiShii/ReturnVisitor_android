@@ -45,6 +45,7 @@ public class RecordVisitActivity extends AppCompatActivity {
     // Visitが保存されるタイミングはOKが押されるとき
     private Visit mVisit;
     private Place mPlace;
+    private ArrayList<String> createdPersonIds;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         setContentView(R.layout.record_visit_activity);
 
         mVisit = new Visit();
+        createdPersonIds = new ArrayList<>();
 
         initBroadcastingForAddress();
         initPlace();
@@ -240,16 +242,27 @@ public class RecordVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                SuggestedPersonsDialog.getInstance(mVisit, mPlace, new SuggestedPersonsDialog.OnSeenPersonAddedListener() {
-                    @Override
-                    public void onAdded(String personId) {
+                SuggestedPersonsDialog.getInstance(mVisit,
+                        mPlace,
+                        createdPersonIds,
+                        new SuggestedPersonsDialog.OnNewPersonAddedListener() {
+                            @Override
+                            public void onAdded(String personId) {
 
-                        mVisit.addPersonId(personId);
-                        updatePersonContainer();
+                                createdPersonIds.add(personId);
+                                mVisit.addPersonId(personId);
+                                updatePersonContainer();
 
-                        // PlaceにはOkを押したときにpersonIdが追加される
-                    }
-                }).show(getFragmentManager(), null);
+                                // PlaceにはOkを押したときにpersonIdが追加される
+                            }
+                        },
+                        new SuggestedPersonsDialog.OnPersonSelectedListener() {
+                            @Override
+                            public void onSelected(String personId) {
+                                mVisit.addPersonId(personId);
+                                updatePersonContainer();
+                            }
+                        }).show(getFragmentManager(), null);
 
             }
         });

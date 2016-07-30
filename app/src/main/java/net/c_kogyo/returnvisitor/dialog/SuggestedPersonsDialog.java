@@ -33,13 +33,21 @@ public class SuggestedPersonsDialog extends DialogFragment {
 
     private static Visit mVisit; // すでにVisitに追加されている人を除外するため
     private static Place mPlace; // この場所で今までに出会った人を取得するため
-    private static OnSeenPersonAddedListener mListener;
+    private static OnNewPersonAddedListener mAddedListener;
+    private static OnPersonSelectedListener mSelectedListener;
+    private static ArrayList<String> mCreatePersonIds;
 
-    public static SuggestedPersonsDialog getInstance(Visit visit, Place place, OnSeenPersonAddedListener listener) {
+    public static SuggestedPersonsDialog getInstance(Visit visit,
+                                                     Place place,
+                                                     ArrayList<String> createdPersonIds,
+                                                     OnNewPersonAddedListener addedListener,
+                                                     OnPersonSelectedListener selectedListener) {
 
         mVisit = visit;
         mPlace = place;
-        mListener = listener;
+        mAddedListener = addedListener;
+        mSelectedListener = selectedListener;
+        mCreatePersonIds = new ArrayList<>(createdPersonIds);
 
         return new SuggestedPersonsDialog();
     }
@@ -91,7 +99,7 @@ public class SuggestedPersonsDialog extends DialogFragment {
         personList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mListener.onAdded(persons.get(i).getId());
+                mSelectedListener.onSelected(persons.get(i).getId());
                 dismiss();
             }
         });
@@ -110,6 +118,7 @@ public class SuggestedPersonsDialog extends DialogFragment {
 
         if (searchString == null || isStringAllBlank(searchString)) {
             personIds = mPlace.getPersonIds();
+            personIds.addAll(mCreatePersonIds);
         } else {
             personIds = RVData.getInstance().personList.getSearchedPersonIds(searchString, getActivity());
 
@@ -138,7 +147,7 @@ public class SuggestedPersonsDialog extends DialogFragment {
                     @Override
                     public void onClick(Person person) {
 
-                        mListener.onAdded(person.getId());
+                        mAddedListener.onAdded(person.getId());
                         dismiss();
                     }
                 }).show(getFragmentManager(), null);
@@ -149,9 +158,15 @@ public class SuggestedPersonsDialog extends DialogFragment {
     // 会えた人が追加される状況は二つ
     // SuggestListのアイテムがクリックされる
     // PersonDialogで新しい人を作って帰ってくる
-    public interface OnSeenPersonAddedListener {
+    public interface OnNewPersonAddedListener {
 
+        // ここで返されたのがあちらでcreatedPersonIdsに加えられるのだけどね。
         void onAdded(String personId);
+    }
+
+    public interface OnPersonSelectedListener {
+
+        void onSelected(String personId);
     }
 
     private class SuggestedPersonAdapter extends BaseAdapter {
