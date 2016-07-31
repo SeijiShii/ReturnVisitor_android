@@ -24,14 +24,17 @@ import com.google.android.gms.maps.model.LatLng;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Place;
+import net.c_kogyo.returnvisitor.data.Placement;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
+import net.c_kogyo.returnvisitor.dialog.PlacementDialog;
 import net.c_kogyo.returnvisitor.dialog.PlacementSelectDialog;
 import net.c_kogyo.returnvisitor.dialog.SelectPersonDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 import net.c_kogyo.returnvisitor.view.BaseAnimateView;
 import net.c_kogyo.returnvisitor.view.PersonCell;
+import net.c_kogyo.returnvisitor.view.PlacementCell;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -397,7 +400,23 @@ public class RecordVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                PlacementSelectDialog.getInstance().show(getFragmentManager(), null);
+                PlacementSelectDialog.getInstance(new PlacementDialog.OnAddPlacementListener() {
+                    @Override
+                    public void onAdd(Placement placement) {
+                        mVisit.addPlacement(placement);
+                        placementContainer.addView(new PlacementCell(placement,
+                                RecordVisitActivity.this, BaseAnimateView.InitialHeightCondition.FROM_0,
+                                new PlacementCell.PostRemoveAnimationListener() {
+                            @Override
+                            public void postAnimation(PlacementCell cell) {
+                                placementContainer.removeView(cell);
+                                mVisit.removePlacement(cell.getPlacement());
+                                updatePlacementTouchText();
+                            }
+                        }));
+                        updatePlacementTouchText();
+                    }
+                }).show(getFragmentManager(), null);
             }
         });
     }
@@ -410,6 +429,7 @@ public class RecordVisitActivity extends AppCompatActivity {
             placementTouchText.setVisibility(View.VISIBLE);
         }
     }
+
 
 
 

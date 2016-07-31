@@ -1,6 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 
 import net.c_kogyo.returnvisitor.R;
@@ -102,14 +103,45 @@ public class Placement extends BaseDataItem {
         this.category = category;
     }
 
+    public Placement(HashMap<String, Object> map) {
+
+        super();
+        setMap(map);
+    }
+
     @Override
     public String getIdHeader() {
         return PLACEMENT;
     }
 
+    public String toString(Context context) {
+
+        String[] catArray = context.getResources().getStringArray(R.array.placement_array);
+        String[] magArray = context.getResources().getStringArray(R.array.magazine_array);
+
+        StringBuilder builder = new StringBuilder();
+
+        if (category != Category.MAGAZINE) {
+
+            builder.append(catArray[category.num()]);
+
+        } else {
+
+            builder.append(magArray[magCategory.num()])
+                    .append(" ")
+                    .append(getNumberString(number, magCategory, context));
+        }
+
+        if (name.length() > 0) {
+            builder.append(" ").append(name);
+        }
+
+        return builder.toString();
+    }
+
     @Override
     public String toStringForSearch(Context context) {
-        return null;
+        return toString(context);
     }
 
     public Category getCategory() {
@@ -144,13 +176,23 @@ public class Placement extends BaseDataItem {
 
         HashMap<String, Object> map = super.toMap();
 
-        map.put(CATEGORY, category);
-        map.put(MAGAZINE_CATEGORY, magCategory);
+        map.put(CATEGORY, category.toString());
+        map.put(MAGAZINE_CATEGORY, magCategory.toString());
         map.put(NUMBER, number.getTimeInMillis());
 
         return map;
   }
 
+    @Override
+    public void setMap(@NonNull HashMap<String, Object> map) {
+        super.setMap(map);
+
+        this.category = Category.valueOf(map.get(CATEGORY).toString());
+        this.magCategory = MagazineCategory.valueOf(map.get(MAGAZINE_CATEGORY).toString());
+        this.number = Calendar.getInstance();
+        this.number.setTimeInMillis(Long.valueOf(map.get(NUMBER).toString()));
+
+    }
 
     public void setNumber(Calendar number) {
         this.number = number;
@@ -217,4 +259,6 @@ public class Placement extends BaseDataItem {
 
         return list;
     }
+
+
 }

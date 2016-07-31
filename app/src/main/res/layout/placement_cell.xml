@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="@drawable/gray_trans_circle"
+    android:padding="3dp"
+    android:layout_margin="2dp">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:id="@+id/placement_text"
+        android:textColor="@color/text_color_normal"
+        android:textSize="12sp"/>
+
+    <RelativeLayout
+        android:layout_width="30dp"
+        android:layout_height="match_parent">
+
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/remove_button_selector"
+            android:id="@+id/remove_button"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

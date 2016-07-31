@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.util.LongSparseArray;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +40,13 @@ public abstract class BaseDataItem  implements Cloneable{
         this.id = generateNewId();
         this.name = "";
         this.note = "";
+    }
+
+    BaseDataItem(HashMap<String, Object> map) {
+
+        this();
+        setMap(map);
+
     }
 
     /**

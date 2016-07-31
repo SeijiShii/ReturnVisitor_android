@@ -37,6 +37,8 @@ public class Visit extends TimePeriodDataItem{
 
     @Override
     public String toStringForSearch(Context context) {
+
+        // TODO Visitをsearchすることはあるのだろうか
         return null;
     }
 
@@ -49,13 +51,10 @@ public class Visit extends TimePeriodDataItem{
         map.put(PERSON_IDS, personIds);
         map.put(RV_COUNT, rvCount);
 
-        //TODO オブジェクトのArrayListをそのままマップできるわけがないよね。
-
         ArrayList<HashMap<String, Object>> mapList = new ArrayList<>();
         for ( int i = 0 ; i < placements.size() ; i++ ) {
             mapList.add(placements.get(i).toMap());
         }
-
         map.put(PLACEMENTS, mapList);
 
         return map;
@@ -120,7 +119,20 @@ public class Visit extends TimePeriodDataItem{
             o = null;
         }
 
-        // TODO placementsのHashMapからのデータ回収
+        // placementsのHashMapからのデータ回収
+        Object o1 = map.get(PLACEMENTS);
+        if (o1 != null) {
+
+            this.placements = new ArrayList<>();
+
+            ArrayList<Object> oList = (ArrayList<Object>) o1;
+            for (Object o2 : oList) {
+
+                HashMap<String, Object> map1 = (HashMap<String, Object>) o2;
+                this.placements.add(new Placement(map1));
+            }
+
+        }
 
     }
 

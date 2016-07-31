@@ -19,7 +19,11 @@ import net.c_kogyo.returnvisitor.data.Placement;
 
 public class PlacementSelectDialog extends DialogFragment {
 
-    static public PlacementSelectDialog getInstance() {
+    static private PlacementDialog.OnAddPlacementListener mListener;
+
+    static public PlacementSelectDialog getInstance(PlacementDialog.OnAddPlacementListener listener) {
+
+        mListener = listener;
 
         return new PlacementSelectDialog();
     }
@@ -52,17 +56,13 @@ public class PlacementSelectDialog extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                PlacementDialog.getInstance(Placement.Category.getEnum(i), new PlacementDialog.OnOkListener() {
-                    @Override
-                    public void onOkClick(Placement placement) {
-                        //TODO PlacementDialogからの戻り
-                    }
-                }).show(getFragmentManager(), null);
+                PlacementDialog.getInstance(Placement.Category.getEnum(i), mListener).show(getFragmentManager(), null);
                 dismiss();
             }
         });
 
     }
+
 
 
 }

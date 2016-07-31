@@ -33,10 +33,10 @@ public class PlacementDialog extends DialogFragment {
 
     private String[] categoryArray, magazineArray;
     private Placement mPlacement;
-    private static OnOkListener mListener;
+    private static OnAddPlacementListener mListener;
 
     private static Placement.Category mCategory;
-    static public PlacementDialog getInstance(Placement.Category category, OnOkListener listener) {
+    static public PlacementDialog getInstance(Placement.Category category, OnAddPlacementListener listener) {
 
         mCategory = category;
         mListener = listener;
@@ -60,7 +60,7 @@ public class PlacementDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                mListener.onOkClick(mPlacement);
+                mListener.onAdd(mPlacement);
                 RVData.placementCompList.addToBoth(mPlacement.getName());
             }
         });
@@ -199,7 +199,7 @@ public class PlacementDialog extends DialogFragment {
 
     }
 
-    public interface OnOkListener {
-        void onOkClick(Placement placement);
+    public interface OnAddPlacementListener {
+        void onAdd(Placement placement);
     }
 }
