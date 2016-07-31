@@ -55,7 +55,7 @@ public class PersonDialog extends DialogFragment {
 
         mContext = getActivity();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
         v = LayoutInflater.from(getActivity()).inflate(R.layout.person_dialog, null);
         builder.setView(v);
@@ -76,7 +76,7 @@ public class PersonDialog extends DialogFragment {
             }
         });
         builder.setNegativeButton(R.string.cancel_text, null);
-        
+
         builder.setTitle(R.string.person);
 
         if (RVData.getInstance().personList.contains(mPerson)) {
@@ -84,7 +84,19 @@ public class PersonDialog extends DialogFragment {
             builder.setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    // TODO　Person 削除メソッド
+
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
+                    builder1.setTitle(R.string.delete_person);
+                    builder1.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            // TODO　Person 削除メソッド
+
+                        }
+                    });
+                    builder1.setNegativeButton(R.string.cancel_text, null);
+                    builder1.create().show();
+
                 }
             });
 
