@@ -12,14 +12,13 @@ public class Placement extends BaseDataItem {
 
     public enum Category {
 
-        NONE(0),
-        BIBLE(1),
-        BOOK(2),
-        TRACT(3),
-        MAGAZINE(4),
-        WEB_LINK(5),
-        SHOW_VIDEO(6),
-        OTHER(7);
+        BIBLE(0),
+        BOOK(1),
+        TRACT(2),
+        MAGAZINE(3),
+        WEB_LINK(4),
+        SHOW_VIDEO(5),
+        OTHER(6);
 
         private final int num;
 
@@ -85,7 +84,7 @@ public class Placement extends BaseDataItem {
     public Placement() {
         super();
 
-        this.category = Category.NONE;
+        this.category = Category.OTHER;
         this.magCategory = MagazineCategory.NOT_MAGAZINE;
         this.number = null;
 

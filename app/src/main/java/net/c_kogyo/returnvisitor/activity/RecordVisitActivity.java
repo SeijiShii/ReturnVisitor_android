@@ -27,6 +27,7 @@ import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
+import net.c_kogyo.returnvisitor.dialog.PlacementSelectDialog;
 import net.c_kogyo.returnvisitor.dialog.SelectPersonDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 import net.c_kogyo.returnvisitor.view.BaseAnimateView;
@@ -64,6 +65,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         initDateText();
         initTimeText();
         initPersonContainer();
+        initPlacementContainer();
 
 
         initOkButton();
@@ -381,6 +383,35 @@ public class RecordVisitActivity extends AppCompatActivity {
         }
         return ids;
     }
+
+    // Placement Frame
+    private LinearLayout placementContainer;
+    private TextView placementTouchText;
+    private void initPlacementContainer() {
+
+        placementContainer = (LinearLayout) findViewById(R.id.placement_container);
+        placementTouchText = (TextView) findViewById(R.id.placement_touch_text);
+        updatePlacementTouchText();
+
+        placementContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                PlacementSelectDialog.getInstance().show(getFragmentManager(), null);
+            }
+        });
+    }
+
+    private void updatePlacementTouchText() {
+
+        if (mVisit.getPlacements().size() > 0) {
+            placementTouchText.setVisibility(View.VISIBLE);
+        } else {
+            placementTouchText.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
 
     private void initOkButton() {
 

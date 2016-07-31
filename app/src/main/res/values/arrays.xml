@@ -29,5 +29,15 @@
         <item>Female</item>
     </array>
 
+    <array name="placement_array">
+        <item>Bible</item>
+        <item>Book</item>
+        <item>Tract</item>
+        <item>Magazine</item>
+        <item>Web Link</item>
+        <item>Showing Video</item>
+        <item>Other</item>
+    </array>
+
 
 </resources>
