@@ -39,5 +39,11 @@
         <item>Other</item>
     </array>
 
+    <array name="magazine_array">
+        <item>WATCHTOWER</item>
+        <item>Study WATCHTOWER</item>
+        <item>Awake!</item>
+    </array>
+
 
 </resources>

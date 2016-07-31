@@ -405,9 +405,9 @@ public class RecordVisitActivity extends AppCompatActivity {
     private void updatePlacementTouchText() {
 
         if (mVisit.getPlacements().size() > 0) {
-            placementTouchText.setVisibility(View.VISIBLE);
-        } else {
             placementTouchText.setVisibility(View.INVISIBLE);
+        } else {
+            placementTouchText.setVisibility(View.VISIBLE);
         }
     }
 

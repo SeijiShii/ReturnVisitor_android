@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.data.Placement;
 
 /**
  * Created by SeijiShii on 2016/07/30.
@@ -51,8 +52,12 @@ public class PlacementSelectDialog extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                PlacementDialog.getInstance(Placement.Category.getEnum(i)).show(getFragmentManager(), null);
+                dismiss();
             }
         });
 
     }
+
+
 }

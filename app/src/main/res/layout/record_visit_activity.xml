@@ -112,7 +112,7 @@
                 android:layout_height="20dp"
                 android:textSize="15sp"
                 android:gravity="left"
-                android:text="@string/placement"
+                android:text="@string/placements"
                 android:textColor="@color/text_color_normal"/>
 
             <FrameLayout

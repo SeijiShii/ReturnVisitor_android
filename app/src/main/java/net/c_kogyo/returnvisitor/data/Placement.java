@@ -46,8 +46,7 @@ public class Placement extends BaseDataItem {
 
         WATCHTOWER(0),
         STUDY_WATCHTOWER(1),
-        AWAKE(2),
-        NOT_MAGAZINE(3);
+        AWAKE(2);
 
         private final int num;
 
@@ -85,7 +84,7 @@ public class Placement extends BaseDataItem {
         super();
 
         this.category = Category.OTHER;
-        this.magCategory = MagazineCategory.NOT_MAGAZINE;
+        this.magCategory = null;
         this.number = null;
 
     }

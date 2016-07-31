@@ -21,7 +21,7 @@
                 android:background="@drawable/gray_trans_circle"
                 android:padding="5dp"
                 android:hint="@string/name"
-                android:inputType="text"/>
+                android:inputType="textFilter"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
