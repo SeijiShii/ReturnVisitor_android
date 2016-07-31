@@ -190,6 +190,10 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
     }
 
+    public boolean contains(T data) {
+        return indexOf(data) >= 0;
+    }
+
     public T getById(String id) {
 
         for ( T data : list ) {

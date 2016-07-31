@@ -76,6 +76,19 @@ public class PersonDialog extends DialogFragment {
             }
         });
         builder.setNegativeButton(R.string.cancel_text, null);
+        
+        builder.setTitle(R.string.person);
+
+        if (RVData.getInstance().personList.contains(mPerson)) {
+
+            builder.setNeutralButton(R.string.delete, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // TODO　Person 削除メソッド
+                }
+            });
+
+        }
 
         initNameText();
         initSexRadio();
@@ -152,9 +165,6 @@ public class PersonDialog extends DialogFragment {
         });
 
     }
-
-
-
 
     private void initInterestRater() {
 

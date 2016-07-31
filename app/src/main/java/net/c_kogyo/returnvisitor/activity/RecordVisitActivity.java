@@ -68,7 +68,7 @@ public class RecordVisitActivity extends AppCompatActivity {
 
         initOkButton();
         initCancelButton();
-
+        initDeleteButton();
     }
 
     private void initPlace() {
@@ -408,6 +408,22 @@ public class RecordVisitActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void initDeleteButton() {
+
+        Button deleteButton = (Button) findViewById(R.id.delete_button);
+        if (RVData.getInstance().visitList.contains(mVisit)) {
+            deleteButton.setVisibility(View.VISIBLE);
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+        } else {
+            deleteButton.setVisibility(View.INVISIBLE);
+        }
     }
 
 
