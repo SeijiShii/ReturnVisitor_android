@@ -59,7 +59,7 @@ public class SelectPersonDialog extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        v = LayoutInflater.from(getActivity()).inflate(R.layout.suggested_persons_dialog, null);
+        v = LayoutInflater.from(getActivity()).inflate(R.layout.select_persons_dialog, null);
         builder.setView(v);
 
         initSearchText();
