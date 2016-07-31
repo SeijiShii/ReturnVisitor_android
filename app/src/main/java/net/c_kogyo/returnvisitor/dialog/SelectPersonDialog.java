@@ -29,7 +29,7 @@ import java.util.ArrayList;
  * Created by SeijiShii on 2016/07/29.
  */
 
-public class SuggestedPersonsDialog extends DialogFragment {
+public class SelectPersonDialog extends DialogFragment {
 
     private static Visit mVisit; // すでにVisitに追加されている人を除外するため
     private static Place mPlace; // この場所で今までに出会った人を取得するため
@@ -37,11 +37,11 @@ public class SuggestedPersonsDialog extends DialogFragment {
     private static OnPersonSelectedListener mSelectedListener;
     private static ArrayList<String> mCreatePersonIds;
 
-    public static SuggestedPersonsDialog getInstance(Visit visit,
-                                                     Place place,
-                                                     ArrayList<String> createdPersonIds,
-                                                     OnNewPersonAddedListener addedListener,
-                                                     OnPersonSelectedListener selectedListener) {
+    public static SelectPersonDialog getInstance(Visit visit,
+                                                 Place place,
+                                                 ArrayList<String> createdPersonIds,
+                                                 OnNewPersonAddedListener addedListener,
+                                                 OnPersonSelectedListener selectedListener) {
 
         mVisit = visit;
         mPlace = place;
@@ -49,7 +49,7 @@ public class SuggestedPersonsDialog extends DialogFragment {
         mSelectedListener = selectedListener;
         mCreatePersonIds = new ArrayList<>(createdPersonIds);
 
-        return new SuggestedPersonsDialog();
+        return new SelectPersonDialog();
     }
 
     private View v;
@@ -66,6 +66,9 @@ public class SuggestedPersonsDialog extends DialogFragment {
         initPersonList();
         refreshSuggestedPersons(null);
         initAddPersonButton();
+
+        builder.setTitle(R.string.select_seen_person_dialog);
+        builder.setNegativeButton(R.string.cancel_text, null);
 
         return builder.create();
     }
@@ -118,7 +121,14 @@ public class SuggestedPersonsDialog extends DialogFragment {
 
         if (searchString == null || isStringAllBlank(searchString)) {
             personIds = mPlace.getPersonIds();
-            personIds.addAll(mCreatePersonIds);
+
+            // Merge without duplicates
+            for ( String id : mCreatePersonIds ) {
+                if (!personIds.contains(id)) {
+                    personIds.add(id);
+                }
+            }
+
         } else {
             personIds = RVData.getInstance().personList.getSearchedPersonIds(searchString, getActivity());
 

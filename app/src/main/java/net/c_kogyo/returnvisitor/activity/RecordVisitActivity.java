@@ -27,7 +27,7 @@ import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
-import net.c_kogyo.returnvisitor.dialog.SuggestedPersonsDialog;
+import net.c_kogyo.returnvisitor.dialog.SelectPersonDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 import net.c_kogyo.returnvisitor.view.BaseAnimateView;
 import net.c_kogyo.returnvisitor.view.PersonCell;
@@ -242,10 +242,10 @@ public class RecordVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                SuggestedPersonsDialog.getInstance(mVisit,
+                SelectPersonDialog.getInstance(mVisit,
                         mPlace,
                         createdPersonIds,
-                        new SuggestedPersonsDialog.OnNewPersonAddedListener() {
+                        new SelectPersonDialog.OnNewPersonAddedListener() {
                             @Override
                             public void onAdded(String personId) {
 
@@ -256,7 +256,7 @@ public class RecordVisitActivity extends AppCompatActivity {
                                 // PlaceにはOkを押したときにpersonIdが追加される
                             }
                         },
-                        new SuggestedPersonsDialog.OnPersonSelectedListener() {
+                        new SelectPersonDialog.OnPersonSelectedListener() {
                             @Override
                             public void onSelected(String personId) {
                                 mVisit.addPersonId(personId);
