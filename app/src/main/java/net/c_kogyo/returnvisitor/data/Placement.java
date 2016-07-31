@@ -1,7 +1,13 @@
 package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 
+import net.c_kogyo.returnvisitor.R;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -84,9 +90,16 @@ public class Placement extends BaseDataItem {
         super();
 
         this.category = Category.OTHER;
-        this.magCategory = null;
-        this.number = null;
+        this.magCategory = MagazineCategory.WATCHTOWER;
+        this.number = Calendar.getInstance();
 
+    }
+
+    public Placement(Category category) {
+
+        this();
+
+        this.category = category;
     }
 
     @Override
@@ -117,30 +130,12 @@ public class Placement extends BaseDataItem {
 
     /**
      *
-     * @return Calendar only if Category = MAGAZINE & MagazineCategory = STUDY_WATCHTOWER
-     * else return NULL
-     */
-    public Calendar getNumberCalendar() {
-
-        if (this.category == Category.MAGAZINE && this.magCategory == MagazineCategory.STUDY_WATCHTOWER)
-            return number;
-        return null;
-    }
-
-    /**
-     *
      * @return int number [1 - 6] if Category == MAGAZINE except STUDY
      * else return 0
      */
-    public int getNumber() {
+    public Calendar getNumber() {
 
-        if (this.category != Category.MAGAZINE) return 0;
-
-        if (this.magCategory == MagazineCategory.STUDY_WATCHTOWER) return 0;
-
-        int month = number.get(Calendar.MONTH);
-
-        return (month + 1) / 2;
+        return number;
 
     }
 
@@ -159,5 +154,67 @@ public class Placement extends BaseDataItem {
 
     public void setNumber(Calendar number) {
         this.number = number;
+    }
+
+    public static String getNumberString(Calendar number, MagazineCategory magCategory, Context context) {
+
+        String magNumString;
+
+        SimpleDateFormat yFormat = new SimpleDateFormat("yyyy");
+        String yearString = yFormat.format(number.getTime());
+
+        if (magCategory == MagazineCategory.STUDY_WATCHTOWER) {
+
+            SimpleDateFormat mFormat = new SimpleDateFormat("MMMM");
+            String monthString = mFormat.format(number.getTime());
+
+            magNumString = context.getString(R.string.magazine_number_month, monthString, yearString);
+
+        } else {
+
+            String numString = String.valueOf((number.get(Calendar.MONTH) + 1 )/ 2);
+
+            magNumString = context.getString(R.string.magazine_number_number, numString, yearString);
+        }
+        return magNumString;
+
+    }
+
+    static public ArrayList<Pair<Calendar, String>> getMagazineNumberArrayList(Placement.MagazineCategory magCategory, Context context) {
+
+        ArrayList<Pair<Calendar, String>> list = new ArrayList<>();
+        Calendar numberCounter = Calendar.getInstance();
+        numberCounter.add(Calendar.MONTH, -11);
+
+        if (magCategory == MagazineCategory.STUDY_WATCHTOWER) {
+            // 現在月が12(#11)番目（1年前まで指定可能）　現在月より3つ先まで表示
+
+            for ( int i = 0; i < 15 ; i++ ) {
+
+                Calendar clonedNumber = (Calendar) numberCounter.clone();
+                String str = getNumberString(numberCounter, magCategory, context);
+                Pair<Calendar, String> pair = new Pair<>(clonedNumber, str);
+                list.add(pair);
+
+
+                numberCounter.add(Calendar.MONTH, 1);
+            }
+
+        } else {
+            // 現在月が6(#5)番目（1年前まで指定可能）　現在月より3つ先まで表示
+
+            for ( int i = 0; i < 9 ; i++ ) {
+
+                Calendar clonedNumber = (Calendar) numberCounter.clone();
+                String str = getNumberString(numberCounter, magCategory, context);
+                Pair<Calendar, String> pair = new Pair<>(clonedNumber, str);
+                list.add(pair);
+
+                numberCounter.add(Calendar.MONTH, 2);
+            }
+
+        }
+
+        return list;
     }
 }

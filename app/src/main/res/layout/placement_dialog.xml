@@ -35,7 +35,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:orientation="horizontal"
         android:id="@+id/magazine_number_container">
@@ -45,14 +45,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"/>
 
-        <TextView
+        <Spinner
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="match_parent"
             android:background="@drawable/gray_trans_circle"
             android:gravity="center"
             android:layout_margin="5dp"
-            android:id="@+id/magazine_number_text"/>
+            android:id="@+id/magazine_number_spinner"/>
 
     </LinearLayout>
 

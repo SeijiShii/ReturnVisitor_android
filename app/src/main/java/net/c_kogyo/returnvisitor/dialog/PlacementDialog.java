@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,9 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.Placement;
+
+import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by SeijiShii on 2016/07/30.
@@ -25,7 +30,7 @@ import net.c_kogyo.returnvisitor.data.Placement;
 public class PlacementDialog extends DialogFragment {
 
     private String[] categoryArray, magazineArray;
-
+    private Placement mPlacement;
 
     private static Placement.Category mCategory;
     static public PlacementDialog getInstance(Placement.Category category) {
@@ -42,6 +47,8 @@ public class PlacementDialog extends DialogFragment {
 
         categoryArray = getActivity().getResources().getStringArray(R.array.placement_array);
         magazineArray = getActivity().getResources().getStringArray(R.array.magazine_array);
+
+        mPlacement = new Placement(mCategory);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.placement);
@@ -67,7 +74,7 @@ public class PlacementDialog extends DialogFragment {
     private void initCategoryText() {
 
         TextView categoryText = (TextView) v.findViewById(R.id.category_text);
-        categoryText.setText(categoryArray[mCategory.num()]);
+        categoryText.setText(categoryArray[mPlacement.getCategory().num()]);
     }
 
     private void initMagazineCategoryContainer() {
@@ -92,6 +99,8 @@ public class PlacementDialog extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
+                mPlacement.setMagCategory(Placement.MagazineCategory.getEnum(i));
+                initMagazineNumberSpinner();
             }
 
             @Override
@@ -113,20 +122,56 @@ public class PlacementDialog extends DialogFragment {
         } else {
 
             magazineNumberContainer.setVisibility(View.VISIBLE);
-            initMagazineNumberText();
+            initMagazineNumberSpinner();
         }
      }
 
-    private TextView magazineNumberText;
-    private void initMagazineNumberText() {
 
-        magazineNumberText = (TextView) v.findViewById(R.id.magazine_number_text);
-        magazineNumberText.setOnClickListener(new View.OnClickListener() {
+    private Spinner magazineNumberSpinner;
+    private void initMagazineNumberSpinner() {
+
+        final ArrayList<Pair<Calendar, String>> numberList = Placement.getMagazineNumberArrayList(mPlacement.getMagCategory(), getActivity());
+        ArrayList<String> numStringList = new ArrayList<>();
+        for (Pair<Calendar, String> item : numberList) {
+
+            numStringList.add(item.second);
+        }
+
+        magazineNumberSpinner = (Spinner) v.findViewById(R.id.magazine_number_spinner);
+        ArrayAdapter<String> magNumAdapter = new ArrayAdapter<>(getActivity(),
+                                                                android.R.layout.simple_list_item_1,
+                                                                numStringList);
+        magazineNumberSpinner.setAdapter(magNumAdapter);
+        magazineNumberSpinner.setSelection(magNumAdapter.getCount() - 4);
+        magazineNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+//                if (mPlacement.getMagCategory() == Placement.MagazineCategory.STUDY_WATCHTOWER) {
+//                    // 現在月は11番目のアイテム
+//
+//                    mPlacement.setNumber();
+//
+//                } else {
+//                    // 現在月は5番目のアイテム
+//
+//                    mPlacement.getNumber().add(Calendar.MONTH, i * 2 - 11);
+//                }
+
+                mPlacement.setNumber(numberList.get(i).first);
+
+                Toast.makeText(getActivity(),
+                        Placement.getNumberString(mPlacement.getNumber(), mPlacement.getMagCategory(), getActivity()),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
+
+
     }
 
     private void initNameText() {
