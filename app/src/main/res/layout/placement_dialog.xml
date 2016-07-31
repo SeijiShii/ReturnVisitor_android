@@ -1,67 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="5dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:textSize="15sp"
-        android:textColor="@color/text_color_normal"
-        android:id="@+id/category_text"/>
-
-    <RelativeLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/magazine_category_container">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:textSize="13sp"
+            android:textSize="15sp"
             android:textColor="@color/text_color_normal"
-            android:text="@string/magazine_category"
-            android:layout_alignParentLeft="true"
-            android:gravity="center_vertical"/>
+            android:id="@+id/category_text"/>
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/magazine_category_spinner"
-            android:layout_alignParentRight="true"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/magazine_category_container">
 
-    </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:textSize="13sp"
+                android:textColor="@color/text_color_normal"
+                android:text="@string/magazine_category"
+                android:layout_alignParentLeft="true"
+                android:gravity="center_vertical"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:id="@+id/magazine_number_container">
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/magazine_category_spinner"
+                android:layout_alignParentRight="true"/>
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
+        </RelativeLayout>
 
-        <Spinner
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="match_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:id="@+id/magazine_number_container">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="match_parent"
+                android:background="@drawable/gray_trans_circle"
+                android:gravity="center"
+                android:layout_margin="5dp"
+                android:id="@+id/magazine_number_spinner"/>
+
+        </LinearLayout>
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:background="@drawable/gray_trans_circle"
-            android:gravity="center"
+            android:gravity="center_vertical|left"
             android:layout_margin="5dp"
-            android:id="@+id/magazine_number_spinner"/>
+            android:id="@+id/name_text"/>
 
     </LinearLayout>
 
-    <AutoCompleteTextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@drawable/gray_trans_circle"
-        android:gravity="center_vertical|left"
-        android:layout_margin="5dp"
-        android:id="@+id/name_text"/>
-
-</LinearLayout>
+</ScrollView>

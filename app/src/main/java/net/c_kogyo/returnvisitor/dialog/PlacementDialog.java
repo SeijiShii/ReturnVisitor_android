@@ -6,6 +6,8 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,10 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.Placement;
+import net.c_kogyo.returnvisitor.data.RVData;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,11 +33,13 @@ public class PlacementDialog extends DialogFragment {
 
     private String[] categoryArray, magazineArray;
     private Placement mPlacement;
+    private static OnOkListener mListener;
 
     private static Placement.Category mCategory;
-    static public PlacementDialog getInstance(Placement.Category category) {
+    static public PlacementDialog getInstance(Placement.Category category, OnOkListener listener) {
 
         mCategory = category;
+        mListener = listener;
 
         return new PlacementDialog();
     }
@@ -56,6 +60,8 @@ public class PlacementDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
+                mListener.onOkClick(mPlacement);
+                RVData.placementCompList.addToBoth(mPlacement.getName());
             }
         });
         builder.setNegativeButton(R.string.cancel_text, null);
@@ -147,22 +153,11 @@ public class PlacementDialog extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-//                if (mPlacement.getMagCategory() == Placement.MagazineCategory.STUDY_WATCHTOWER) {
-//                    // 現在月は11番目のアイテム
-//
-//                    mPlacement.setNumber();
-//
-//                } else {
-//                    // 現在月は5番目のアイテム
-//
-//                    mPlacement.getNumber().add(Calendar.MONTH, i * 2 - 11);
-//                }
-
                 mPlacement.setNumber(numberList.get(i).first);
 
-                Toast.makeText(getActivity(),
-                        Placement.getNumberString(mPlacement.getNumber(), mPlacement.getMagCategory(), getActivity()),
-                        Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(),
+//                        Placement.getNumberString(mPlacement.getNumber(), mPlacement.getMagCategory(), getActivity()),
+//                        Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -177,5 +172,34 @@ public class PlacementDialog extends DialogFragment {
     private void initNameText() {
 
         AutoCompleteTextView nameText = (AutoCompleteTextView) v.findViewById(R.id.name_text);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1,
+                RVData.getInstance().placementCompList.getList());
+        nameText.setAdapter(adapter);
+        nameText.setThreshold(1);
+
+        nameText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                mPlacement.setName(editable.toString());
+            }
+        });
+
+
+    }
+
+    public interface OnOkListener {
+        void onOkClick(Placement placement);
     }
 }

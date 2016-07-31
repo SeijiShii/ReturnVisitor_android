@@ -52,7 +52,12 @@ public class PlacementSelectDialog extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                PlacementDialog.getInstance(Placement.Category.getEnum(i)).show(getFragmentManager(), null);
+                PlacementDialog.getInstance(Placement.Category.getEnum(i), new PlacementDialog.OnOkListener() {
+                    @Override
+                    public void onOkClick(Placement placement) {
+                        //TODO PlacementDialogからの戻り
+                    }
+                }).show(getFragmentManager(), null);
                 dismiss();
             }
         });

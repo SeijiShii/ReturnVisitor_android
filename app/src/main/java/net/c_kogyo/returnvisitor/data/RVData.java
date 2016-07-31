@@ -1,6 +1,15 @@
 package net.c_kogyo.returnvisitor.data;
 
+import android.content.Context;
 import android.util.Log;
+
+import com.facebook.internal.CollectionMapper;
+
+import net.c_kogyo.returnvisitor.R;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Created by SeijiShii on 2016/07/24.
@@ -16,6 +25,11 @@ public class RVData {
         mOnDataChangedListener = onDataChangedListener;
 
     }
+    public static void setCompleteListSeed(Context context) {
+
+        String[] nameSeedList = context.getResources().getStringArray(R.array.complete_array);
+        placementCompList.getList().addAll(Arrays.asList(nameSeedList));
+    }
 
     public static RVData getInstance() {
         return ourInstance;
@@ -24,6 +38,8 @@ public class RVData {
     public static PlaceList placeList;
     public static PersonList personList;
     public static VisitList visitList;
+
+    public static CompleteList placementCompList;
 
     private boolean isPlaceLoaded = false;
     private boolean isPersonLoaded = false;
@@ -73,6 +89,8 @@ public class RVData {
                 isVisitLoaded = true;
             }
         };
+
+        placementCompList = new CompleteList("PlacementCompleteList");
 
         new Thread(new Runnable() {
             @Override

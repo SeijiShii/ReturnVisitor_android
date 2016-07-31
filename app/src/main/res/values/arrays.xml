@@ -45,5 +45,102 @@
         <item>Awake!</item>
     </array>
 
+    <array name="complete_array">
+        <item>New World Translation</item>
+        <item>Reference Bible</item>
+
+        <item>Bible Teach</item>
+        <item>God\'s Love</item>
+        <item>Bible Stories</item>
+        <item>Close to Jehovah</item>
+        <item>Sing to Jehovah</item>
+        <item>Young People Ask, Volume 1</item>
+        <item>Young People Ask, Volume 2</item>
+        <item>Teacher</item>
+
+        <item>新世界訳</item>
+        <item>参照資料付き聖書</item>
+        <item>聖書の教え</item>
+        <item>神の愛</item>
+        <item>聖書物語</item>
+        <item>エホバに近づきなさい</item>
+        <item>エホバに歌う</item>
+        <item>若い人が尋ねる，第1巻</item>
+        <item>若い人が尋ねる，第2巻</item>
+        <item>教え手</item>
+
+        <item>Kingdom News</item>
+        <item>Bible\’s Message</item>
+        <item>Does God Care</item>
+        <item>God\’s Friend</item>
+        <item>Good News</item>
+        <item>Happy Family</item>
+        <item>Happy Life</item>
+        <item>Jehovah\’s Will</item>
+        <item>Listen and Live</item>
+        <item>Listen to God</item>
+        <item>My Bible Lessons</item>
+        <item>Origin of Life</item>
+        <item>Pathway</item>
+        <item>Satisfying Life</item>
+        <item>Spirits of the Dead</item>
+        <item>Teach Your Children</item>
+        <item>Was Life Created?</item>
+        <item>When Someone Dies</item>
+        <item>Happy Family Life</item>
+        <item>Kingdom</item>
+        <item>Know the Truth</item>
+        <item>View the Bible</item>
+        <item>View the Future</item>
+        <item>Web site tract</item>
+        <item>Who Controls the World?</item>
+        <item>Will Suffering End?</item>
+
+        <item>愛する家族を亡くしたとき</item>
+        <item>エホバのご意志</item>
+        <item>お子さんを教えましょう</item>
+        <item>神の言われることを聞いてください</item>
+        <item>神の言葉の紹介</item>
+        <item>神の友</item>
+        <item>聞いて生きる</item>
+        <item>研究ガイド</item>
+        <item>幸せな家族</item>
+        <item>幸せへの道</item>
+        <item>死者の霊</item>
+        <item>せいしょのべんきょう</item>
+        <item>聖書のメッセージ</item>
+        <item>生命 ― どこから？</item>
+        <item>生命の起源</item>
+        <item>満足のいく生活</item>
+        <item>良い知らせ</item>
+        <item>王国ニュース</item>
+        <item>王国</item>
+        <item>家族の幸せ</item>
+        <item>苦しみ</item>
+        <item>この世界</item>
+        <item>将来</item>
+        <item>真理を知る</item>
+        <item>聖書はどんな本？</item>
+
+    </array>
+
+    <array name="tag_item_array">
+        <item>Bible Study</item>
+        <item>Return Visit</item>
+        <item>Magazine Route</item>
+    </array>
+
+    <array name="visit_frequency_array">
+        <item>None</item>
+        <item>3 Days</item>
+        <item>1 Week</item>
+        <item>2 Weeks</item>
+        <item>1 Month</item>
+        <item>2 Months</item>
+        <item>3 Months</item>
+        <item>6 Months</item>
+        <item>1 Year</item>
+    </array>
+
 
 </resources>

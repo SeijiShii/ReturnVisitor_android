@@ -117,6 +117,7 @@ public class MapActivity extends AppCompatActivity
                         showAllMarkers();
                     }
                 });
+        RVData.setCompleteListSeed(this);
 
         setContentView(R.layout.activity_map);
 
