@@ -30,6 +30,7 @@ import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.Placement;
 import net.c_kogyo.returnvisitor.data.RVData;
+import net.c_kogyo.returnvisitor.data.Tag;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
 import net.c_kogyo.returnvisitor.dialog.PlacementDialog;
@@ -39,6 +40,7 @@ import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 import net.c_kogyo.returnvisitor.view.BaseAnimateView;
 import net.c_kogyo.returnvisitor.view.PersonCell;
 import net.c_kogyo.returnvisitor.view.PlacementCell;
+import net.c_kogyo.returnvisitor.view.TagView;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -78,6 +80,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         initOkButton();
         initCancelButton();
         initDeleteButton();
+
     }
 
     private void initPlace() {
@@ -436,7 +439,7 @@ public class RecordVisitActivity extends AppCompatActivity {
 
     private void initNoteText() {
 
-        AutoCompleteTextView noteText = (AutoCompleteTextView) findViewById(R.id.note_text);
+        AutoCompleteTextView noteText = (AutoCompleteTextView) findViewById(R.id.visit_note_text);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, RVData.noteCompleteList.getList());
         noteText.setAdapter(adapter);
         noteText.addTextChangedListener(new TextWatcher() {
@@ -459,7 +462,6 @@ public class RecordVisitActivity extends AppCompatActivity {
 
 
     }
-
 
     private void initOkButton() {
 
@@ -504,6 +506,21 @@ public class RecordVisitActivity extends AppCompatActivity {
         } else {
             deleteButton.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void tagTest() {
+
+        final LinearLayout testContainer = (LinearLayout) findViewById(R.id.tag_test_container);
+
+        Tag tag = new Tag("聖書研究",false);
+        TagView tagView = new TagView(tag, this, true, new TagView.PostRemoveListener() {
+            @Override
+            public void postRemove(TagView tagView) {
+                testContainer.removeView(tagView);
+            }
+        });
+        testContainer.addView(tagView);
+
     }
 
 

@@ -1,6 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,20 +19,18 @@ public class Tag extends BaseDataItem implements Cloneable {
 
     private boolean isMutated;
 
-    public Tag(boolean isMutated) {
+    public Tag(String tagName, boolean isMutated) {
 
+        super();
         this.isMutated = isMutated;
+        this.name = tagName;
     }
 
-//    public Tag(JSONObject object) {
-//        super(object);
-//
-//        try {
-//            if (object.has(IS_MUTATED)) this.isMutated = object.getBoolean(IS_MUTATED);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public Tag(HashMap<String, Object> map) {
+
+        super();
+        setMap(map);
+    }
 
     public boolean isMutated() {
         return isMutated;
@@ -46,19 +45,6 @@ public class Tag extends BaseDataItem implements Cloneable {
     public String toStringForSearch(Context context) {
         return null;
     }
-
-//    @Override
-//    public JSONObject getJSONObject() {
-//        JSONObject object = super.getJSONObject();
-//
-//        try {
-//            object.put(IS_MUTATED, this.isMutated);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return object;
-//    }
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
@@ -75,6 +61,12 @@ public class Tag extends BaseDataItem implements Cloneable {
         return map;
     }
 
+    @Override
+    public void setMap(@NonNull HashMap<String, Object> map) {
+        super.setMap(map);
+
+        this.isMutated = Boolean.valueOf(map.get(IS_MUTATED).toString());
+    }
 
     public void setMutated(boolean mutated) {
         isMutated = mutated;

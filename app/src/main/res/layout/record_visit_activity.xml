@@ -151,7 +151,14 @@
                 android:background="@drawable/gray_trans_circle"
                 android:padding="5dp"
                 android:layout_margin="5dp"
-                android:id="@id/note_text"/>
+                android:id="@+id/visit_note_text"/>
+
+            <!-- Tag Test -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:orientation="horizontal"
+                android:id="@+id/tag_test_container"/>
 
             <!-- OK -->
             <RelativeLayout

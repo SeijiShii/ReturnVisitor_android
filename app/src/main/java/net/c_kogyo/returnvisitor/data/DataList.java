@@ -27,12 +27,14 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
     protected ArrayList<T> list;
     private Class<T> klass;
     private DatabaseReference reference;
-    private long childCount = 0;
+    private long childCount;
     private long childCounter = 0;
 
     DataList(final Class<T> klass) {
         list = new ArrayList<T>();
         this.klass = klass;
+
+        this.childCount = 0;
 
         String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
         final String className = klass.getSimpleName();
@@ -41,15 +43,15 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
                 .child(userId)
                 .child(className);
 
-        // こちらは一度呼ばれたら取り外されるリスナ。起動時のデータの読み出し等に用いる
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                // Childリスナではないので指定したノードそのものを読み込む
-                // ここではデータ数だけを読み取る
+                Log.d(DATA_LIST_TAG, "Key: "+ dataSnapshot.getKey());
+                Log.d(DATA_LIST_TAG, "Child Count: "+ String.valueOf(dataSnapshot.getChildrenCount()));
+
                 childCount = dataSnapshot.getChildrenCount();
-                if (childCount == 0) {
+                if (childCount <= 0) {
                     onDataLoaded();
                 }
 
@@ -62,6 +64,49 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
             }
         });
 
+
+
+//        FirebaseDatabase.getInstance().getReference().child(userId)
+//                .addChildEventListener(new ChildEventListener() {
+//                    @Override
+//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//                        Log.d(DATA_LIST_TAG, "Key: "+ dataSnapshot.getKey());
+//                        if (!dataSnapshot.getKey().equals(className)) return;
+//
+//                        Log.d(DATA_LIST_TAG, "Child Count: "+ String.valueOf(dataSnapshot.getChildrenCount()));
+//
+//                        childCount = dataSnapshot.getChildrenCount();
+//
+//                        if (childCount <= 0) {
+//                            onDataLoaded();
+//                        } else {
+//                            addChildEventListener();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                        Log.d(DATA_LIST_TAG, "Canceled!");
+//
+//                    }
+//                });
 
     }
 
@@ -122,6 +167,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
             }
         });
+
 
 
 

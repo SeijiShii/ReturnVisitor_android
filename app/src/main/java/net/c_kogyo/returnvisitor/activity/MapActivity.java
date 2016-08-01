@@ -103,20 +103,23 @@ public class MapActivity extends AppCompatActivity
         initFirebaseDatabase();
 
         // リモートのデータを読み込むためだけに一度getInstanceを実行
-        RVData.setListeners(new RVData.OnDataReadyListener() {
-                               @Override
-                               public void onDataReady() {
+        if (!isDataReady) {
+            RVData.setListeners(new RVData.OnDataReadyListener() {
+                                    @Override
+                                    public void onDataReady() {
 
-                                   isDataReady = true;
-                               }
-                           },
-                new RVData.OnDataChangedListener() {
-                    @Override
-                    public void onDataChanged(Class clazz) {
+                                        isDataReady = true;
+                                    }
+                                },
+                    new RVData.OnDataChangedListener() {
+                        @Override
+                        public void onDataChanged(Class clazz) {
 
-                        showAllMarkers();
-                    }
-                });
+                            showAllMarkers();
+                        }
+                    });
+        }
+
         RVData.setCompleteListSeed(this);
 
         setContentView(R.layout.activity_map);
