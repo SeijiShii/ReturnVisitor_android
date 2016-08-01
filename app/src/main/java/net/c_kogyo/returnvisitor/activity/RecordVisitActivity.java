@@ -12,7 +12,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
@@ -69,7 +73,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         initTimeText();
         initPersonContainer();
         initPlacementContainer();
-
+        initNoteText();
 
         initOkButton();
         initCancelButton();
@@ -430,7 +434,31 @@ public class RecordVisitActivity extends AppCompatActivity {
         }
     }
 
+    private void initNoteText() {
 
+        AutoCompleteTextView noteText = (AutoCompleteTextView) findViewById(R.id.note_text);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, RVData.noteCompleteList.getList());
+        noteText.setAdapter(adapter);
+        noteText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+                mVisit.setNote(editable.toString());
+            }
+        });
+
+
+    }
 
 
     private void initOkButton() {
@@ -442,8 +470,9 @@ public class RecordVisitActivity extends AppCompatActivity {
 
                 mPlace.addPersonIds(mVisit.getPersonIds());
 
-                RVData.getInstance().visitList.add(mVisit);
-                RVData.getInstance().placeList.add(mPlace);
+                RVData.visitList.add(mVisit);
+                RVData.placeList.add(mPlace);
+                RVData.noteCompleteList.addToBoth(mVisit.getNote());
 
                 finish();
             }

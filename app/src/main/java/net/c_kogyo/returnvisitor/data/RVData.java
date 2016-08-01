@@ -40,6 +40,7 @@ public class RVData {
     public static VisitList visitList;
 
     public static CompleteList placementCompList;
+    public static CompleteList noteCompleteList;
 
     private boolean isPlaceLoaded = false;
     private boolean isPersonLoaded = false;
@@ -91,6 +92,7 @@ public class RVData {
         };
 
         placementCompList = new CompleteList("PlacementCompleteList");
+        noteCompleteList = new CompleteList("NoteCompleteList");
 
         new Thread(new Runnable() {
             @Override

@@ -139,7 +139,7 @@
             </FrameLayout>
 
             <!-- Note -->
-            <EditText
+            <AutoCompleteTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/button_height"
@@ -150,7 +150,8 @@
                 android:textSize="15sp"
                 android:background="@drawable/gray_trans_circle"
                 android:padding="5dp"
-                android:layout_margin="5dp" />
+                android:layout_margin="5dp"
+                android:id="@id/note_text"/>
 
             <!-- OK -->
             <RelativeLayout
