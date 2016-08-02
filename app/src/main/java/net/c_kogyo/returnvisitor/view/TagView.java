@@ -101,7 +101,7 @@ public class TagView extends FrameLayout {
         void postRemove(TagView tagView);
     }
 
-    public int getViewWidth() {
+    public int getMeasuredViewWidth() {
         return measuredWidth;
     }
 }

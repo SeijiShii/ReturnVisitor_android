@@ -31,6 +31,21 @@ public class RVData {
         placementCompList.getList().addAll(Arrays.asList(nameSeedList));
     }
 
+    public static void initTagList(Context context) {
+        tagList = new TagList(context) {
+            @Override
+            public void onDataChanged(Tag data) {
+                if ( mOnDataChangedListener != null ) {
+                    mOnDataChangedListener.onDataChanged(Place.class);
+                }
+            }
+
+            @Override
+            public void onDataLoaded() {
+            }
+        };
+    }
+
     public static RVData getInstance() {
         return ourInstance;
     }
@@ -38,6 +53,7 @@ public class RVData {
     public static PlaceList placeList;
     public static PersonList personList;
     public static VisitList visitList;
+    public static TagList tagList;
 
     public static CompleteList placementCompList;
     public static CompleteList noteCompleteList;
@@ -62,6 +78,7 @@ public class RVData {
                 isPlaceLoaded = true;
             }
         };
+
         personList = new PersonList() {
             @Override
             public void onDataChanged(Person data) {
@@ -76,6 +93,7 @@ public class RVData {
                 isPersonLoaded = true;
             }
         };
+
         visitList = new VisitList() {
             @Override
             public void onDataChanged(Visit data) {
@@ -91,6 +109,7 @@ public class RVData {
             }
         };
 
+
         placementCompList = new CompleteList("PlacementCompleteList");
         noteCompleteList = new CompleteList("NoteCompleteList");
 
@@ -98,7 +117,7 @@ public class RVData {
             @Override
             public void run() {
 
-                while ( !isPlaceLoaded || !isPersonLoaded || !isVisitLoaded) {
+                while ( !isPlaceLoaded || !isPersonLoaded || !isVisitLoaded ) {
                     try {
                         Thread.sleep(50);
                         Log.d("RVData", "WAIT!");

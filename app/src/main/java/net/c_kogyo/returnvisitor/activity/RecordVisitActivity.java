@@ -40,6 +40,7 @@ import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 import net.c_kogyo.returnvisitor.view.BaseAnimateView;
 import net.c_kogyo.returnvisitor.view.PersonCell;
 import net.c_kogyo.returnvisitor.view.PlacementCell;
+import net.c_kogyo.returnvisitor.view.TagContainer;
 import net.c_kogyo.returnvisitor.view.TagView;
 
 import java.text.DateFormat;
@@ -80,6 +81,9 @@ public class RecordVisitActivity extends AppCompatActivity {
         initOkButton();
         initCancelButton();
         initDeleteButton();
+
+        tagContainerTest();
+
 
     }
 
@@ -508,19 +512,24 @@ public class RecordVisitActivity extends AppCompatActivity {
         }
     }
 
-    private void tagTest() {
+//    private void tagTest() {
+//
+//        final LinearLayout testContainer = (LinearLayout) findViewById(R.id.tag_test_container);
+//
+//        Tag tag = new Tag("聖書研究",false);
+//        TagView tagView = new TagView(tag, this, true, new TagView.PostRemoveListener() {
+//            @Override
+//            public void postRemove(TagView tagView) {
+//                testContainer.removeView(tagView);
+//            }
+//        });
+//        testContainer.addView(tagView);
+//
+//    }
 
-        final LinearLayout testContainer = (LinearLayout) findViewById(R.id.tag_test_container);
+    private void tagContainerTest() {
 
-        Tag tag = new Tag("聖書研究",false);
-        TagView tagView = new TagView(tag, this, true, new TagView.PostRemoveListener() {
-            @Override
-            public void postRemove(TagView tagView) {
-                testContainer.removeView(tagView);
-            }
-        });
-        testContainer.addView(tagView);
-
+        TagContainer tagContainer = (TagContainer) findViewById(R.id.tag_container);
     }
 
 

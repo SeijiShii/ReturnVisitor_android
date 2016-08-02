@@ -102,8 +102,12 @@ public class MapActivity extends AppCompatActivity
 
         initFirebaseDatabase();
 
+        //
+
+
         // リモートのデータを読み込むためだけに一度getInstanceを実行
         if (!isDataReady) {
+            RVData.initTagList(this);
             RVData.setListeners(new RVData.OnDataReadyListener() {
                                     @Override
                                     public void onDataReady() {
@@ -119,6 +123,7 @@ public class MapActivity extends AppCompatActivity
                         }
                     });
         }
+
 
         RVData.setCompleteListSeed(this);
 

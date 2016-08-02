@@ -153,12 +153,10 @@
                 android:layout_margin="5dp"
                 android:id="@+id/visit_note_text"/>
 
-            <!-- Tag Test -->
-            <LinearLayout
+            <net.c_kogyo.returnvisitor.view.TagContainer
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:orientation="horizontal"
-                android:id="@+id/tag_test_container"/>
+                android:layout_height="wrap_content"
+                android:id="@+id/tag_container"/>
 
             <!-- OK -->
             <RelativeLayout

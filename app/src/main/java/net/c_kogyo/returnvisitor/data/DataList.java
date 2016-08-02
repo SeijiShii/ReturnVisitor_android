@@ -202,10 +202,12 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
     public void add(T data) {
 
-        list.add(data);
+        if ( indexOf(data) < 0 ) {
+            list.add(data);
 
-        DatabaseReference node = reference.child(data.getId());
-        node.setValue(data.toMap());
+            DatabaseReference node = reference.child(data.getId());
+            node.setValue(data.toMap());
+        }
     }
 
     public void set(T data) {
