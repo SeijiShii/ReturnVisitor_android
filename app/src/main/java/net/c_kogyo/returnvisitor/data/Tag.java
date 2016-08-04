@@ -26,6 +26,10 @@ public class Tag extends BaseDataItem implements Cloneable {
         this.name = tagName;
     }
 
+    public Tag() {
+        super();
+    }
+
     public Tag(HashMap<String, Object> map) {
 
         super();

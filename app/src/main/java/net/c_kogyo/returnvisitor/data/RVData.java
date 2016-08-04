@@ -39,10 +39,6 @@ public class RVData {
                     mOnDataChangedListener.onDataChanged(Place.class);
                 }
             }
-
-            @Override
-            public void onDataLoaded() {
-            }
         };
     }
 

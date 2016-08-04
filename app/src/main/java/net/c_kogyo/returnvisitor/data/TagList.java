@@ -10,19 +10,14 @@ import net.c_kogyo.returnvisitor.R;
 
 public abstract class TagList extends DataList<Tag> {
 
+
+    private String[] defaultTagArray;
+
     public TagList(Context context) {
         super(Tag.class);
 
-        String[] defaultTagArray = context.getResources().getStringArray(R.array.tag_item_array);
+        defaultTagArray = context.getResources().getStringArray(R.array.tag_item_array);
 
-        // TODO 初期タグの追加でFirebaseに追加されすぎてしまう件
-        for (String tagString : defaultTagArray) {
-
-            if (!hasSameNamedTag(tagString)) {
-                Tag tag = new Tag(tagString, true);
-                add(tag);
-            }
-        }
     }
 
     public boolean hasSameNamedTag(String name) {
@@ -33,5 +28,19 @@ public abstract class TagList extends DataList<Tag> {
             }
         }
         return false;
+    }
+
+    @Override
+    public void onDataLoaded() {
+
+        // TODO 初期タグの追加でFirebaseに追加されすぎてしまう件
+        // Firebaseからロードが終わってから、なければ追加するようにする
+        for (String tagString : defaultTagArray) {
+
+            if (!hasSameNamedTag(tagString)) {
+                Tag tag = new Tag(tagString, true);
+                add(tag);
+            }
+        }
     }
 }
