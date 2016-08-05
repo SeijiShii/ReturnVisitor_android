@@ -69,13 +69,26 @@ public class TagContainer extends LinearLayout {
         // すべてのTagを横一列に配置してみる
         for ( String id : mIds ) {
 
-            Tag tag = RVData.tagList.getById(id);
+            final Tag tag = RVData.tagList.getById(id);
             if (tag != null) {
 
                 TagView tagView = new TagView(tag, getContext(), true, new TagView.PostRemoveListener() {
                     @Override
                     public void postRemove(TagView tagView) {
 
+                        mIds.remove(tagView.getTag().getId());
+                        tagViews.remove(tagView);
+
+                        //TODO もうすこしフェードインアウトするようなアニメーションにできるかも
+                        ViewParent parent = tagView.getParent();
+                        LinearLayout line = (LinearLayout) parent;
+                        line.removeView(tagView);
+
+                        if (line.getChildCount() <= 0) {
+
+                            TagContainer.this.removeView(line);
+
+                        }
                     }
                 });
 
@@ -155,12 +168,9 @@ public class TagContainer extends LinearLayout {
     private void initTestData() {
 
         mIds = new ArrayList<>();
-        for ( int i = 0 ; i < 3 ; i++ ) {
+        for (Tag tag : RVData.tagList) {
 
-            for (Tag tag : RVData.tagList) {
-
-                mIds.add(tag.getId());
-            }
+            mIds.add(tag.getId());
         }
     }
 }

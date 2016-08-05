@@ -44,6 +44,10 @@ public class TagView extends FrameLayout {
         tagText.setText(mTag.getName());
     }
 
+    public Tag getTag() {
+        return mTag;
+    }
+
     private void initRemoveButton(boolean showRemoveButton) {
 
         Button removeButton = (Button) findViewById(R.id.remove_button);
@@ -96,12 +100,11 @@ public class TagView extends FrameLayout {
         }
     }
 
+    public int getMeasuredViewWidth() {
+        return measuredWidth;
+    }
 
     public interface PostRemoveListener {
         void postRemove(TagView tagView);
-    }
-
-    public int getMeasuredViewWidth() {
-        return measuredWidth;
     }
 }

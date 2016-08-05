@@ -36,6 +36,8 @@ public class Tag extends BaseDataItem implements Cloneable {
         setMap(map);
     }
 
+
+    // Mutateされると削除できなくなります
     public boolean isMutated() {
         return isMutated;
     }
