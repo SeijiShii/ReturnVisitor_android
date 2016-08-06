@@ -49,8 +49,6 @@ public class TagContainer extends LinearLayout {
 
     private void initCommon() {
 
-        initTestData();
-
         viewWidth = 0;
         tagViews = new ArrayList<>();
         lineViews = new ArrayList<>();
@@ -206,15 +204,6 @@ public class TagContainer extends LinearLayout {
             widthSum += tagView.getMeasuredViewWidth();
         }
 
-    }
-
-    private void initTestData() {
-
-        mIds = new ArrayList<>();
-        for (Tag tag : RVData.tagList) {
-
-            mIds.add(tag.getId());
-        }
     }
 
     public void setOnTagRemoveListener(OnTagRemoveListener listener) {

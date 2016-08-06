@@ -82,8 +82,6 @@ public class RecordVisitActivity extends AppCompatActivity {
         initCancelButton();
         initDeleteButton();
 
-        tagContainerTest();
-
 
     }
 
@@ -261,17 +259,6 @@ public class RecordVisitActivity extends AppCompatActivity {
                 SelectPersonDialog.getInstance(mVisit,
                         mPlace,
                         createdPersonIds,
-                        new SelectPersonDialog.OnNewPersonAddedListener() {
-                            @Override
-                            public void onAdded(String personId) {
-
-                                createdPersonIds.add(personId);
-                                mVisit.addPersonId(personId);
-                                updatePersonContainer();
-
-                                // PlaceにはOkを押したときにpersonIdが追加される
-                            }
-                        },
                         new SelectPersonDialog.OnPersonSelectedListener() {
                             @Override
                             public void onSelected(String personId) {
@@ -463,8 +450,6 @@ public class RecordVisitActivity extends AppCompatActivity {
                 mVisit.setNote(editable.toString());
             }
         });
-
-
     }
 
     private void initOkButton() {
@@ -512,26 +497,23 @@ public class RecordVisitActivity extends AppCompatActivity {
         }
     }
 
-//    private void tagTest() {
-//
-//        final LinearLayout testContainer = (LinearLayout) findViewById(R.id.tag_test_container);
-//
-//        Tag tag = new Tag("聖書研究",false);
-//        TagView tagView = new TagView(tag, this, true, new TagView.PostRemoveListener() {
-//            @Override
-//            public void postRemove(TagView tagView) {
-//                testContainer.removeView(tagView);
-//            }
-//        });
-//        testContainer.addView(tagView);
-//
-//    }
 
-    private void tagContainerTest() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        TagContainer tagContainer = (TagContainer) findViewById(R.id.tag_container);
+        if (requestCode == Constants.PersonCode.ADD_PERSON_REQUEST_CODE) {
+            if (resultCode == Constants.PersonCode.PERSON_ADDED_RESULT_CODE) {
+
+                String id = data.getStringExtra(Person.PERSON);
+                if (id != null) {
+                    mVisit.addPersonId(id);
+                    updatePersonContainer();
+                    createdPersonIds.add(id);
+                }
+
+
+            }
+        }
     }
-
-
-
 }

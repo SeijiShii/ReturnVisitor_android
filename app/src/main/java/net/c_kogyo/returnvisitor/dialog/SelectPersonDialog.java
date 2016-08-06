@@ -3,6 +3,7 @@ package net.c_kogyo.returnvisitor.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.activity.Constants;
+import net.c_kogyo.returnvisitor.activity.PersonActivity;
+import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
 import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
@@ -33,19 +37,16 @@ public class SelectPersonDialog extends DialogFragment {
 
     private static Visit mVisit; // すでにVisitに追加されている人を除外するため
     private static Place mPlace; // この場所で今までに出会った人を取得するため
-    private static OnNewPersonAddedListener mAddedListener;
     private static OnPersonSelectedListener mSelectedListener;
     private static ArrayList<String> mCreatePersonIds;
 
     public static SelectPersonDialog getInstance(Visit visit,
                                                  Place place,
                                                  ArrayList<String> createdPersonIds,
-                                                 OnNewPersonAddedListener addedListener,
                                                  OnPersonSelectedListener selectedListener) {
 
         mVisit = visit;
         mPlace = place;
-        mAddedListener = addedListener;
         mSelectedListener = selectedListener;
         mCreatePersonIds = new ArrayList<>(createdPersonIds);
 
@@ -153,14 +154,11 @@ public class SelectPersonDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
 
-                PersonDialog.getInstance(null, new PersonDialog.OnOkClickListener() {
-                    @Override
-                    public void onClick(Person person) {
+                Intent newPersonIntent = new Intent(getActivity(), PersonActivity.class);
+                getActivity().startActivityForResult(newPersonIntent, Constants.PersonCode.ADD_PERSON_REQUEST_CODE);
 
-                        mAddedListener.onAdded(person.getId());
-                        dismiss();
-                    }
-                }).show(getFragmentManager(), null);
+                dismiss();
+
             }
         });
     }
