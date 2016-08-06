@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.view;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -26,12 +28,14 @@ public class TagContainer extends LinearLayout {
     private int viewWidth;
     private ArrayList<TagView> tagViews;
     private ArrayList<LinearLayout> lineViews;
+    private OnTagRemoveListener mListener;
 
 
-    public TagContainer(Context context, ArrayList<String> tagIds) {
+    public TagContainer(Context context, ArrayList<String> tagIds, OnTagRemoveListener listener) {
         super(context);
 
         mIds = tagIds;
+        mListener = listener;
 
         initCommon();
 
@@ -79,15 +83,54 @@ public class TagContainer extends LinearLayout {
                         mIds.remove(tagView.getTag().getId());
                         tagViews.remove(tagView);
 
-                        //TODO もうすこしフェードインアウトするようなアニメーションにできるかも
-                        ViewParent parent = tagView.getParent();
-                        LinearLayout line = (LinearLayout) parent;
-                        line.removeView(tagView);
+                        //フェードインアウトするようなアニメーション
+                        // カスケードでシシオドシ的な実装
 
-                        if (line.getChildCount() <= 0) {
+                        ValueAnimator animator = ValueAnimator.ofFloat(1, 0);
+                        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                TagContainer.this.setAlpha((float) valueAnimator.getAnimatedValue());
+                            }
+                        });
+                        animator.setDuration(500);
+                        animator.addListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animator) {
 
-                            TagContainer.this.removeView(line);
 
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animator) {
+
+                                redrawTagViews();
+                                ValueAnimator animator1 = ValueAnimator.ofFloat(0, 1);
+                                animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                    @Override
+                                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                        TagContainer.this.setAlpha((float) valueAnimator.getAnimatedValue());
+                                    }
+                                });
+                                animator1.setDuration(500);
+                                animator1.start();
+
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animator) {
+
+                            }
+                        });
+                        animator.start();
+
+                        if (mListener != null) {
+                            mListener.onTagRemove(tagView.getTag());
                         }
                     }
                 });
@@ -172,5 +215,13 @@ public class TagContainer extends LinearLayout {
 
             mIds.add(tag.getId());
         }
+    }
+
+    public void setOnTagRemoveListener(OnTagRemoveListener listener) {
+        mListener = listener;
+    }
+
+    public interface OnTagRemoveListener {
+        void onTagRemove(Tag tag);
     }
 }
