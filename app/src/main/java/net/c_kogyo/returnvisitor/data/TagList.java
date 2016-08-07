@@ -49,4 +49,14 @@ public abstract class TagList extends DataList<Tag> {
     public ArrayList<Tag> getAll() {
         return list;
     }
+
+    public boolean hasSameName(String name) {
+
+        for (Tag tag : list) {
+            if (tag.name.equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
 }

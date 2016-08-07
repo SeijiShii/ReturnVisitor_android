@@ -79,6 +79,8 @@ public class TagContainer extends LinearLayout {
         for ( String id : mIds ) {
 
             final Tag tag = RVData.tagList.getById(id);
+
+            // 取得時にnullが返ってきたものはリスト内に存在しないので削除された可能性がある
             if (tag != null) {
 
                 TagView tagView = new TagView(tag, getContext(), true, new TagView.OnRemoveClickListener() {

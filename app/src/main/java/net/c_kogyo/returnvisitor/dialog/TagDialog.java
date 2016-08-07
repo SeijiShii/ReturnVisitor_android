@@ -3,12 +3,14 @@ package net.c_kogyo.returnvisitor.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -29,12 +31,12 @@ import java.util.ArrayList;
 public class TagDialog extends DialogFragment {
 
     private static OnTagSelectedListener mListener;
-    private static ArrayList<String> mCaneledTagIds;
+    private static ArrayList<String> mCanceledTagIds;
 
-    public static TagDialog newInstance(OnTagSelectedListener listener, ArrayList<String> caneledTagIds) {
+    public static TagDialog newInstance(OnTagSelectedListener listener, ArrayList<String> canceledTagIds) {
 
         mListener = listener;
-        mCaneledTagIds = caneledTagIds;
+        mCanceledTagIds = canceledTagIds;
 
         return new TagDialog();
     }
@@ -53,6 +55,7 @@ public class TagDialog extends DialogFragment {
         builder.setView(v);
 
         initSearchText();
+        initAddButton();
         initTagList();
 
         builder.setNegativeButton(R.string.cancel_text, null);
@@ -83,6 +86,26 @@ public class TagDialog extends DialogFragment {
         });
     }
 
+    private void initAddButton() {
+        Button addButton = (Button) v.findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String name = searchText.getText().toString();
+                if (RVData.tagList.hasSameName(name)) return;
+
+                Tag newTag = new Tag(name, false);
+                RVData.tagList.add(newTag);
+
+                mTags.add(newTag);
+                updateTagLinear(null);
+
+                searchText.setText("");
+            }
+        });
+    }
+
     private LinearLayout tagLinear;
     private void initTagList() {
 
@@ -102,7 +125,7 @@ public class TagDialog extends DialogFragment {
         ArrayList<Tag> tagsToRemove = new ArrayList<>();
         for (Tag tag : mTags) {
 
-            if (mCaneledTagIds.contains(tag.getId())) {
+            if (mCanceledTagIds.contains(tag.getId())) {
                 tagsToRemove.add(tag);
             }
         }
@@ -134,6 +157,7 @@ public class TagDialog extends DialogFragment {
                         @Override
                         public void onRemoveClick(TagView tagView) {
 
+                            deleteTagComfirm(tagView);
                         }
                     });
 
@@ -158,9 +182,35 @@ public class TagDialog extends DialogFragment {
         }
     }
 
-    private void deleteTagComfirm() {
+    private void deleteTagComfirm(final TagView tagView) {
 
+        final Tag tag = tagView.getTag();
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle(R.string.delete_tag);
+
+        String message = getString(R.string.delete_tag_message, tag.getName());
+        builder.setMessage(message);
+
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                mTags.remove(tag);
+                RVData.tagList.removeFromBoth(tag);
+                tagView.fadeoutView(new TagView.PostFadeoutListener() {
+                    @Override
+                    public void postFadeout(TagView tagView) {
+                        updateTagLinear(null);
+                    }
+                });
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel_text, null);
+
+        builder.create().show();
     }
 
     private boolean isStringAllBlank(String string) {
