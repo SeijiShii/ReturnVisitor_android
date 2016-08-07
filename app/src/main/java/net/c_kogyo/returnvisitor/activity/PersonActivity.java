@@ -310,7 +310,7 @@ public class PersonActivity extends AppCompatActivity {
     private void initTagContainer() {
 
         tagContainer = (TagContainer) findViewById(R.id.tag_container);
-        tagContainer.setTagIds(mPerson.getTagIds());
+        tagContainer.setTagIds(mPerson.getTagIds(), true);
         tagContainer.setOnTagRemoveListener(new TagContainer.OnTagRemoveListener() {
             @Override
             public void onTagRemove(Tag tag) {

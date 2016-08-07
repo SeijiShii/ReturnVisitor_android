@@ -41,9 +41,10 @@ public abstract class BaseAnimateView extends FrameLayout{
 
             this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0));
             animatePostDrawn();
-        } else {
-            this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getViewHeight()));
         }
+//        else {
+//            this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getViewHeight()));
+//        }
     }
 
     public View getViewById(int resId) {

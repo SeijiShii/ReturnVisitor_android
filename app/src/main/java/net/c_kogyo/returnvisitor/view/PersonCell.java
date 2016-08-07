@@ -33,6 +33,8 @@ public class PersonCell extends BaseAnimateView {
         initPersonText();
         setPerson(null);
         initRemoveButton(listener);
+
+        initTagContainer();
     }
 
     private ImageView raterMark;
@@ -49,9 +51,19 @@ public class PersonCell extends BaseAnimateView {
 
     }
 
+    private TagContainer tagContainer;
+    private void initTagContainer() {
+
+        tagContainer = (TagContainer) getViewById(R.id.tag_container);
+        tagContainer.setTagIds(mPerson.getTagIds(), false);
+    }
+
     @Override
     public int getViewHeight() {
-        return 50;
+
+        if (tagContainer == null) return 50;
+
+        return 50 + tagContainer.getViewHeight();
     }
 
     @Override
@@ -120,4 +132,5 @@ public class PersonCell extends BaseAnimateView {
         void postAnimation(PersonCell cell);
     }
 
+    //TODO PersonSeenDialogを開いたとき、PersonCellにタグが反映されない不具合が生じている
 }

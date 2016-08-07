@@ -5,7 +5,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 
 public class TagContainer extends LinearLayout {
 
-    private static final int lineHeight = 75;
+    private static final int LINE_HEIGHT = 75;
 
     private ArrayList<String> mIds;
 
@@ -29,6 +28,7 @@ public class TagContainer extends LinearLayout {
     private ArrayList<TagView> tagViews;
     private ArrayList<LinearLayout> lineViews;
     private OnTagRemoveListener mListener;
+    private boolean mShowRemove = true;
 
 
 //    public TagContainer(Context context, ArrayList<String> tagIds, OnTagRemoveListener listener) {
@@ -47,11 +47,14 @@ public class TagContainer extends LinearLayout {
         initCommon();
     }
 
-    public void setTagIds(ArrayList<String> tagIds) {
+    public void setTagIds(ArrayList<String> tagIds, boolean showRemoveButtons) {
 
         mIds = tagIds;
+        mShowRemove = showRemoveButtons;
+
         initCommon();
     }
+
 
     private void initCommon() {
 
@@ -83,7 +86,7 @@ public class TagContainer extends LinearLayout {
             // 取得時にnullが返ってきたものはリスト内に存在しないので削除された可能性がある
             if (tag != null) {
 
-                TagView tagView = new TagView(tag, getContext(), true, new TagView.OnRemoveClickListener() {
+                TagView tagView = new TagView(tag, getContext(), mShowRemove, new TagView.OnRemoveClickListener() {
                     @Override
                     public void onRemoveClick(final TagView tagView) {
 
@@ -131,7 +134,7 @@ public class TagContainer extends LinearLayout {
 
     private void addLine() {
         LinearLayout line = new LinearLayout(getContext());
-        line.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, lineHeight));
+        line.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LINE_HEIGHT));
         line.setOrientation(HORIZONTAL);
         lineViews.add(line);
         this.addView(line);
@@ -139,7 +142,7 @@ public class TagContainer extends LinearLayout {
 
     private void redrawTagViews() {
 
-        viewWidth = getWidth();
+        viewWidth = getMeasuredWidth();
         setVisibility(VISIBLE);
 
         // 一旦すべてリセット
@@ -305,5 +308,8 @@ public class TagContainer extends LinearLayout {
         void onTagRemove(Tag tag);
     }
 
+    public int getViewHeight() {
+        return LINE_HEIGHT * lineViews.size();
+    }
 
 }

@@ -55,6 +55,7 @@ public class TagView extends FrameLayout {
         if (showRemoveButton) {
 
             removeButton.setVisibility(VISIBLE);
+            removeButton.getLayoutParams().width = 25;
             removeButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -67,6 +68,7 @@ public class TagView extends FrameLayout {
         } else {
 
             removeButton.setVisibility(INVISIBLE);
+            removeButton.getLayoutParams().width = 0;
         }
     }
 
