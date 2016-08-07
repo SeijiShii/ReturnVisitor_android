@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -64,7 +66,7 @@ public class SelectPersonDialog extends DialogFragment {
         builder.setView(v);
 
         initSearchText();
-        initPersonList();
+        initPersonContainer();
         refreshSuggestedPersons(null);
         initAddPersonButton();
 
@@ -96,17 +98,24 @@ public class SelectPersonDialog extends DialogFragment {
         });
     }
 
-    private ListView personList;
-    private void initPersonList() {
+//    private ListView personList;
+//    private void initPersonList() {
+//
+//        personList = (ListView) v.findViewById(R.id.persons_list);
+//        personList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                mSelectedListener.onSelected(persons.get(i).getId());
+//                dismiss();
+//            }
+//        });
+//
+//    }
 
-        personList = (ListView) v.findViewById(R.id.persons_list);
-        personList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mSelectedListener.onSelected(persons.get(i).getId());
-                dismiss();
-            }
-        });
+    private LinearLayout personContainer;
+    private void initPersonContainer() {
+
+        personContainer = (LinearLayout) v.findViewById(R.id.person_container);
 
     }
 
@@ -136,7 +145,8 @@ public class SelectPersonDialog extends DialogFragment {
         }
         personIds.removeAll(mVisit.getPersonIds());
         persons = RVData.personList.getPersons(personIds);
-        personList.setAdapter(new SuggestedPersonAdapter(persons));
+        setPersonCells();
+//        personList.setAdapter(new SuggestedPersonAdapter(persons));
     }
 
     private boolean isStringAllBlank(String string) {
@@ -161,13 +171,34 @@ public class SelectPersonDialog extends DialogFragment {
         });
     }
 
-    // 会えた人が追加される状況は二つ
-    // SuggestListのアイテムがクリックされる
-    // PersonDialogで新しい人を作って帰ってくる
-    public interface OnNewPersonAddedListener {
+    private void setPersonCells() {
 
-        // ここで返されたのがあちらでcreatedPersonIdsに加えられるのだけどね。
-        void onAdded(String personId);
+        personContainer.removeAllViews();
+
+        for ( Person person : persons ) {
+
+            final PersonCell cell = new PersonCell(getActivity(), person, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT, null);
+            personContainer.addView(cell);
+
+            cell.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                        cell.setAlpha(0.5f);
+                        return true;
+                    } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                        cell.setAlpha(1f);
+                        mSelectedListener.onSelected(cell.getPerson().getId());
+                        dismiss();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+        }
+
     }
 
     public interface OnPersonSelectedListener {
@@ -175,44 +206,44 @@ public class SelectPersonDialog extends DialogFragment {
         void onSelected(String personId);
     }
 
-    private class SuggestedPersonAdapter extends BaseAdapter {
-
-        private ArrayList<Person> mPersons;
-
-        SuggestedPersonAdapter(ArrayList<Person> persons) {
-
-            mPersons = persons;
-        }
-
-        @Override
-        public int getCount() {
-            return mPersons.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return mPersons.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-
-            if (view == null) {
-                view = new PersonCell(getActivity(),
-                        (Person) getItem(i),
-                        BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT,
-                        null);
-            } else {
-                ((PersonCell) view).setPerson((Person) getItem(i));
-            }
-
-            return view;
-        }
-    }
+//    private class SuggestedPersonAdapter extends BaseAdapter {
+//
+//        private ArrayList<Person> mPersons;
+//
+//        SuggestedPersonAdapter(ArrayList<Person> persons) {
+//
+//            mPersons = persons;
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return mPersons.size();
+//        }
+//
+//        @Override
+//        public Object getItem(int i) {
+//            return mPersons.get(i);
+//        }
+//
+//        @Override
+//        public long getItemId(int i) {
+//            return i;
+//        }
+//
+//        @Override
+//        public View getView(int i, View view, ViewGroup viewGroup) {
+//
+//            if (view == null) {
+//                view = new PersonCell(getActivity(),
+//                        (Person) getItem(i),
+//                        BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT,
+//                        null);
+//            } else {
+//                ((PersonCell) view).setPerson((Person) getItem(i));
+//            }
+//
+//            return view;
+//        }
+//    }
 
 }
