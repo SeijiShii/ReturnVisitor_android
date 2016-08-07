@@ -244,6 +244,8 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onMapLongClick(LatLng latLng) {
 
+                // MapActivity長押し時に地図がスクロールするようにと思ったがタイミング的に無理みたい
+
                 if (firebaseAuth.getCurrentUser() != null) {
 
                     startRecordVisitActivityByPosition(latLng);
@@ -283,7 +285,7 @@ public class MapActivity extends AppCompatActivity
             @Override
             public boolean onMarkerClick(Marker marker) {
 
-                Place place = RVData.getInstance().placeList.getByMarkerId(marker.getId());
+                Place place = RVData.placeList.getByMarkerId(marker.getId());
 
                 if (place != null) {
 
@@ -302,10 +304,10 @@ public class MapActivity extends AppCompatActivity
                     }).show(getFragmentManager(), null);
                 } else {
 
-                    // TODO マーカーをクリックしたものの該当する場所が見つからない場合はマーカーを削除
+                    // マーカーをクリックしたものの該当する場所が見つからない場合はマーカーを削除
+                    marker.remove();
+                    markers.remove(marker);
                 }
-
-
 
                 return false;
             }
@@ -313,7 +315,6 @@ public class MapActivity extends AppCompatActivity
 
 
     }
-
 
     private void startRecordVisitActivityByPosition(LatLng latLng) {
 
@@ -326,7 +327,6 @@ public class MapActivity extends AppCompatActivity
 
         startActivity(recordVisitIntent);
     }
-
 
     private void startRecordVisitByPlaceId(String id) {
         Intent recordVisitIntent = new Intent(this, RecordVisitActivity.class);

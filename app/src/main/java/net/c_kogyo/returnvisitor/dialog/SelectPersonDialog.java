@@ -146,7 +146,6 @@ public class SelectPersonDialog extends DialogFragment {
         personIds.removeAll(mVisit.getPersonIds());
         persons = RVData.personList.getPersons(personIds);
         setPersonCells();
-//        personList.setAdapter(new SuggestedPersonAdapter(persons));
     }
 
     private boolean isStringAllBlank(String string) {
@@ -205,45 +204,5 @@ public class SelectPersonDialog extends DialogFragment {
 
         void onSelected(String personId);
     }
-
-//    private class SuggestedPersonAdapter extends BaseAdapter {
-//
-//        private ArrayList<Person> mPersons;
-//
-//        SuggestedPersonAdapter(ArrayList<Person> persons) {
-//
-//            mPersons = persons;
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return mPersons.size();
-//        }
-//
-//        @Override
-//        public Object getItem(int i) {
-//            return mPersons.get(i);
-//        }
-//
-//        @Override
-//        public long getItemId(int i) {
-//            return i;
-//        }
-//
-//        @Override
-//        public View getView(int i, View view, ViewGroup viewGroup) {
-//
-//            if (view == null) {
-//                view = new PersonCell(getActivity(),
-//                        (Person) getItem(i),
-//                        BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT,
-//                        null);
-//            } else {
-//                ((PersonCell) view).setPerson((Person) getItem(i));
-//            }
-//
-//            return view;
-//        }
-//    }
 
 }

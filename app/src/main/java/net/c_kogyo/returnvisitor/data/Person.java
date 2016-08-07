@@ -268,7 +268,16 @@ public class Person extends BaseDataItem implements Cloneable{
         builder.append(context.getResources().getStringArray(R.array.age_array)[this.age.num()]).append(" ");
         builder.append(context.getResources().getStringArray(R.array.interest_array)[this.interest.num()]).append(" ");
 
-        // TODO Tagを実装したらappendする。
+        // Tagを実装したらappend
+        for (String tagId : tagIds) {
+
+            Tag tag = RVData.tagList.getById(tagId);
+            if (tag != null) {
+
+                builder.append(tag.name).append(" ");
+            }
+        }
+
 
         return builder.toString();
     }

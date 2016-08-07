@@ -202,4 +202,6 @@ public class PlacementDialog extends DialogFragment {
     public interface OnAddPlacementListener {
         void onAdd(Placement placement);
     }
+
+    //TODO PlacementDialogもAutoCompleteTextの関係で不具合が生じているのでActivityに換装する。
 }

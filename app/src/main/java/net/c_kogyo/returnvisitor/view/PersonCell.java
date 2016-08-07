@@ -132,5 +132,5 @@ public class PersonCell extends BaseAnimateView {
         void postAnimation(PersonCell cell);
     }
 
-    //TODO PersonSeenDialogを開いたとき、PersonCellにタグが反映されない不具合が生じている
+
 }
