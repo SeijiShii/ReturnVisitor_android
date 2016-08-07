@@ -131,13 +131,11 @@ public class SelectPersonDialog extends DialogFragment {
             }
 
         } else {
-            personIds = RVData.getInstance().personList.getSearchedPersonIds(searchString, getActivity());
+            personIds = RVData.personList.getSearchedPersonIds(searchString, getActivity());
 
         }
         personIds.removeAll(mVisit.getPersonIds());
-
-        persons = RVData.getInstance().personList.getPersons(personIds);
-
+        persons = RVData.personList.getPersons(personIds);
         personList.setAdapter(new SuggestedPersonAdapter(persons));
     }
 

@@ -4,9 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import net.c_kogyo.returnvisitor.R;
@@ -14,6 +17,8 @@ import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Tag;
 import net.c_kogyo.returnvisitor.view.TagView;
 import net.c_kogyo.returnvisitor.view.TagViewInTagDialog;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 
@@ -47,6 +52,7 @@ public class TagDialog extends DialogFragment {
         v = LayoutInflater.from(getActivity()).inflate(R.layout.tag_dialog, null);
         builder.setView(v);
 
+        initSearchText();
         initTagList();
 
         builder.setNegativeButton(R.string.cancel_text, null);
@@ -54,16 +60,41 @@ public class TagDialog extends DialogFragment {
         return builder.create();
     }
 
+    private EditText searchText;
+    private void initSearchText() {
+
+        searchText = (EditText) v.findViewById(R.id.search_text);
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                updateTagLinear(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+
     private LinearLayout tagLinear;
     private void initTagList() {
 
         tagLinear = (LinearLayout) v.findViewById(R.id.tag_list);
 
-        updateTagLinear();
+        updateTagLinear(null);
 
     }
 
-    private void updateTagLinear() {
+    private void updateTagLinear(String searchWord) {
+
+        tagLinear.removeAllViews();
 
         mTags = new ArrayList<>(RVData.tagList.getAll());
 
@@ -77,6 +108,24 @@ public class TagDialog extends DialogFragment {
         }
         mTags.removeAll(tagsToRemove);
 
+        if (searchWord != null) {
+            if (searchWord.length() > 0 && !isStringAllBlank(searchWord)) {
+
+                String[] words = searchWord.split(" ");
+                ArrayList<Tag> tags = new ArrayList<>();
+
+                for ( Tag tag : mTags ) {
+
+                    for (String word : words) {
+
+                        if (StringUtils.containsIgnoreCase(tag.getName(), word)) {
+                            tags.add(tag);
+                        }
+                    }
+                }
+                mTags = new ArrayList<>(tags);
+            }
+        }
 
         for (final Tag tag : mTags) {
 
@@ -111,6 +160,12 @@ public class TagDialog extends DialogFragment {
 
     private void deleteTagComfirm() {
 
+
+    }
+
+    private boolean isStringAllBlank(String string) {
+
+        return string.trim().length() <= 0;
 
     }
 
