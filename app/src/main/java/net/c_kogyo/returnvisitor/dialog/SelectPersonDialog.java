@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -165,6 +166,7 @@ public class SelectPersonDialog extends DialogFragment{
             public void onClick(View view) {
 
                 Intent newPersonIntent = new Intent(getActivity(), PersonActivity.class);
+                newPersonIntent.putExtra(Constants.REQUEST_CODE, Constants.PersonCode.ADD_PERSON_REQUEST_CODE);
                 getActivity().startActivityForResult(newPersonIntent, Constants.PersonCode.ADD_PERSON_REQUEST_CODE);
 
                 dismiss();
@@ -172,7 +174,6 @@ public class SelectPersonDialog extends DialogFragment{
             }
         });
     }
-
 
     private static final String GESTURE_TAG = "Gesture";
     private void setPersonCells() {
@@ -184,52 +185,43 @@ public class SelectPersonDialog extends DialogFragment{
             final PersonCell cell = new PersonCell(getActivity(), person, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT, null);
             personContainer.addView(cell);
 
+            cell.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mSelectedListener.onSelected(cell.getPerson().getId());
+                    dismiss();
+                }
+            });
+
+            cell.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+
+                    Intent intent = new Intent(getActivity(), PersonActivity.class);
+                    intent.putExtra(Person.PERSON, cell.getPerson().getId());
+                    intent.putExtra(Constants.REQUEST_CODE, Constants.PersonCode.EDIT_PERSON_REQUEST_CODE);
+                    getActivity().startActivityForResult(intent, Constants.PersonCode.EDIT_PERSON_REQUEST_CODE);
+
+                    dismiss();
+
+                    return true;
+                }
+            });
+
+            // タッチ時に半透明にする　振り分けや伝播の仕方を間違えると他のリスナが呼ばれない
             cell.setOnTouchListener(new View.OnTouchListener() {
-
-                long startTime;
-
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                    int action = motionEvent.getAction();
-
-                    switch (action) {
-                        case MotionEvent.ACTION_DOWN :
-                            Log.d(GESTURE_TAG, "ACTION_DOWN");
-                            cell.setAlpha(0.5f);
-                            startTime = motionEvent.getEventTime();
-                            return true;
-
-                        case MotionEvent.ACTION_UP:
-
-                            long duration = motionEvent.getEventTime() - startTime;
-
-                            Log.d(GESTURE_TAG, "ACTION_UP");
-                            Log.d(GESTURE_TAG, "ACTION_UP_TIME: " + duration);
-
-                            if (duration < 500) {
-
-                                cell.setAlpha(1f);
-                                mSelectedListener.onSelected(cell.getPerson().getId());
-
-                            }  else {
-
-
-
-                            }
-
-                            dismiss();
-                            return true;
-                        }
-                        return true;
-                    }
-
-
+                    cell.setAlpha(0.5f);
+                    return false;
+                }
             });
+
         }
 
     }
-    
+
     public interface OnPersonSelectedListener {
 
         void onSelected(String personId);

@@ -28,6 +28,8 @@ import net.c_kogyo.returnvisitor.dialog.TagDialog;
 import net.c_kogyo.returnvisitor.view.TagContainer;
 
 import static net.c_kogyo.returnvisitor.activity.Constants.buttonRes;
+import static net.c_kogyo.returnvisitor.data.Person.Sex.FEMALE;
+import static net.c_kogyo.returnvisitor.data.Person.Sex.MALE;
 
 /**
  * Created by SeijiShii on 2016/08/06.
@@ -57,8 +59,10 @@ public class PersonActivity extends AppCompatActivity {
         initNameText();
         initSexRadio();
         initAgeSpinner();
-        initInterestRater();
+
         initInterestStateText();
+        initInterestRater();
+
         initNoteText();
 
         initAddTagButton();
@@ -110,12 +114,21 @@ public class PersonActivity extends AppCompatActivity {
         maleButton = (RadioButton) findViewById(R.id.male_button);
         femaleButton = (RadioButton) findViewById(R.id.female_button);
 
+        if (mPerson != null) {
+
+            if (mPerson.getSex() == MALE) {
+                maleButton.setChecked(true);
+            } else if (mPerson.getSex() == FEMALE) {
+                femaleButton.setChecked(true);
+            }
+        }
+
         maleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
                 if (b) {
-                    mPerson.setSex(Person.Sex.MALE);
+                    mPerson.setSex(MALE);
                     femaleButton.setChecked(false);
                 }
             }
@@ -145,6 +158,11 @@ public class PersonActivity extends AppCompatActivity {
                 android.R.layout.simple_spinner_item);
 
         ageSpinner.setAdapter(adapter);
+
+        if (mPerson != null) {
+            ageSpinner.setSelection(mPerson.getAge().num());
+        }
+
         ageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -159,11 +177,12 @@ public class PersonActivity extends AppCompatActivity {
 
     }
 
+    private Button[] raterButtons;
     private void initInterestRater() {
 
         LinearLayout raterContainer = (LinearLayout) findViewById(R.id.rater_container);
 
-        final Button[] raterButtons = new Button[8];
+        raterButtons = new Button[8];
         for ( int i = 0 ; i < 7 ; i++ ) {
             raterButtons[i] = new Button(this);
             raterButtons[i].setBackgroundResource(buttonRes[0]);
@@ -185,22 +204,31 @@ public class PersonActivity extends AppCompatActivity {
                 public void onClick(View view) {
 
                     int tag = Integer.parseInt(view.getTag().toString());
+                    Person.Interest interest = Person.Interest.getEnum(tag);
 
-                    mPerson.setInterest(Person.Interest.getEnum(tag));
+                    mPerson.setInterest(interest);
+                    refreshRater(interest);
 
-                    interestStateText.setText(getResources().getStringArray(R.array.interest_array)[mPerson.getInterest().num()]);
-
-                    for (int i = 0 ; i <= tag ; i++) {
-                        raterButtons[i].setBackgroundResource(Constants.buttonRes[tag]);
-                    }
-
-                    for (int i = tag + 1 ; i < 7 ; i++ ) {
-                        raterButtons[i].setBackgroundResource(Constants.buttonRes[0]);
-                    }
                 }
             });
         }
+        refreshRater(mPerson.getInterest());
 
+    }
+
+    private void refreshRater(Person.Interest interest) {
+
+        int num = interest.num();
+
+        interestStateText.setText(getResources().getStringArray(R.array.interest_array)[mPerson.getInterest().num()]);
+
+        for (int i = 0 ; i <= num ; i++) {
+            raterButtons[i].setBackgroundResource(Constants.buttonRes[num]);
+        }
+
+        for (int i = num + 1 ; i < 7 ; i++ ) {
+            raterButtons[i].setBackgroundResource(Constants.buttonRes[0]);
+        }
     }
 
     private TextView interestStateText;
@@ -214,6 +242,8 @@ public class PersonActivity extends AppCompatActivity {
     private void initNoteText() {
 
         noteText = (AutoCompleteTextView) findViewById(R.id.note_text);
+        noteText.setText(mPerson.getNote());
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, RVData.noteCompleteList.getList());
         noteText.setAdapter(adapter);
         noteText.addTextChangedListener(new TextWatcher() {
@@ -245,13 +275,25 @@ public class PersonActivity extends AppCompatActivity {
                 mPerson.setName(nameText.getText().toString());
                 mPerson.setNote(noteText.getText().toString());
 
-                RVData.personList.add(mPerson);
+                if (getIntent().getIntExtra(Constants.REQUEST_CODE, 0) == Constants.PersonCode.ADD_PERSON_REQUEST_CODE) {
+                    RVData.personList.add(mPerson);
 
-                RVData.noteCompleteList.addToBoth(mPerson.getNote());
+                    RVData.noteCompleteList.addToBoth(mPerson.getNote());
 
-                Intent intent = new Intent();
-                intent.putExtra(Person.PERSON, mPerson.getId());
-                setResult(Constants.PersonCode.PERSON_ADDED_RESULT_CODE, intent);
+                    Intent intent = new Intent();
+                    intent.putExtra(Person.PERSON, mPerson.getId());
+                    setResult(Constants.PersonCode.PERSON_ADDED_RESULT_CODE, intent);
+                } else if (getIntent().getIntExtra(Constants.REQUEST_CODE, 0) == Constants.PersonCode.EDIT_PERSON_REQUEST_CODE) {
+
+                    RVData.personList.set(mPerson);
+
+                    RVData.noteCompleteList.addToBoth(mPerson.getNote());
+
+                    Intent intent = new Intent();
+                    intent.putExtra(Person.PERSON, mPerson.getId());
+                    setResult(Constants.PersonCode.PERSON_EDITED_RESULT_CODE, intent);
+
+                }
 
                 finish();
             }

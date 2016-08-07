@@ -511,7 +511,14 @@ public class RecordVisitActivity extends AppCompatActivity {
                     createdPersonIds.add(id);
                 }
 
-
+            }
+        } else if (requestCode == Constants.PersonCode.EDIT_PERSON_REQUEST_CODE) {
+            if (resultCode == Constants.PersonCode.PERSON_EDITED_RESULT_CODE) {
+                String id = data.getStringExtra(Person.PERSON);
+                if (id != null) {
+                    mVisit.addPersonId(id);
+                    updatePersonContainer();
+                }
             }
         }
     }

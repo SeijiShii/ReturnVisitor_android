@@ -28,11 +28,17 @@ public class Constants {
             R.mipmap.marker_orange
     };
 
+    public static final String REQUEST_CODE = "Request Code";
+
     public class PersonCode {
 
         public static final int ADD_PERSON_REQUEST_CODE = 1000;
-        public static final int PERSON_ADDED_RESULT_CODE = 1001;
-        public static final int PERSON_CANCELED_RESULT_CODE = 1002;
+        public static final int EDIT_PERSON_REQUEST_CODE = 1001;
+
+        public static final int PERSON_ADDED_RESULT_CODE = 1002;
+        public static final int PERSON_EDITED_RESULT_CODE = 1003;
+        public static final int PERSON_CANCELED_RESULT_CODE = 1004;
+
     }
 
 }
