@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.activity.Constants;
@@ -35,7 +38,7 @@ import java.util.ArrayList;
  * Created by SeijiShii on 2016/07/29.
  */
 
-public class SelectPersonDialog extends DialogFragment {
+public class SelectPersonDialog extends DialogFragment{
 
     private static Visit mVisit; // すでにVisitに追加されている人を除外するため
     private static Place mPlace; // この場所で今までに出会った人を取得するため
@@ -170,6 +173,8 @@ public class SelectPersonDialog extends DialogFragment {
         });
     }
 
+
+    private static final String GESTURE_TAG = "Gesture";
     private void setPersonCells() {
 
         personContainer.removeAllViews();
@@ -180,26 +185,51 @@ public class SelectPersonDialog extends DialogFragment {
             personContainer.addView(cell);
 
             cell.setOnTouchListener(new View.OnTouchListener() {
+
+                long startTime;
+
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
 
-                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                        cell.setAlpha(0.5f);
-                        return true;
-                    } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                        cell.setAlpha(1f);
-                        mSelectedListener.onSelected(cell.getPerson().getId());
-                        dismiss();
+                    int action = motionEvent.getAction();
+
+                    switch (action) {
+                        case MotionEvent.ACTION_DOWN :
+                            Log.d(GESTURE_TAG, "ACTION_DOWN");
+                            cell.setAlpha(0.5f);
+                            startTime = motionEvent.getEventTime();
+                            return true;
+
+                        case MotionEvent.ACTION_UP:
+
+                            long duration = motionEvent.getEventTime() - startTime;
+
+                            Log.d(GESTURE_TAG, "ACTION_UP");
+                            Log.d(GESTURE_TAG, "ACTION_UP_TIME: " + duration);
+
+                            if (duration < 500) {
+
+                                cell.setAlpha(1f);
+                                mSelectedListener.onSelected(cell.getPerson().getId());
+
+                            }  else {
+
+
+
+                            }
+
+                            dismiss();
+                            return true;
+                        }
                         return true;
                     }
-                    return false;
-                }
-            });
 
+
+            });
         }
 
     }
-
+    
     public interface OnPersonSelectedListener {
 
         void onSelected(String personId);
