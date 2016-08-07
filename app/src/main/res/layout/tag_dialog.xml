@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Search Field -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height"
+        android:orientation="horizontal"
+        android:layout_margin="5dp"
+        android:padding="3dp"
+        android:background="@drawable/gray_trans_circle">
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:inputType="textNoSuggestions"
+            android:id="@+id/search_text"
+            android:background="#0000"
+            android:hint="@string/search"/>
+
+        <RelativeLayout
+            android:layout_width="30dp"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/green_plus_selector"
+                android:id="@+id/add_button"/>
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tag_list"
+            android:orientation="vertical"/>
+
+    </ScrollView>
+
+</LinearLayout>

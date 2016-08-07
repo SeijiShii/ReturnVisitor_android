@@ -4,6 +4,8 @@ import android.content.Context;
 
 import net.c_kogyo.returnvisitor.R;
 
+import java.util.ArrayList;
+
 /**
  * Created by SeijiShii on 2016/08/01.
  */
@@ -42,5 +44,9 @@ public abstract class TagList extends DataList<Tag> {
                 add(tag);
             }
         }
+    }
+
+    public ArrayList<Tag> getAll() {
+        return list;
     }
 }

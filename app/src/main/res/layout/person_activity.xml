@@ -113,6 +113,29 @@
                 android:gravity="center"
                 android:id="@+id/interest_state_text"/>
 
+            <!-- Add Tag Button -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="5dp"
+                    android:text="@string/add_tag_button"
+                    android:background="@drawable/trans_green_selector"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/add_tag_button"/>
+
+            </RelativeLayout>
+
+            <!-- Tag Container -->
+            <net.c_kogyo.returnvisitor.view.TagContainer
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tag_container"/>
+
             <!-- Note -->
             <AutoCompleteTextView
                 android:layout_width="match_parent"

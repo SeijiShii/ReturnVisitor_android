@@ -31,19 +31,25 @@ public class TagContainer extends LinearLayout {
     private OnTagRemoveListener mListener;
 
 
-    public TagContainer(Context context, ArrayList<String> tagIds, OnTagRemoveListener listener) {
-        super(context);
-
-        mIds = tagIds;
-        mListener = listener;
-
-        initCommon();
-
-    }
+//    public TagContainer(Context context, ArrayList<String> tagIds, OnTagRemoveListener listener) {
+//        super(context);
+//
+//        mIds = tagIds;
+//        mListener = listener;
+//
+//        initCommon();
+//
+//    }
 
     public TagContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        initCommon();
+    }
+
+    public void setTagIds(ArrayList<String> tagIds) {
+
+        mIds = tagIds;
         initCommon();
     }
 
@@ -55,6 +61,7 @@ public class TagContainer extends LinearLayout {
 
         this.setOrientation(VERTICAL);
 
+        if (mIds == null) return;
         if (mIds.size() <= 0) return;
 
         addLine();
@@ -74,66 +81,22 @@ public class TagContainer extends LinearLayout {
             final Tag tag = RVData.tagList.getById(id);
             if (tag != null) {
 
-                TagView tagView = new TagView(tag, getContext(), true, new TagView.PostRemoveListener() {
+                TagView tagView = new TagView(tag, getContext(), true, new TagView.OnRemoveClickListener() {
                     @Override
-                    public void postRemove(TagView tagView) {
+                    public void onRemoveClick(final TagView tagView) {
 
-                        mIds.remove(tagView.getTag().getId());
-                        tagViews.remove(tagView);
-
-                        //フェードインアウトするようなアニメーション
-                        // カスケードでシシオドシ的な実装
-
-                        ValueAnimator animator = ValueAnimator.ofFloat(1, 0);
-                        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        tagView.fadeoutView(new TagView.PostFadeoutListener() {
                             @Override
-                            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                TagContainer.this.setAlpha((float) valueAnimator.getAnimatedValue());
+                            public void postFadeout(TagView tagView) {
+
+                                postTagViewFadeout(tagView);
                             }
                         });
-                        animator.setDuration(500);
-                        animator.addListener(new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animator) {
 
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animator animator) {
-
-                                redrawTagViews();
-                                ValueAnimator animator1 = ValueAnimator.ofFloat(0, 1);
-                                animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                                    @Override
-                                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                                        TagContainer.this.setAlpha((float) valueAnimator.getAnimatedValue());
-                                    }
-                                });
-                                animator1.setDuration(500);
-                                animator1.start();
-
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animator) {
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animator) {
-
-                            }
-                        });
-                        animator.start();
-
-                        if (mListener != null) {
-                            mListener.onTagRemove(tagView.getTag());
-                        }
                     }
                 });
 
-                tagViews.add(tagView);
+               tagViews.add(tagView);
                 lineViews.get(0).addView(tagView);
 
             }
@@ -210,7 +173,135 @@ public class TagContainer extends LinearLayout {
         mListener = listener;
     }
 
+    public void addTag(Tag tag) {
+
+        final TagView tagView = new TagView(tag, getContext(), true, new TagView.OnRemoveClickListener() {
+            @Override
+            public void onRemoveClick(TagView tagView) {
+
+                tagView.fadeoutView(new TagView.PostFadeoutListener() {
+                    @Override
+                    public void postFadeout(TagView tagView) {
+                        postTagViewFadeout(tagView);
+                    }
+                });
+            }
+        });
+        tagView.setAlpha(0);
+        tagViews.add(tagView);
+
+        if (this.getChildCount() <= 0) {
+            addLine();
+        }
+
+        LinearLayout bottomLine = (LinearLayout) this.getChildAt(getChildCount() - 1);
+        if (bottomLine.getChildCount() <= 0) {
+            bottomLine.addView(tagView);
+        } else {
+
+            int widthSum = 0;
+            for ( int i = 0 ; i < bottomLine.getChildCount() ; i++ ) {
+
+                widthSum += ((TagView) bottomLine.getChildAt(i)).getMeasuredViewWidth();
+            }
+
+            if (bottomLine.getMeasuredWidth() - widthSum > tagView.getMeasuredViewWidth()) {
+                bottomLine.addView(tagView);
+            } else {
+                addLine();
+                lineViews.get(lineViews.size() - 1).addView(tagView);
+            }
+        }
+
+        final Handler handler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while (tagView.getMeasuredWidth() <= 0) {
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        //
+                    }
+                }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+                        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            @Override
+                            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                                tagView.setAlpha((float) valueAnimator.getAnimatedValue());
+                            }
+                        });
+                        animator.setDuration(500);
+                        animator.start();
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void postTagViewFadeout(TagView tagView) {
+        mIds.remove(tagView.getTag().getId());
+        tagViews.remove(tagView);
+
+        //フェードインアウトするようなアニメーション
+        // カスケードでシシオドシ的な実装
+
+        ValueAnimator animator0 = ValueAnimator.ofFloat(1, 0);
+        animator0.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                TagContainer.this.setAlpha((float) valueAnimator.getAnimatedValue());
+            }
+        });
+        animator0.setDuration(500);
+        animator0.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+
+                redrawTagViews();
+                ValueAnimator animator1 = ValueAnimator.ofFloat(0, 1);
+                animator1.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                        TagContainer.this.setAlpha((float) valueAnimator.getAnimatedValue());
+                    }
+                });
+                animator1.setDuration(500);
+                animator1.start();
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        animator0.start();
+
+        if (mListener != null) {
+            mListener.onTagRemove(tagView.getTag());
+        }
+    }
+
     public interface OnTagRemoveListener {
         void onTagRemove(Tag tag);
     }
+
+
 }

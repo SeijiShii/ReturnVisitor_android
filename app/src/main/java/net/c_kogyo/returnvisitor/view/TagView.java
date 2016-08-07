@@ -20,10 +20,10 @@ public class TagView extends FrameLayout {
 
     private Tag mTag;
     private View v;
-    private PostRemoveListener mListener;
+    private OnRemoveClickListener mListener;
     private int measuredWidth;
 
-    public TagView(Tag tag, Context context, boolean showRemoveButton, PostRemoveListener listener) {
+    public TagView(Tag tag, Context context, boolean showRemoveButton, OnRemoveClickListener listener) {
         super(context);
 
         mTag = tag;
@@ -48,7 +48,7 @@ public class TagView extends FrameLayout {
         return mTag;
     }
 
-    private void initRemoveButton(boolean showRemoveButton) {
+    public void initRemoveButton(boolean showRemoveButton) {
 
         Button removeButton = (Button) findViewById(R.id.remove_button);
 
@@ -59,37 +59,7 @@ public class TagView extends FrameLayout {
                 @Override
                 public void onClick(View view) {
 
-                    ValueAnimator animator = ValueAnimator.ofFloat(1f, 0f);
-                    animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                        @Override
-                        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                            TagView.this.setAlpha((float) valueAnimator.getAnimatedValue());
-                        }
-                    });
-                    animator.setDuration(500);
-                    animator.addListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animator) {
-
-                            mListener.postRemove(TagView.this);
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animator) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animator) {
-
-                        }
-                    });
-                    animator.start();
+                    mListener.onRemoveClick(TagView.this);
 
                 }
             });
@@ -104,7 +74,47 @@ public class TagView extends FrameLayout {
         return measuredWidth;
     }
 
-    public interface PostRemoveListener {
-        void postRemove(TagView tagView);
+    public void fadeoutView(final PostFadeoutListener fadeoutListener) {
+
+        ValueAnimator animator = ValueAnimator.ofFloat(1, 0);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                TagView.this.setAlpha((float) valueAnimator.getAnimatedValue());
+            }
+        });
+        animator.setDuration(500);
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+
+                fadeoutListener.postFadeout(TagView.this);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        animator.start();
     }
+
+    public interface OnRemoveClickListener {
+        void onRemoveClick(TagView tagView);
+    }
+
+    public interface PostFadeoutListener {
+        void postFadeout(TagView tagView);
+    }
+
 }

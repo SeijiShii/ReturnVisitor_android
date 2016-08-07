@@ -23,6 +23,9 @@ import android.widget.TextView;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.RVData;
+import net.c_kogyo.returnvisitor.data.Tag;
+import net.c_kogyo.returnvisitor.dialog.TagDialog;
+import net.c_kogyo.returnvisitor.view.TagContainer;
 
 import static net.c_kogyo.returnvisitor.activity.Constants.buttonRes;
 
@@ -57,6 +60,9 @@ public class PersonActivity extends AppCompatActivity {
         initInterestRater();
         initInterestStateText();
         initNoteText();
+
+        initAddTagButton();
+        initTagContainer();
 
         initOkButton();
         initCancelButton();
@@ -277,5 +283,39 @@ public class PersonActivity extends AppCompatActivity {
         } else {
             deleteButton.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void initAddTagButton() {
+
+        Button addTagButton = (Button) findViewById(R.id.add_tag_button);
+        addTagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                TagDialog.newInstance(new TagDialog.OnTagSelectedListener() {
+                    @Override
+                    public void onTagSelect(Tag tag) {
+
+                        tagContainer.addTag(tag);
+                        mPerson.addTagIds(tag.getId());
+                    }
+                },
+                mPerson.getTagIds())
+                        .show(getFragmentManager(), null);
+            }
+        });
+    }
+
+    private TagContainer tagContainer;
+    private void initTagContainer() {
+
+        tagContainer = (TagContainer) findViewById(R.id.tag_container);
+        tagContainer.setTagIds(mPerson.getTagIds());
+        tagContainer.setOnTagRemoveListener(new TagContainer.OnTagRemoveListener() {
+            @Override
+            public void onTagRemove(Tag tag) {
+                mPerson.getTagIds().remove(tag.getId());
+            }
+        });
     }
 }
