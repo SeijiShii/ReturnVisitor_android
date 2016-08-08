@@ -30,7 +30,6 @@ import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.Placement;
 import net.c_kogyo.returnvisitor.data.RVData;
-import net.c_kogyo.returnvisitor.data.Tag;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
 import net.c_kogyo.returnvisitor.dialog.PlacementDialog;
@@ -40,8 +39,7 @@ import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 import net.c_kogyo.returnvisitor.view.BaseAnimateView;
 import net.c_kogyo.returnvisitor.view.PersonCell;
 import net.c_kogyo.returnvisitor.view.PlacementCell;
-import net.c_kogyo.returnvisitor.view.TagContainer;
-import net.c_kogyo.returnvisitor.view.TagView;
+import net.c_kogyo.returnvisitor.view.RefreshableCounterView;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -56,7 +54,6 @@ public class RecordVisitActivity extends AppCompatActivity {
     // Visitが保存されるタイミングはOKが押されるとき
     private Visit mVisit;
     private Place mPlace;
-    private ArrayList<String> createdPersonIds;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,7 +62,6 @@ public class RecordVisitActivity extends AppCompatActivity {
         setContentView(R.layout.record_visit_activity);
 
         mVisit = new Visit();
-        createdPersonIds = new ArrayList<>();
 
         initBroadcastingForAddress();
         initPlace();
@@ -75,13 +71,13 @@ public class RecordVisitActivity extends AppCompatActivity {
         initDateText();
         initTimeText();
         initPersonContainer();
+        initRCountCounter();
         initPlacementContainer();
         initNoteText();
 
         initOkButton();
         initCancelButton();
         initDeleteButton();
-
 
     }
 
@@ -258,12 +254,12 @@ public class RecordVisitActivity extends AppCompatActivity {
 
                 SelectPersonDialog.getInstance(mVisit,
                         mPlace,
-                        createdPersonIds,
                         new SelectPersonDialog.OnPersonSelectedListener() {
                             @Override
                             public void onSelected(String personId) {
                                 mVisit.addPersonId(personId);
                                 updatePersonContainer();
+                                rvCountCounter.setCount(mVisit.refreshRVCount(RecordVisitActivity.this));
                             }
                         }).show(getFragmentManager(), null);
 
@@ -273,7 +269,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         //会えた人を列挙する
         for ( String id : mVisit.getPersonIds() ) {
 
-            Person person = RVData.getInstance().personList.getById(id);
+            Person person = RVData.personList.getById(id);
             if (person != null) {
 
                 PersonCell cell = new PersonCell(this,
@@ -302,7 +298,7 @@ public class RecordVisitActivity extends AppCompatActivity {
 
         for ( String id : addedIds ) {
 
-            Person person = RVData.getInstance().personList.getById(id);
+            Person person = RVData.personList.getById(id);
             if (person != null) {
 
                 PersonCell cell = new PersonCell(this,
@@ -371,6 +367,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         personContainer.removeView(cell);
         mVisit.getPersonIds().remove(cell.getPerson().getId());
         updatePersonTouchText();
+        rvCountCounter.setCount(mVisit.refreshRVCount(this));
     }
 
     private ArrayList<String> getPersonIdsInContainer() {
@@ -383,6 +380,20 @@ public class RecordVisitActivity extends AppCompatActivity {
             ids.add(cell.getPerson().getId());
         }
         return ids;
+    }
+
+    private RefreshableCounterView rvCountCounter;
+    private void initRCountCounter() {
+
+        rvCountCounter = (RefreshableCounterView) findViewById(R.id.rv_count_text);
+        rvCountCounter.setCount(mVisit.refreshRVCount(this));
+        rvCountCounter.setOnRefreshPressedListener(new RefreshableCounterView.OnRefreshPressedListener() {
+            @Override
+            public void onRefreshPress(RefreshableCounterView refreshableCounterView) {
+
+                refreshableCounterView.setCount(mVisit.refreshRVCount(RecordVisitActivity.this));
+            }
+        });
     }
 
     // Placement Frame
@@ -460,9 +471,10 @@ public class RecordVisitActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 mPlace.addPersonIds(mVisit.getPersonIds());
+                mVisit.setRvCount(rvCountCounter.getCount());
 
-                RVData.visitList.add(mVisit);
-                RVData.placeList.add(mPlace);
+                RVData.visitList.addOrSet(mVisit);
+                RVData.placeList.addOrSet(mPlace);
                 RVData.noteCompleteList.addToBoth(mVisit.getNote());
 
                 finish();
@@ -508,7 +520,9 @@ public class RecordVisitActivity extends AppCompatActivity {
                 if (id != null) {
                     mVisit.addPersonId(id);
                     updatePersonContainer();
-                    createdPersonIds.add(id);
+                    mPlace.addPersonId(id);
+                    rvCountCounter.setCount(mVisit.refreshRVCount(this));
+
                 }
 
             }
@@ -518,6 +532,10 @@ public class RecordVisitActivity extends AppCompatActivity {
                 if (id != null) {
                     mVisit.addPersonId(id);
                     updatePersonContainer();
+                    mPlace.addPersonId(id);
+                    rvCountCounter.setCount(mVisit.refreshRVCount(this));
+
+
                 }
             }
         }

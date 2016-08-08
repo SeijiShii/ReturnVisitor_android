@@ -350,4 +350,16 @@ public class Person extends BaseDataItem implements Cloneable{
         this.placeIds = placeIds;
     }
 
+    public boolean isRV(Context context) {
+
+        ArrayList<Tag> tags = RVData.tagList.getList(this.tagIds);
+
+        for (Tag tag : tags) {
+            if (tag.isBibleStudyTag(context) || tag.isMRTag(context) || tag.isRVTag(context)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

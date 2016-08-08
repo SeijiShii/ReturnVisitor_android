@@ -166,12 +166,20 @@ public class Place extends BaseDataItem {
     }
 
     public void addPersonId (String personId) {
-        this.personIds.add(personId);
+
+        if (!this.personIds.contains(personId)) {
+
+            this.personIds.add(personId);
+        }
     }
 
     public void addPersonIds(ArrayList<String> personIds) {
 
-        this.personIds.addAll(personIds);
+        for (String id : personIds) {
+            if (!this.personIds.contains(id)) {
+                this.personIds.add(id);
+            }
+        }
     }
 
     public Person.Interest getInterest() {

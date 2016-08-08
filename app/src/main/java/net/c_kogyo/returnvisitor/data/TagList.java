@@ -41,7 +41,7 @@ public abstract class TagList extends DataList<Tag> {
 
             if (!hasSameNamedTag(tagString)) {
                 Tag tag = new Tag(tagString, true);
-                add(tag);
+                addOrSet(tag);
             }
         }
     }

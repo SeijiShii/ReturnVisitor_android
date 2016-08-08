@@ -139,7 +139,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
                 Log.d(DATA_LIST_TAG, "Child Changed!");
                 // 呼ばれるタイミング
-                // set(data)の後
+                // addOrSet(data)の後
                 // リモート側で変更されたらPushされてくる
                 T data1 = getInstance(dataSnapshot);
                 if ( data1 == null ) return;
@@ -200,19 +200,14 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
         }
     }
 
-    public void add(T data) {
+    public void addOrSet(T data) {
 
-        if ( indexOf(data) < 0 ) {
+        if (indexOf(data) < 0) {
             list.add(data);
+        } else {
+            list.set(indexOf(data), data);
 
-            DatabaseReference node = reference.child(data.getId());
-            node.setValue(data.toMap());
         }
-    }
-
-    public void set(T data) {
-
-        list.set(indexOf(data), data);
 
         DatabaseReference node = reference.child(data.getId());
         node.setValue(data.toMap());
@@ -287,7 +282,20 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
         return ((ArrayList<T>) list).iterator();
     }
 
-//    public abstract void onDataReady();
+    public ArrayList<T> getList(ArrayList<String> ids) {
+
+        ArrayList<T> arrayList = new ArrayList<>();
+        for ( T item : list ) {
+
+            if (ids.contains(item.id)) {
+                arrayList.add(item);
+            }
+        }
+        return arrayList;
+    }
+
+
+
 
     public abstract void onDataChanged(T data);
 

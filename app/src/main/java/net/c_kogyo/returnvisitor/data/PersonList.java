@@ -17,14 +17,14 @@ public abstract class PersonList extends DataList<Person> {
         super(Person.class);
     }
 
-    public ArrayList<Person> getPersons(ArrayList<String> personIds) {
-
-        ArrayList<Person> persons = new ArrayList<>();
-        for ( String  id : personIds) {
-            persons.add(getById(id));
-        }
-        return persons;
-    }
+//    public ArrayList<Person> getPersons(ArrayList<String> personIds) {
+//
+//        ArrayList<Person> persons = new ArrayList<>();
+//        for ( String  id : personIds) {
+//            persons.add(getById(id));
+//        }
+//        return persons;
+//    }
 
     public ArrayList<String> getSearchedPersonIds(String searchString, Context context) {
 

@@ -96,7 +96,7 @@ public class TagDialog extends DialogFragment {
                 if (RVData.tagList.hasSameName(name)) return;
 
                 Tag newTag = new Tag(name, false);
-                RVData.tagList.add(newTag);
+                RVData.tagList.addOrSet(newTag);
 
                 mTags.add(newTag);
                 updateTagLinear(null);

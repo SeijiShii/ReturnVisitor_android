@@ -44,17 +44,14 @@ public class SelectPersonDialog extends DialogFragment{
     private static Visit mVisit; // すでにVisitに追加されている人を除外するため
     private static Place mPlace; // この場所で今までに出会った人を取得するため
     private static OnPersonSelectedListener mSelectedListener;
-    private static ArrayList<String> mCreatePersonIds;
 
     public static SelectPersonDialog getInstance(Visit visit,
                                                  Place place,
-                                                 ArrayList<String> createdPersonIds,
                                                  OnPersonSelectedListener selectedListener) {
 
         mVisit = visit;
         mPlace = place;
         mSelectedListener = selectedListener;
-        mCreatePersonIds = new ArrayList<>(createdPersonIds);
 
         return new SelectPersonDialog();
     }
@@ -75,6 +72,8 @@ public class SelectPersonDialog extends DialogFragment{
         initAddPersonButton();
 
         builder.setTitle(R.string.select_seen_person_dialog);
+        builder.setMessage(R.string.select_seen_person_message);
+
         builder.setNegativeButton(R.string.cancel_text, null);
 
         return builder.create();
@@ -136,19 +135,12 @@ public class SelectPersonDialog extends DialogFragment{
         if (searchString == null || isStringAllBlank(searchString)) {
             personIds = mPlace.getPersonIds();
 
-            // Merge without duplicates
-            for ( String id : mCreatePersonIds ) {
-                if (!personIds.contains(id)) {
-                    personIds.add(id);
-                }
-            }
-
         } else {
             personIds = RVData.personList.getSearchedPersonIds(searchString, getActivity());
 
         }
         personIds.removeAll(mVisit.getPersonIds());
-        persons = RVData.personList.getPersons(personIds);
+        persons = RVData.personList.getList(personIds);
         setPersonCells();
     }
 

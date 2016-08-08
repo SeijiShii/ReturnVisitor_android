@@ -76,6 +76,21 @@ public class Visit extends TimePeriodDataItem{
         this.rvCount = rvCount;
     }
 
+    public int refreshRVCount(Context context) {
+
+        ArrayList<Person> persons = RVData.personList.getList(personIds);
+
+        int count = 0;
+
+        for (Person person : persons) {
+            if (person.isRV(context)) {
+                count++;
+            }
+        }
+        rvCount = count;
+        return count;
+    }
+
     public String getPlaceId() {
         return placeId;
     }
@@ -85,7 +100,9 @@ public class Visit extends TimePeriodDataItem{
     }
 
     public void addPersonId(String personId) {
-        personIds.add(personId);
+
+        if (!this.personIds.contains(personId))
+            personIds.add(personId);
     }
 
     public ArrayList<String> getPersonIds() {
@@ -135,6 +152,7 @@ public class Visit extends TimePeriodDataItem{
         }
 
     }
+
 
 
 

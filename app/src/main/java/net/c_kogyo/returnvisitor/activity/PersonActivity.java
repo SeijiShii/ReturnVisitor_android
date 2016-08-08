@@ -276,7 +276,7 @@ public class PersonActivity extends AppCompatActivity {
                 mPerson.setNote(noteText.getText().toString());
 
                 if (getIntent().getIntExtra(Constants.REQUEST_CODE, 0) == Constants.PersonCode.ADD_PERSON_REQUEST_CODE) {
-                    RVData.personList.add(mPerson);
+                    RVData.personList.addOrSet(mPerson);
 
                     RVData.noteCompleteList.addToBoth(mPerson.getNote());
 
@@ -285,7 +285,7 @@ public class PersonActivity extends AppCompatActivity {
                     setResult(Constants.PersonCode.PERSON_ADDED_RESULT_CODE, intent);
                 } else if (getIntent().getIntExtra(Constants.REQUEST_CODE, 0) == Constants.PersonCode.EDIT_PERSON_REQUEST_CODE) {
 
-                    RVData.personList.set(mPerson);
+                    RVData.personList.addOrSet(mPerson);
 
                     RVData.noteCompleteList.addToBoth(mPerson.getNote());
 

@@ -3,6 +3,8 @@ package net.c_kogyo.returnvisitor.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import net.c_kogyo.returnvisitor.R;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -52,10 +54,10 @@ public class Tag extends BaseDataItem implements Cloneable {
         return null;
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
+//    @Override
+//    protected Object clone() throws CloneNotSupportedException {
+//        return super.clone();
+//    }
 
     @Override
     public HashMap<String, Object> toMap() {
@@ -76,5 +78,28 @@ public class Tag extends BaseDataItem implements Cloneable {
 
     public void setMutated(boolean mutated) {
         isMutated = mutated;
+    }
+
+    public boolean isRVTag(Context context) {
+
+        String rvString = context.getResources().getStringArray(R.array.tag_item_array)[1];
+
+        return this.name.equals(rvString);
+    }
+
+    public boolean isBibleStudyTag(Context context) {
+
+        String bsString = context.getResources().getStringArray(R.array.tag_item_array)[0];
+
+        return this.name.equals(bsString);
+
+    }
+
+    public boolean isMRTag(Context context) {
+
+        String mrString = context.getResources().getStringArray(R.array.tag_item_array)[2];
+
+        return this.name.equals(mrString);
+
     }
 }
