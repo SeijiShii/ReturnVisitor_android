@@ -382,6 +382,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         return ids;
     }
 
+    //再訪問数
     private RefreshableCounterView rvCountCounter;
     private void initRCountCounter() {
 
@@ -409,23 +410,7 @@ public class RecordVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                PlacementSelectDialog.getInstance(new PlacementDialog.OnAddPlacementListener() {
-                    @Override
-                    public void onAdd(Placement placement) {
-                        mVisit.addPlacement(placement);
-                        placementContainer.addView(new PlacementCell(placement,
-                                RecordVisitActivity.this, BaseAnimateView.InitialHeightCondition.FROM_0,
-                                new PlacementCell.PostRemoveAnimationListener() {
-                            @Override
-                            public void postAnimation(PlacementCell cell) {
-                                placementContainer.removeView(cell);
-                                mVisit.removePlacement(cell.getPlacement());
-                                updatePlacementTouchText();
-                            }
-                        }));
-                        updatePlacementTouchText();
-                    }
-                }).show(getFragmentManager(), null);
+                PlacementSelectDialog.getInstance().show(getFragmentManager(), null);
             }
         });
     }
@@ -538,8 +523,34 @@ public class RecordVisitActivity extends AppCompatActivity {
 
                 }
             }
+        } else if (requestCode == Constants.PlacementCode.PLACEMENT_REQUEST_CODE) {
+            if (resultCode == Constants.PlacementCode.PLACEMENT_ADDED_RESULT_CODE) {
+
+                Placement placement = PlacementActivity.getPlacement();
+                mVisit.addPlacement(placement);
+                addPlacementCell(placement);
+
+            }
         }
     }
 
-    //TODO RecordVisitに再訪問数を追加
+    private void addPlacementCell(Placement placement) {
+
+        PlacementCell placementCell
+                = new PlacementCell(placement,
+                    this,
+                    BaseAnimateView.InitialHeightCondition.FROM_0,
+                    new PlacementCell.PostRemoveAnimationListener() {
+                        @Override
+                        public void postAnimation(PlacementCell cell) {
+                            placementContainer.removeView(cell);
+                            mVisit.removePlacement(cell.getPlacement());
+                            updatePlacementTouchText();
+                        }
+                    });
+        placementContainer.addView(placementCell);
+        updatePlacementTouchText();
+    }
+
+
 }

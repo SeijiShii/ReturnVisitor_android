@@ -41,4 +41,11 @@ public class Constants {
 
     }
 
+    public class PlacementCode {
+
+        public static final int PLACEMENT_REQUEST_CODE = 2000;
+        public static final int PLACEMENT_ADDED_RESULT_CODE = 2010;
+        public static final int PLACEMENT_CANCELED_RESULT_CODE = 2020;
+    }
+
 }

@@ -78,6 +78,7 @@ public class Placement extends BaseDataItem {
     }
 
     public static final String PLACEMENT = "Placement";
+    public static final String PLACEMENT_CATEGORY = "placement_category";
 
     public static final String CATEGORY = "category";
     public static final String MAGAZINE_CATEGORY = "magazine_category";

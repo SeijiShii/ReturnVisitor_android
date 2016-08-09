@@ -1,92 +1,97 @@
-package net.c_kogyo.returnvisitor.dialog;
+package net.c_kogyo.returnvisitor.activity;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.data.Person;
 import net.c_kogyo.returnvisitor.data.Placement;
 import net.c_kogyo.returnvisitor.data.RVData;
+import net.c_kogyo.returnvisitor.data.Visit;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
- * Created by SeijiShii on 2016/07/30.
+ * Created by SeijiShii on 2016/08/07.
  */
 
-public class PlacementDialog extends DialogFragment {
+public class PlacementActivity extends AppCompatActivity {
 
     private String[] categoryArray, magazineArray;
-    private Placement mPlacement;
-    private static OnAddPlacementListener mListener;
-
-    private static Placement.Category mCategory;
-    static public PlacementDialog getInstance(Placement.Category category, OnAddPlacementListener listener) {
-
-        mCategory = category;
-        mListener = listener;
-
-        return new PlacementDialog();
-    }
-
-    private View v;
+    private static Placement mPlacement;
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        categoryArray = getActivity().getResources().getStringArray(R.array.placement_array);
-        magazineArray = getActivity().getResources().getStringArray(R.array.magazine_array);
+        // staticなので確実にヌリファイしておく
+        mPlacement = null;
 
-        mPlacement = new Placement(mCategory);
+        categoryArray = getResources().getStringArray(R.array.placement_array);
+        magazineArray = getResources().getStringArray(R.array.magazine_array);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.placement);
-        builder.setPositiveButton(R.string.ok_text, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
+        initPlacement();
 
-                mListener.onAdd(mPlacement);
-                RVData.placementCompList.addToBoth(mPlacement.getName());
-            }
-        });
-        builder.setNegativeButton(R.string.cancel_text, null);
+        setContentView(R.layout.placement_activity);
 
-        v = LayoutInflater.from(getActivity()).inflate(R.layout.placement_activity, null);
-
+        initToolBar();
         initCategoryText();
         initMagazineCategoryContainer();
         initMagazineNumberContainer();
         initNameText();
 
-        builder.setView(v);
-        return builder.create();
+        initOkButton();
+        initCancelButton();
+    }
+
+    private void initPlacement() {
+
+        Intent intent = getIntent();
+        String catString = intent.getStringExtra(Placement.PLACEMENT_CATEGORY);
+
+        if ( catString == null ) {
+            catString = Placement.Category.OTHER.toString();
+        }
+
+        Placement.Category category = Placement.Category.valueOf(catString);
+        mPlacement = new Placement(category);
+    }
+
+    private void initToolBar() {
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        if (toolbar != null) {
+
+            toolbar.setTitle(R.string.placement);
+        }
     }
 
     private void initCategoryText() {
 
-        TextView categoryText = (TextView) v.findViewById(R.id.category_text);
+        TextView categoryText = (TextView) findViewById(R.id.category_text);
         categoryText.setText(categoryArray[mPlacement.getCategory().num()]);
     }
 
     private void initMagazineCategoryContainer() {
 
-        RelativeLayout magazineCategoryContainer = (RelativeLayout) v.findViewById(R.id.magazine_category_container);
-        if (mCategory != Placement.Category.MAGAZINE) {
+        RelativeLayout magazineCategoryContainer = (RelativeLayout) findViewById(R.id.magazine_category_container);
+        if (mPlacement.getCategory() != Placement.Category.MAGAZINE) {
             magazineCategoryContainer.setVisibility(View.INVISIBLE);
             magazineCategoryContainer.getLayoutParams().height = 0;
 
@@ -98,8 +103,8 @@ public class PlacementDialog extends DialogFragment {
 
     private void initMagazineCategorySpinner(){
 
-        Spinner magazineCategorySpinner = (Spinner) v.findViewById(R.id.magazine_category_spinner);
-        ArrayAdapter<String> magazineAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, magazineArray);
+        Spinner magazineCategorySpinner = (Spinner) findViewById(R.id.magazine_category_spinner);
+        ArrayAdapter<String> magazineAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, magazineArray);
         magazineCategorySpinner.setAdapter(magazineAdapter);
         magazineCategorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -119,8 +124,8 @@ public class PlacementDialog extends DialogFragment {
 
     private void initMagazineNumberContainer() {
 
-        LinearLayout magazineNumberContainer = (LinearLayout) v.findViewById(R.id.magazine_number_container);
-        if ( mCategory != Placement.Category.MAGAZINE ) {
+        LinearLayout magazineNumberContainer = (LinearLayout) findViewById(R.id.magazine_number_container);
+        if ( mPlacement.getCategory() != Placement.Category.MAGAZINE ) {
 
             magazineNumberContainer.setVisibility(View.INVISIBLE);
             magazineNumberContainer.getLayoutParams().height = 0;
@@ -130,23 +135,22 @@ public class PlacementDialog extends DialogFragment {
             magazineNumberContainer.setVisibility(View.VISIBLE);
             initMagazineNumberSpinner();
         }
-     }
-
+    }
 
     private Spinner magazineNumberSpinner;
     private void initMagazineNumberSpinner() {
 
-        final ArrayList<Pair<Calendar, String>> numberList = Placement.getMagazineNumberArrayList(mPlacement.getMagCategory(), getActivity());
+        final ArrayList<Pair<Calendar, String>> numberList = Placement.getMagazineNumberArrayList(mPlacement.getMagCategory(), this);
         ArrayList<String> numStringList = new ArrayList<>();
         for (Pair<Calendar, String> item : numberList) {
 
             numStringList.add(item.second);
         }
 
-        magazineNumberSpinner = (Spinner) v.findViewById(R.id.magazine_number_spinner);
-        ArrayAdapter<String> magNumAdapter = new ArrayAdapter<>(getActivity(),
-                                                                android.R.layout.simple_list_item_1,
-                                                                numStringList);
+        magazineNumberSpinner = (Spinner) findViewById(R.id.magazine_number_spinner);
+        ArrayAdapter<String> magNumAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1,
+                numStringList);
         magazineNumberSpinner.setAdapter(magNumAdapter);
         magazineNumberSpinner.setSelection(magNumAdapter.getCount() - 4);
         magazineNumberSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -171,10 +175,10 @@ public class PlacementDialog extends DialogFragment {
 
     private void initNameText() {
 
-        AutoCompleteTextView nameText = (AutoCompleteTextView) v.findViewById(R.id.name_text);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+        AutoCompleteTextView nameText = (AutoCompleteTextView) findViewById(R.id.name_text);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
-                RVData.getInstance().placementCompList.getList());
+                RVData.placementCompList.getList());
         nameText.setAdapter(adapter);
         nameText.setThreshold(1);
 
@@ -197,9 +201,41 @@ public class PlacementDialog extends DialogFragment {
         });
     }
 
-    public interface OnAddPlacementListener {
-        void onAdd(Placement placement);
+    private void initOkButton() {
+
+        Button okButton = (Button) findViewById(R.id.ok_button);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                setResult(Constants.PlacementCode.PLACEMENT_ADDED_RESULT_CODE);
+
+                finish();
+            }
+        });
     }
 
-    //TODO PlacementDialogもAutoCompleteTextの関係で不具合が生じているのでActivityに換装する。
+    private void initCancelButton() {
+
+        Button cancelButton = (Button) findViewById(R.id.cancel_button);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                setResult(Constants.PlacementCode.PLACEMENT_CANCELED_RESULT_CODE);
+
+                mPlacement = null;
+                finish();
+            }
+        });
+    }
+
+    public static Placement getPlacement() {
+
+        Placement placement = mPlacement;
+        mPlacement =null;
+
+        return placement;
+    }
 }
+

@@ -3,6 +3,7 @@ package net.c_kogyo.returnvisitor.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.activity.Constants;
+import net.c_kogyo.returnvisitor.activity.PlacementActivity;
+import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.Placement;
+import net.c_kogyo.returnvisitor.data.Visit;
 
 /**
  * Created by SeijiShii on 2016/07/30.
@@ -19,11 +24,7 @@ import net.c_kogyo.returnvisitor.data.Placement;
 
 public class PlacementSelectDialog extends DialogFragment {
 
-    static private PlacementDialog.OnAddPlacementListener mListener;
-
-    static public PlacementSelectDialog getInstance(PlacementDialog.OnAddPlacementListener listener) {
-
-        mListener = listener;
+    static public PlacementSelectDialog getInstance() {
 
         return new PlacementSelectDialog();
     }
@@ -56,7 +57,12 @@ public class PlacementSelectDialog extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                PlacementDialog.getInstance(Placement.Category.getEnum(i), mListener).show(getFragmentManager(), null);
+                Intent intent = new Intent(getActivity(), PlacementActivity.class);
+                intent.putExtra(Placement.PLACEMENT_CATEGORY, Placement.Category.getEnum(i).toString());
+                intent.putExtra(Placement.PLACEMENT, Constants.PlacementCode.PLACEMENT_REQUEST_CODE);
+
+                getActivity().startActivityForResult(intent, Constants.PlacementCode.PLACEMENT_REQUEST_CODE);
+
                 dismiss();
             }
         });
