@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="CollapseHeight" format="dimension"/>
+    <attr name="ExtractHeight" format="dimension"/>
+
     <declare-styleable name="RefreshableCounterView">
         <attr name="Title" format="string"/>
     </declare-styleable>
 
     <declare-styleable name="CollapseButton">
-        <attr name="CollapseHeight" format="dimension"/>
-        <attr name="ExtractHeight" format="dimension"/>
+        <attr name="CollapseHeight" />
+        <attr name="ExtractHeight" />
     </declare-styleable>
+
+    <declare-styleable name="HeightChangeFrameLayout">
+        <attr name="CollapseHeight" />
+        <attr name="ExtractHeight" />
+    </declare-styleable>
+
 </resources>
