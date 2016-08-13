@@ -25,53 +25,64 @@ public class CollapseButton extends Button {
 
     public CollapseButton(Context context, AttributeSet attrs) {
         super(context, attrs);
+        applyAttr(context, attrs);
     }
 
     public CollapseButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        applyAttr(context, attrs);
     }
 
     private void applyAttr(Context context, AttributeSet attrs) {
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CollapseButton, 0, 0);
         try {
-            collapseHeight = array.getInt(R.styleable.CollapseButton_CollapseHeight, 0);
-            extractHeight = array.getInt(R.styleable.CollapseButton_ExtractHeight, 0);
+            collapseHeight = array.getDimensionPixelSize(R.styleable.CollapseButton_CollapseHeight, 0);
+            extractHeight = array.getDimensionPixelSize(R.styleable.CollapseButton_ExtractHeight, 0);
         } finally {
             array.recycle();
         }
 
     }
 
-    public void animateHeight(boolean collapse) {
+    public void animateHeight(boolean extract) {
 
         int originalHeight, targetHeight;
 
         originalHeight = this.getLayoutParams().height;
 
-        if (collapse) {
-
-            targetHeight = collapseHeight;
-
-        } else {
+        if (extract) {
 
             targetHeight = extractHeight;
 
+        } else {
+
+            targetHeight = collapseHeight;
+
         }
+
+        if (originalHeight == targetHeight) return;
 
         ValueAnimator animator = ValueAnimator.ofInt(originalHeight, targetHeight);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 CollapseButton.this.getLayoutParams().height = (int) valueAnimator.getAnimatedValue();
+                requestLayout();
             }
         });
-        animator.setDuration(500);
+        animator.setDuration(Math.abs(targetHeight - originalHeight) * 3);
         animator.start();
     }
 
-    private void initCommon() {
 
+    public void setHeight(boolean extract) {
+
+        if (extract) {
+            this.getLayoutParams().height = extractHeight;
+        } else {
+            this.getLayoutParams().height = collapseHeight;
+        }
     }
 
 

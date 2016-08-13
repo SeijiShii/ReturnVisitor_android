@@ -6,7 +6,7 @@
     </declare-styleable>
 
     <declare-styleable name="CollapseButton">
-        <attr name="CollapseHeight" format="integer"/>
-        <attr name="ExtractHeight" format="integer"/>
+        <attr name="CollapseHeight" format="dimension"/>
+        <attr name="ExtractHeight" format="dimension"/>
     </declare-styleable>
 </resources>

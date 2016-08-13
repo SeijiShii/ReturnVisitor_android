@@ -18,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -47,6 +46,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -65,6 +65,9 @@ import net.c_kogyo.returnvisitor.dialog.MarkerDialog;
 import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
+import net.c_kogyo.returnvisitor.view.CollapseButton;
+
+import static net.c_kogyo.returnvisitor.activity.Constants.LogInCode.GOOGLE_SIGN_IN_RC;
 
 public class MapActivity extends AppCompatActivity
                             implements OnMapReadyCallback,
@@ -421,8 +424,9 @@ public class MapActivity extends AppCompatActivity
         mDrawerToggle = new ActionBarDrawerToggle(this, navDrawer, toolbar, R.string.app_name, R.string.app_name);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
 
-        createLoginOutButton();
+        initLoginButton();
         initAnonymousLoginButton();
+        initLogoutButton();
 
     }
 
@@ -444,7 +448,6 @@ public class MapActivity extends AppCompatActivity
                 .build();
     }
 
-
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -458,55 +461,147 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                if (firebaseAuth.getCurrentUser() != null) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+
+                if (user != null) {
 
                     initDateIfAuthed();
-                    setLogOutButton();
 
                     String name = firebaseAuth.getCurrentUser().getDisplayName();
                     if (name == null) {
                         name = firebaseAuth.getCurrentUser().getEmail();
                     }
 
-                    Toast.makeText(MapActivity.this, name, Toast.LENGTH_SHORT).show();
+                    if (name == null) {
+                        name = getString(R.string.no_name);
+                    }
 
-                } else {
-                    setLoginButton();
+                    String loginText = getString(R.string.logged_in_as, name);
+                    Toast.makeText(MapActivity.this, loginText, Toast.LENGTH_SHORT).show();
+
                 }
-                initAnonymousLoginButton();
+                animateLoginButton(user == null || loggedInAnonymously());
+                animateAnonymousLoginButton(user == null);
+                animateLogoutButton(user != null);
             }
         };
     }
 
-    private Button loginOutButton;
-    private void createLoginOutButton() {
+    private CollapseButton loginButton;
+    private View loginBorder;
+    private void initLoginButton() {
 
-         loginOutButton = (Button) findViewById(R.id.login_button);
-        
-        if (firebaseAuth == null) {
+        loginButton = (CollapseButton) findViewById(R.id.login_button);
+        loginBorder = findViewById(R.id.login_border);
 
-            setLoginButton();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        // ログインボタンを表示する基準はログインしていないか無名ログインしているか
+        if (user == null || loggedInAnonymously()) {
 
+            loginButton.setHeight(false);
+            loginBorder.setVisibility(View.VISIBLE);
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    LoginSelectDialog.newInstance(
+                            new OnGoogleSignInClickListener(),
+                            new OnFBLoinClickListener(),
+                            new EmailLoginClickListener())
+                            .show(getFragmentManager(), "Login_dialog");
+                }
+            });
         } else {
-            if (firebaseAuth.getCurrentUser() == null) {
-
-                setLoginButton();
-
-            } else {
-
-                setLogOutButton();
-
-            }
+            loginButton.setHeight(true);
+            loginButton.setOnClickListener(null);
+            loginBorder.setVisibility(View.INVISIBLE);
         }
 
     }
 
-    private void setLoginButton() {
-        loginOutButton.setText(R.string.login);
-        loginOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    private void animateLoginButton(boolean extract) {
 
+        if (extract) {
+
+            loginButton.setHeight(false);
+            loginBorder.setVisibility(View.VISIBLE);
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    LoginSelectDialog.newInstance(
+                            new OnGoogleSignInClickListener(),
+                            new OnFBLoinClickListener(),
+                            new EmailLoginClickListener())
+                            .show(getFragmentManager(), "Login_dialog");
+                }
+            });
+        } else {
+            loginButton.setHeight(true);
+            loginButton.setOnClickListener(null);
+            loginBorder.setVisibility(View.INVISIBLE);
+        }
+        loginButton.animateHeight(extract);
+    }
+
+    private CollapseButton anonymousLoginButton;
+    private View anonymousBorder;
+    private void initAnonymousLoginButton() {
+
+        anonymousLoginButton = (CollapseButton) findViewById(R.id.anonymous_login_button);
+        anonymousBorder = findViewById(R.id.anonymous_login_border);
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+
+        anonymousLoginButton.setHeight(user != null);
+        if (user == null) {
+
+            anonymousBorder.setVisibility(View.VISIBLE);
+            anonymousLoginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    confirmAnonymousLogin();
+                }
+            });
+
+        } else {
+
+            anonymousBorder.setVisibility(View.INVISIBLE);
+            anonymousLoginButton.setOnClickListener(null);
+
+        }
+    }
+
+    private void animateAnonymousLoginButton(boolean extract) {
+
+        if (extract) {
+
+            anonymousBorder.setVisibility(View.VISIBLE);
+            anonymousLoginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    confirmAnonymousLogin();
+                }
+            });
+
+        } else {
+
+            anonymousBorder.setVisibility(View.INVISIBLE);
+            anonymousLoginButton.setOnClickListener(null);
+        }
+
+        anonymousLoginButton.animateHeight(extract);
+    }
+
+    private void confirmAnonymousLogin() {
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.anonymous_title);
+        builder.setMessage(R.string.anonymous_message);
+        builder.setNegativeButton(R.string.cancel_text, null);
+        builder.setNeutralButton(R.string.login, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
                 LoginSelectDialog.newInstance(
                         new OnGoogleSignInClickListener(),
                         new OnFBLoinClickListener(),
@@ -514,62 +609,21 @@ public class MapActivity extends AppCompatActivity
                         .show(getFragmentManager(), "Login_dialog");
             }
         });
-    }
-
-    private void setLogOutButton() {
-
-        String name = "";
-        try {
-            name = firebaseAuth.getCurrentUser().getDisplayName();
-
-            if (name == null) {
-                name = firebaseAuth.getCurrentUser().getEmail();
-            } else {
-                name = getString(R.string.no_data);
-            }
-
-        } catch (NullPointerException e) {
-
-            //
-        }
-        String logOutText = getString(R.string.logged_in_as, name);
-        loginOutButton.setText(logOutText);
-
-        loginOutButton.setOnClickListener(new View.OnClickListener() {
+        builder.setPositiveButton(R.string.anonymous_ok, new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                signOutFromFirebaseAuth();
-                navDrawer.closeDrawer(Gravity.LEFT);
+            public void onClick(DialogInterface dialogInterface, int i) {
 
+                anonymousLogin();
             }
         });
+        builder.create().show();
     }
 
-    //TODO 無名ログインも実装する
-    private void initAnonymousLoginButton() {
-
-        Button anonymousLoginButton = (Button) findViewById(R.id.anonymous_login_button);
-        View anonymousBorder = findViewById(R.id.anonymous_login_border);
+    private boolean loggedInAnonymously() {
 
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user == null) {
 
-            anonymousLoginButton.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.button_height);
-            anonymousLoginButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    anonymousLogin();
-                }
-            });
-            anonymousBorder.setVisibility(View.VISIBLE);
-
-        } else {
-
-            anonymousLoginButton.getLayoutParams().height = 0;
-            anonymousLoginButton.setOnClickListener(null);
-            anonymousBorder.setVisibility(View.INVISIBLE);
-        }
+        return user != null && user.getDisplayName() == null && user.getEmail() == null;
 
     }
 
@@ -585,6 +639,85 @@ public class MapActivity extends AppCompatActivity
                 }
             }
         });
+    }
+
+    private CollapseButton logoutButton;
+    private View logoutBorder;
+    private void initLogoutButton() {
+
+        logoutButton = (CollapseButton) findViewById(R.id.log_out_button);
+        logoutBorder = findViewById(R.id.log_out_border);
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+
+            String name = firebaseAuth.getCurrentUser().getDisplayName();
+            if (name == null) {
+                name = firebaseAuth.getCurrentUser().getEmail();
+            }
+
+            if (name == null) {
+                name = getString(R.string.no_name);
+            }
+
+            String logoutText = getString(R.string.log_out, name);
+            logoutButton.setText(logoutText);
+
+            logoutButton.setHeight(false);
+            logoutBorder.setVisibility(View.VISIBLE);
+
+            logoutButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    signOutFromFirebaseAuth();
+                }
+            });
+
+        } else {
+
+            logoutButton.setHeight(true);
+            logoutBorder.setVisibility(View.INVISIBLE);
+
+            logoutBorder.setOnClickListener(null);
+        }
+    }
+
+    private void animateLogoutButton(boolean extract) {
+
+        if (extract) {
+
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+
+            if (user != null) {
+                String name = firebaseAuth.getCurrentUser().getDisplayName();
+                if (name == null) {
+                    name = firebaseAuth.getCurrentUser().getEmail();
+                }
+
+                if (name == null) {
+                    name = getString(R.string.no_name);
+                }
+
+                String logoutText = getString(R.string.log_out, name);
+                logoutButton.setText(logoutText);
+                logoutBorder.setVisibility(View.VISIBLE);
+
+                logoutButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        signOutFromFirebaseAuth();
+                    }
+                });
+            }
+        } else {
+
+            logoutButton.setOnClickListener(null);
+            logoutBorder.setVisibility(View.INVISIBLE);
+
+        }
+        logoutButton.animateHeight(extract);
     }
 
     private void signOutFromFirebaseAuth() {
@@ -613,17 +746,15 @@ public class MapActivity extends AppCompatActivity
         if (requestCode == GOOGLE_SIGN_IN_RC) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
-        } else if (requestCode == FB_LOG_IN_RC) {
+        } else {
 
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
 
     // Email Login
-
     private String mEmail;
     private String mPassword;
-
     private static final String EMAIL_LOG_IN_TAG = "email_login_tag";
     public class EmailLoginClickListener {
 
@@ -634,9 +765,28 @@ public class MapActivity extends AppCompatActivity
             mEmail = email;
             mPassword = password;
 
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(MapActivity.this, MapActivity.this);
+            if (firebaseAuth.getCurrentUser() == null) {
 
+                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(MapActivity.this, MapActivity.this);
+            } else if (loggedInAnonymously()) {
+
+                AuthCredential credential = EmailAuthProvider.getCredential(email, password);
+                firebaseAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(FIREBASE_TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(FIREBASE_TAG, "signInWithCredential", task.getException());
+                            Toast.makeText(MapActivity.this, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
         }
     }
 
@@ -675,8 +825,6 @@ public class MapActivity extends AppCompatActivity
     }
 
     // Google Sign in
-
-    private static final int GOOGLE_SIGN_IN_RC = 716;
     public class OnGoogleSignInClickListener {
 
         public void onClick() {
@@ -687,11 +835,11 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
-
     private static final String GOOGLE_SIGN_IN_TAG = "google_sign_in_tag";
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(GOOGLE_SIGN_IN_TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
+
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             firebaseAuthWithGoogle(acct);
@@ -707,37 +855,41 @@ public class MapActivity extends AppCompatActivity
         Log.d(FIREBASE_TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(FIREBASE_TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w(FIREBASE_TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(MapActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            setLogOutButton();
+        if (firebaseAuth.getCurrentUser() == null) {
+            firebaseAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d(FIREBASE_TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Log.w(FIREBASE_TAG, "signInWithCredential", task.getException());
+                                Toast.makeText(MapActivity.this, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show();
+                            }
+
+                            // ...
                         }
+                    });
+        } else if (loggedInAnonymously()) {
 
-                        // ...
+            firebaseAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (!task.isSuccessful()) {
+                        Log.w(FIREBASE_TAG, "signInWithCredential", task.getException());
+                        Toast.makeText(MapActivity.this, getString(R.string.auth_failed), Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
+            });
+
+        }
+
+
     }
-
-//    public static String userId;
-//    private void loadUserId() {
-//
-//        SharedPreferences prefs = getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE);
-//        userId = prefs.getString(USER_EMAIL_ID, null);
-//    }
-
-    // Facebook Login
-
-    private static final int FB_LOG_IN_RC = 64206;
 
     public class OnFBLoinClickListener {
 
@@ -793,32 +945,49 @@ public class MapActivity extends AppCompatActivity
         Log.d(FB_TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(FB_TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
+        if (firebaseAuth.getCurrentUser() == null ) {
+            firebaseAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d(FB_TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
-                            if (task.getException() instanceof FirebaseAuthException) {
-                                if (((FirebaseAuthException)task.getException()).getErrorCode().equals("ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")){
-                                    Toast.makeText(MapActivity.this, R.string.different_credential, Toast.LENGTH_SHORT).show();
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+
+                                if (task.getException() instanceof FirebaseAuthException) {
+                                    if (((FirebaseAuthException)task.getException()).getErrorCode().equals("ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL")){
+                                        Toast.makeText(MapActivity.this, R.string.different_credential, Toast.LENGTH_SHORT).show();
+                                    }
                                 }
+
+                                Log.w(FB_TAG, "signInWithCredential", task.getException());
+
                             }
 
-                            Log.w(FB_TAG, "signInWithCredential", task.getException());
-
-                        } else {
-                            setLogOutButton();
+                            // ...
                         }
+                    });
 
-                        // ...
+        } else if (loggedInAnonymously()) {
+
+            firebaseAuth.getCurrentUser().linkWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(MapActivity.this, getString(R.string.auth_failed),
+                                Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
+            });
+
+        }
+
+
     }
 
     ArrayList<Marker> markers;

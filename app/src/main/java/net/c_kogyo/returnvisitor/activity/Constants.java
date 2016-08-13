@@ -48,4 +48,12 @@ public class Constants {
         public static final int PLACEMENT_CANCELED_RESULT_CODE = 2020;
     }
 
+    public class LogInCode {
+
+        public static final int GOOGLE_SIGN_IN_RC = 3000;
+//        public static final int FACEBOOK_LOG_IN_RC = 3001;
+
+
+    }
+
 }
