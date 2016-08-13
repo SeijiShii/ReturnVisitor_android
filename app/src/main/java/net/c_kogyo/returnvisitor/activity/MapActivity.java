@@ -50,9 +50,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,32 +99,11 @@ public class MapActivity extends AppCompatActivity
         initGoogleSignIn();
         initFacebookLogin();
 
-        initFirebaseDatabase();
-
-        //
+//        initFirebaseDatabase();
 
 
-        // リモートのデータを読み込むためだけに一度getInstanceを実行
-        if (!isDataReady) {
-            RVData.initTagList(this);
-            RVData.setListeners(new RVData.OnDataReadyListener() {
-                                    @Override
-                                    public void onDataReady() {
-
-                                        isDataReady = true;
-                                    }
-                                },
-                    new RVData.OnDataChangedListener() {
-                        @Override
-                        public void onDataChanged(Class clazz) {
-
-                            showAllMarkers();
-                        }
-                    });
-        }
-
-
-        RVData.setCompleteListSeed(this);
+        // TODO ログアウト状態でアプリを起動したら墜ちた
+        initDateIfAuthed();
 
         setContentView(R.layout.activity_map);
 
@@ -166,6 +144,32 @@ public class MapActivity extends AppCompatActivity
 
         if (mAuthListener != null) {
             firebaseAuth.removeAuthStateListener(mAuthListener);
+        }
+
+    }
+
+    private void initDateIfAuthed() {
+
+        if (firebaseAuth.getCurrentUser() != null && !isDataReady) {
+
+            // リモートのデータを読み込むためだけに一度getInstanceを実行
+            RVData.initTagList(this);
+            RVData.setCompleteListSeed(this);
+            RVData.setListeners(new RVData.OnDataReadyListener() {
+                                    @Override
+                                    public void onDataReady() {
+
+                                        isDataReady = true;
+                                    }
+                                },
+                    new RVData.OnDataChangedListener() {
+                        @Override
+                        public void onDataChanged(Class clazz) {
+
+                            showAllMarkers();
+
+                        }
+                    });
         }
 
     }
@@ -334,35 +338,10 @@ public class MapActivity extends AppCompatActivity
         startActivity(recordVisitIntent);
     }
 
-    private DatabaseReference reference;
-    private void initFirebaseDatabase() {
-        reference = FirebaseDatabase.getInstance().getReference();
-
-    }
-
-//    private String generateValidUserId(String email) {
+//    private DatabaseReference reference;
+//    private void initFirebaseDatabase() {
+//        reference = FirebaseDatabase.getInstance().getReference();
 //
-///*
-//        Firebaseのkeyには禁則文字がある
-//
-//        * . (period)
-//        * $ (dollar sign)
-//        * [ (left square bracket)
-//        * ] (right square bracket)
-//        * # (hash or pound sign)
-//        * / (forward slash)
-//*/
-//
-//        final String RV = "_rv_";
-//
-//        String id = email.replaceAll("\\.", RV + "period_");
-//        id = id.replaceAll("\\$", RV + "dollar_sign_");
-//        id = id.replaceAll("\\[", RV + "left_square_bracket_");
-//        id = id.replaceAll("]", RV + "right_square_bracket_");
-//        id = id.replaceAll("#", RV + "hash_or_pound_sign_");
-//        id = id.replaceAll("/", RV + "forward_slash_");
-//
-//        return id;
 //    }
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_LOCATION = 717;
@@ -443,6 +422,7 @@ public class MapActivity extends AppCompatActivity
         mDrawerToggle.setDrawerIndicatorEnabled(true);
 
         createLoginOutButton();
+        initAnonymousLoginButton();
 
     }
 
@@ -464,6 +444,7 @@ public class MapActivity extends AppCompatActivity
                 .build();
     }
 
+
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
@@ -478,6 +459,8 @@ public class MapActivity extends AppCompatActivity
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
                 if (firebaseAuth.getCurrentUser() != null) {
+
+                    initDateIfAuthed();
                     setLogOutButton();
 
                     String name = firebaseAuth.getCurrentUser().getDisplayName();
@@ -487,16 +470,10 @@ public class MapActivity extends AppCompatActivity
 
                     Toast.makeText(MapActivity.this, name, Toast.LENGTH_SHORT).show();
 
-//                    String newUserId = generateValidUserId(firebaseAuth.getCurrentUser().getEmail());
-//                    if (!newUserId.equals(userId)) {
-//                        userId = newUserId;
-//                        getSharedPreferences(RETURN_VISITOR_SHARED_PREFS, MODE_PRIVATE)
-//                                .edit().putString(USER_EMAIL_ID, userId).apply();
-//                    }
-
                 } else {
                     setLoginButton();
                 }
+                initAnonymousLoginButton();
             }
         };
     }
@@ -521,8 +498,6 @@ public class MapActivity extends AppCompatActivity
 
             }
         }
-
-
 
     }
 
@@ -549,10 +524,13 @@ public class MapActivity extends AppCompatActivity
 
             if (name == null) {
                 name = firebaseAuth.getCurrentUser().getEmail();
+            } else {
+                name = getString(R.string.no_data);
             }
 
         } catch (NullPointerException e) {
 
+            //
         }
         String logOutText = getString(R.string.logged_in_as, name);
         loginOutButton.setText(logOutText);
@@ -567,6 +545,48 @@ public class MapActivity extends AppCompatActivity
         });
     }
 
+    //TODO 無名ログインも実装する
+    private void initAnonymousLoginButton() {
+
+        Button anonymousLoginButton = (Button) findViewById(R.id.anonymous_login_button);
+        View anonymousBorder = findViewById(R.id.anonymous_login_border);
+
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user == null) {
+
+            anonymousLoginButton.getLayoutParams().height = getResources().getDimensionPixelSize(R.dimen.button_height);
+            anonymousLoginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    anonymousLogin();
+                }
+            });
+            anonymousBorder.setVisibility(View.VISIBLE);
+
+        } else {
+
+            anonymousLoginButton.getLayoutParams().height = 0;
+            anonymousLoginButton.setOnClickListener(null);
+            anonymousBorder.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    private void anonymousLogin() {
+
+        firebaseAuth.signInAnonymously().addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (!task.isSuccessful()) {
+                    Log.w("AnonymousLogin", "signInAnonymously", task.getException());
+                    Toast.makeText(MapActivity.this, "Authentication failed.",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     private void signOutFromFirebaseAuth() {
 
         new AlertDialog.Builder(this).setTitle(R.string.log_out_text)
@@ -575,7 +595,6 @@ public class MapActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         FirebaseAuth.getInstance().signOut();
-                        setLoginButton();
                     }
                 })
                 .setNegativeButton(R.string.cancel_text, null)
@@ -583,6 +602,8 @@ public class MapActivity extends AppCompatActivity
                 .show();
 
     }
+
+    // TODO 時間管理ボタンの実装
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -32,7 +32,6 @@ import net.c_kogyo.returnvisitor.data.Placement;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
-import net.c_kogyo.returnvisitor.dialog.PlacementDialog;
 import net.c_kogyo.returnvisitor.dialog.PlacementSelectDialog;
 import net.c_kogyo.returnvisitor.dialog.SelectPersonDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;

@@ -4,4 +4,9 @@
     <declare-styleable name="RefreshableCounterView">
         <attr name="Title" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="CollapseButton">
+        <attr name="CollapseHeight" format="integer"/>
+        <attr name="ExtractHeight" format="integer"/>
+    </declare-styleable>
 </resources>

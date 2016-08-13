@@ -156,6 +156,26 @@
                     android:layout_marginRight="5dp"
                     android:background="@color/text_color_normal"/>
 
+                <!-- Anonymous Login -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:background="@drawable/trans_green_selector"
+                    android:text="@string/anonymous_login"
+                    android:textColor="@color/text_color_normal"
+                    android:paddingLeft="10dp"
+                    android:gravity="left|center_vertical"
+                    android:drawablePadding="10dp"
+                    android:id="@+id/anonymous_login_button"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/text_color_normal"
+                    android:id="@+id/anonymous_login_border"/>
+
             </LinearLayout>
 
         </ScrollView>
