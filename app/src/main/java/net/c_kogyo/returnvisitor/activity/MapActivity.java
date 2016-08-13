@@ -87,8 +87,8 @@ public class MapActivity extends AppCompatActivity
 
     private MapView mMapView;
     private GoogleMap mMap;
-
-    private boolean isDataReady = false;
+    private boolean isMapReady;
+    private boolean isDataReady;
 
     public static AddressTextLanguage addressTextLang;
 
@@ -96,11 +96,15 @@ public class MapActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        isDataReady = false;
+        isMapReady = false;
+
         addressTextLang = AddressTextLanguage.USE_DEVICE_LOCALE;
 
         initFirebaseAuth();
         initGoogleSignIn();
         initFacebookLogin();
+
 
 //        initFirebaseDatabase();
 
@@ -163,14 +167,13 @@ public class MapActivity extends AppCompatActivity
                                     public void onDataReady() {
 
                                         isDataReady = true;
+                                        showMarkers(firebaseAuth.getCurrentUser() != null);
                                     }
                                 },
                     new RVData.OnDataChangedListener() {
                         @Override
                         public void onDataChanged(Class clazz) {
-
-                            showAllMarkers();
-
+                            showMarkers(firebaseAuth.getCurrentUser() != null);
                         }
                     });
         }
@@ -219,10 +222,15 @@ public class MapActivity extends AppCompatActivity
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
+    //TODO ログインしていない状態でデータにアクセスさせない備え
+    //TODO    ログアウトしたらマーカー類が消えるように
 
     private static final String MY_LOCATION_TAG = "my_location";
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+        isMapReady = true;
+
         mMap = googleMap;
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.getUiSettings().setZoomGesturesEnabled(true);
@@ -246,80 +254,70 @@ public class MapActivity extends AppCompatActivity
         mMap.setPadding(0, 40, 0, 0);
 
         loadCameraPosition();
+        setMapListeners(firebaseAuth.getCurrentUser() != null);
+        showMarkers(firebaseAuth.getCurrentUser() != null);
 
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
+    }
 
-                // MapActivity長押し時に地図がスクロールするようにと思ったがタイミング的に無理みたい
+    private void setMapListeners(boolean set) {
 
-                if (firebaseAuth.getCurrentUser() != null) {
+        if (set) {
 
-                    startRecordVisitActivityByPosition(latLng);
+            mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+                @Override
+                public void onMapLongClick(LatLng latLng) {
 
-                } else {
+                    // MapActivity長押し時に地図がスクロールするようにと思ったがタイミング的に無理みたい
 
-                    Toast.makeText(MapActivity.this, R.string.login_needed, Toast.LENGTH_SHORT).show();
-                }
+                    if (firebaseAuth.getCurrentUser() != null) {
 
-            }
-        });
+                        startRecordVisitActivityByPosition(latLng);
 
-        final Handler handler = new Handler();
+                    } else {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                while (!isDataReady) {
-
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException e) {
-                        //
+                        Toast.makeText(MapActivity.this, R.string.login_needed, Toast.LENGTH_SHORT).show();
                     }
+
                 }
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        showAllMarkers();
+            });
+
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+
+                    Place place = RVData.placeList.getByMarkerId(marker.getId());
+
+                    if (place != null) {
+
+                        MarkerDialog.getInstance(place,
+                                new MarkerDialog.OnVisitRecordClickListener() {
+                                    @Override
+                                    public void onVisitRecordClick(Place place) {
+                                        startRecordVisitByPlaceId(place.getId());
+                                    }
+                                },
+                                new MarkerDialog.OnPlaceRemoveListener() {
+                                    @Override
+                                    public void onPlaceRemoved(Place place) {
+                                        showMarkers(firebaseAuth.getCurrentUser() != null);
+                                    }
+                                }).show(getFragmentManager(), null);
+                    } else {
+
+                        // マーカーをクリックしたものの該当する場所が見つからない場合はマーカーを削除
+                        marker.remove();
                     }
-                });
-            }
-        }).start();
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-
-                Place place = RVData.placeList.getByMarkerId(marker.getId());
-
-                if (place != null) {
-
-                    MarkerDialog.getInstance(place,
-                            new MarkerDialog.OnVisitRecordClickListener() {
-                                @Override
-                                public void onVisitRecordClick(Place place) {
-                                    startRecordVisitByPlaceId(place.getId());
-                                }
-                            },
-                            new MarkerDialog.OnPlaceRemoveListener() {
-                                @Override
-                                public void onPlaceRemoved(Place place) {
-                                    showAllMarkers();
-                                }
-                    }).show(getFragmentManager(), null);
-                } else {
-
-                    // マーカーをクリックしたものの該当する場所が見つからない場合はマーカーを削除
-                    marker.remove();
-                    markers.remove(marker);
+                    return false;
                 }
+            });
 
-                return false;
-            }
-        });
+        } else {
 
+            mMap.setOnMarkerClickListener(null);
+            mMap.setOnMapLongClickListener(null);
+
+        }
 
     }
 
@@ -483,6 +481,7 @@ public class MapActivity extends AppCompatActivity
                 animateLoginButton(user == null || loggedInAnonymously());
                 animateAnonymousLoginButton(user == null);
                 animateLogoutButton(user != null);
+                showMarkers(user != null);
             }
         };
     }
@@ -990,29 +989,57 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    ArrayList<Marker> markers;
-    private void showAllMarkers() {
+//    ArrayList<Marker> markers;
+    private Handler markerHandler;
+    private void showMarkers(final boolean show) {
 
-        if (markers != null) {
-            for (Marker marker : markers) {
-                marker.remove();
+        if (markerHandler != null) return;
+
+        markerHandler = new Handler();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                while (!isMapReady || !isDataReady) {
+
+                    try {
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        //
+                    }
+                }
+                markerHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        mMap.clear();
+                        if (show) {
+
+                            // 起動時、データを読み込んだ後に表示するよう調整
+                            for ( Place place : RVData.placeList ) {
+
+                                MarkerOptions options = new MarkerOptions()
+                                        .icon(BitmapDescriptorFactory.fromResource(Constants.markerRes[place.getInterest().num()]))
+                                        .position(place.getLatLng());
+
+                                Marker marker = mMap.addMarker(options);
+                                place.setMarkerId(marker.getId());
+//                                    markers.add(marker);
+                            }
+
+                        }
+                        markerHandler = null;
+                    }
+                });
+
             }
-        }
+        }).start();
 
-        markers = new ArrayList<>();
 
-        // 起動時、データを読み込んだ後に表示するよう調整
-        for ( Object o : RVData.getInstance().placeList ) {
 
-            Place place = (Place) o;
-            MarkerOptions options = new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(Constants.markerRes[place.getInterest().num()]))
-                    .position(place.getLatLng());
 
-            Marker marker = mMap.addMarker(options);
-            place.setMarkerId(marker.getId());
-            markers.add(marker);
-        }
+
+
     }
 
 
