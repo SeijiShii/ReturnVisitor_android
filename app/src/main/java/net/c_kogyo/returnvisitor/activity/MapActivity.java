@@ -19,6 +19,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -112,11 +114,7 @@ public class MapActivity extends AppCompatActivity
         initGoogleSignIn();
         initFacebookLogin();
 
-
-//        initFirebaseDatabase();
-
-
-        // TODO ログアウト状態でアプリを起動したら墜ちた
+        // ログアウト状態でアプリを起動したら墜ちた
         initDateIfAuthed();
 
         setContentView(R.layout.activity_map);
@@ -125,6 +123,7 @@ public class MapActivity extends AppCompatActivity
         mMapView.onCreate(savedInstanceState);
 
         createToolBar();
+        initGuidText();
         createDrawer();
 
     }
@@ -234,8 +233,8 @@ public class MapActivity extends AppCompatActivity
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
-    //TODO ログインしていない状態でデータにアクセスさせない備え
-    //TODO    ログアウトしたらマーカー類が消えるように
+    //ログインしていない状態でデータにアクセスさせない備え
+    //ログアウトしたらマーカー類が消えるように
 
     private static final String MY_LOCATION_TAG = "my_location";
     @Override
@@ -510,7 +509,7 @@ public class MapActivity extends AppCompatActivity
                     Toast.makeText(MapActivity.this, loginText, Toast.LENGTH_SHORT).show();
 
                 } else {
-                // TODO ログアウト時にデータがすべて消去されるようにする
+                // ログアウト時にデータがすべて消去されるようにする
 
                     RVData.getInstance().clearFromLocal();
                     isDataReady = false;
@@ -520,6 +519,7 @@ public class MapActivity extends AppCompatActivity
                 animateLogoutButton(user != null);
                 showMarkers(user != null, markerHandler);
                 setMapListeners(user != null);
+                initGuidText();
             }
         };
     }
@@ -1102,7 +1102,6 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-
     private Button timeCountButton;
     private void initTimeCountButton() {
 
@@ -1131,6 +1130,19 @@ public class MapActivity extends AppCompatActivity
                 }
             }
         });
+
+    }
+
+    //TODO Guide barの実装
+    private void initGuidText() {
+
+        TextView guideText = (TextView) findViewById(R.id.guide_text);
+
+        if (firebaseAuth.getCurrentUser() == null) {
+            guideText.setText(R.string.must_login);
+        } else {
+            guideText.setText(R.string.long_click_on_map);
+        }
 
     }
 
