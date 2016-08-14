@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -123,7 +122,7 @@ public class MapActivity extends AppCompatActivity
         mMapView.onCreate(savedInstanceState);
 
         createToolBar();
-        initGuidText();
+        initGuideText();
         createDrawer();
 
     }
@@ -519,7 +518,8 @@ public class MapActivity extends AppCompatActivity
                 animateLogoutButton(user != null);
                 showMarkers(user != null, markerHandler);
                 setMapListeners(user != null);
-                initGuidText();
+                enableTimeCount(user != null);
+                initGuideText();
             }
         };
     }
@@ -773,7 +773,6 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    // TODO 時間管理ボタンの実装
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1090,6 +1089,8 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
+    // TODO 時間管理ボタンの実装
+    // ログイン、ログアウトで時間ボタンのアクセシビリティが変わる
     private HeightChangeFrameLayout timeFrame;
     private boolean isTimeCounting;
     private void initTimeFrame() {
@@ -1133,8 +1134,32 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    //TODO Guide barの実装
-    private void initGuidText() {
+    private void enableTimeCount(boolean enable) {
+
+        if (enable) {
+
+            timeCountButton.setAlpha(1f);
+            timeCountButton.setClickable(true);
+
+        } else {
+
+            if (isTimeCounting) {
+                timeFrame.animateHeight(false, null);
+                timeCountButton.setText(R.string.time_count_button);
+                timeCountButton.setBackgroundResource(R.drawable.trans_green_selector);
+                timeCountButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+                // TODO 実際のカウントストップを実装
+                Toast.makeText(this, R.string.logout_time_stop, Toast.LENGTH_SHORT).show();
+            }
+
+            timeCountButton.setAlpha(0.3f);
+            timeCountButton.setClickable(false);
+
+        }
+    }
+
+    //Guide barの実装
+    private void initGuideText() {
 
         TextView guideText = (TextView) findViewById(R.id.guide_text);
 
