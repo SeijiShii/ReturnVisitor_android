@@ -1,5 +1,6 @@
 package net.c_kogyo.returnvisitor.data;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,7 +26,14 @@ CompleteList{
         list = new ArrayList<>();
         mName = nodeName;
 
-        String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
+    }
+
+    public void setListenerAndLoadData() {
+
+        FirebaseUser user = MapActivity.firebaseAuth.getCurrentUser();
+        if (user == null) return;
+
+        String userId = user.getUid();
 
         reference = FirebaseDatabase.getInstance().getReference()
                 .child(userId)
@@ -76,5 +84,9 @@ CompleteList{
 
     public ArrayList<String> getList() {
         return list;
+    }
+
+    public void clearFromLocal() {
+        list.clear();
     }
 }

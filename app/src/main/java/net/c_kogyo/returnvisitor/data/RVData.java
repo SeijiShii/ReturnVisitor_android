@@ -3,60 +3,52 @@ package net.c_kogyo.returnvisitor.data;
 import android.content.Context;
 import android.util.Log;
 
-import com.facebook.internal.CollectionMapper;
-
 import net.c_kogyo.returnvisitor.R;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * Created by SeijiShii on 2016/07/24.
  */
 public class RVData {
-    private static RVData ourInstance = new RVData();
+
+    private static RVData instance = new RVData();
+
     private static OnDataChangedListener mOnDataChangedListener;
     private static OnDataReadyListener mOnDataReadyListener;
 
-    public static void setListeners(OnDataReadyListener onDataReadyListener, OnDataChangedListener onDataChangedListener) {
+    public static void setListeners(OnDataReadyListener onDataReadyListener,
+                                    OnDataChangedListener onDataChangedListener) {
 
         mOnDataReadyListener = onDataReadyListener;
         mOnDataChangedListener = onDataChangedListener;
 
     }
-    public static void setCompleteListSeed(Context context) {
+    public void setCompleteListSeed(Context context) {
 
         String[] nameSeedList = context.getResources().getStringArray(R.array.complete_array);
-        placementCompList.getList().addAll(Arrays.asList(nameSeedList));
+        instance.placementCompList.getList().addAll(Arrays.asList(nameSeedList));
     }
 
-    public static void initTagList(Context context) {
-        tagList = new TagList(context) {
-            @Override
-            public void onDataChanged(Tag data) {
-                if ( mOnDataChangedListener != null ) {
-                    mOnDataChangedListener.onDataChanged(Place.class);
-                }
-            }
-        };
+    public void setDefaultTag(Context context) {
+        tagList.setDefaultTagArray(context);
     }
 
-    public static RVData getInstance() {
-        return ourInstance;
-    }
+    public PlaceList placeList;
+    public PersonList personList;
+    public VisitList visitList;
+    public TagList tagList;
 
-    public static PlaceList placeList;
-    public static PersonList personList;
-    public static VisitList visitList;
-    public static TagList tagList;
-
-    public static CompleteList placementCompList;
-    public static CompleteList noteCompleteList;
+    public CompleteList placementCompList;
+    public CompleteList noteCompleteList;
 
     private boolean isPlaceLoaded = false;
     private boolean isPersonLoaded = false;
     private boolean isVisitLoaded = false;
+
+    public static RVData getInstance(){
+        return instance;
+    }
 
     private RVData() {
 
@@ -105,9 +97,42 @@ public class RVData {
             }
         };
 
+        tagList = new TagList() {
+            @Override
+            public void onDataChanged(Tag data) {
+                if ( mOnDataChangedListener != null ) {
+                    mOnDataChangedListener.onDataChanged(Place.class);
+                }
+            }
+        };
 
         placementCompList = new CompleteList("PlacementCompleteList");
         noteCompleteList = new CompleteList("NoteCompleteList");
+
+
+
+    }
+
+    public void clearFromLocal() {
+
+        placeList.clearFromLocal();
+        personList.clearFromLocal();
+        visitList.clearFromLocal();
+        tagList.clearFromLocal();
+        placementCompList.clearFromLocal();
+        noteCompleteList.clearFromLocal();
+
+    }
+
+    public void setListenerAndLoadData() {
+
+        placeList.setListenerAndLoadData();
+        personList.setListenerAndLoadData();
+        visitList.setListenerAndLoadData();
+        tagList.setListenerAndLoadData();
+
+        placementCompList.setListenerAndLoadData();
+        noteCompleteList.setListenerAndLoadData();
 
         new Thread(new Runnable() {
             @Override
@@ -126,7 +151,6 @@ public class RVData {
                 }
             }
         }).start();
-
     }
 
     public interface OnDataChangedListener {
@@ -136,4 +160,5 @@ public class RVData {
     public interface OnDataReadyListener {
         void onDataReady();
     }
+
 }

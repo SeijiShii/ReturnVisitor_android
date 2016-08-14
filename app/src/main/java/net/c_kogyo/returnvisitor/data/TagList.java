@@ -3,6 +3,7 @@ package net.c_kogyo.returnvisitor.data;
 import android.content.Context;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.view.CollapseButton;
 
 import java.util.ArrayList;
 
@@ -15,11 +16,12 @@ public abstract class TagList extends DataList<Tag> {
 
     private String[] defaultTagArray;
 
-    public TagList(Context context) {
+    public TagList() {
         super(Tag.class);
+    }
 
+    public void setDefaultTagArray(Context context) {
         defaultTagArray = context.getResources().getStringArray(R.array.tag_item_array);
-
     }
 
     public boolean hasSameNamedTag(String name) {

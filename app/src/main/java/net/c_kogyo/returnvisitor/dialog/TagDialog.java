@@ -93,10 +93,10 @@ public class TagDialog extends DialogFragment {
             public void onClick(View view) {
 
                 String name = searchText.getText().toString();
-                if (RVData.tagList.hasSameName(name)) return;
+                if (RVData.getInstance().tagList.hasSameName(name)) return;
 
                 Tag newTag = new Tag(name, false);
-                RVData.tagList.addOrSet(newTag);
+                RVData.getInstance().tagList.addOrSet(newTag);
 
                 mTags.add(newTag);
                 updateTagLinear(null);
@@ -119,7 +119,7 @@ public class TagDialog extends DialogFragment {
 
         tagLinear.removeAllViews();
 
-        mTags = new ArrayList<>(RVData.tagList.getAll());
+        mTags = new ArrayList<>(RVData.getInstance().tagList.getAll());
 
         // すでにPersonについているタグのIDが渡されてくるのでそのタグを削除する
         ArrayList<Tag> tagsToRemove = new ArrayList<>();
@@ -198,7 +198,7 @@ public class TagDialog extends DialogFragment {
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 mTags.remove(tag);
-                RVData.tagList.removeFromBoth(tag);
+                RVData.getInstance().tagList.removeFromBoth(tag);
                 tagView.fadeoutView(new TagView.PostFadeoutListener() {
                     @Override
                     public void postFadeout(TagView tagView) {

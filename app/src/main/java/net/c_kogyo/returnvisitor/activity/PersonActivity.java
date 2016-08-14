@@ -80,7 +80,7 @@ public class PersonActivity extends AppCompatActivity {
         if (personId == null) {
             mPerson = new Person();
         } else {
-            mPerson = RVData.personList.getById(personId);
+            mPerson = RVData.getInstance().personList.getById(personId);
             if (mPerson == null) {
                 mPerson = new Person();
             }
@@ -244,7 +244,7 @@ public class PersonActivity extends AppCompatActivity {
         noteText = (AutoCompleteTextView) findViewById(R.id.note_text);
         noteText.setText(mPerson.getNote());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, RVData.noteCompleteList.getList());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, RVData.getInstance().noteCompleteList.getList());
         noteText.setAdapter(adapter);
         noteText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -276,18 +276,18 @@ public class PersonActivity extends AppCompatActivity {
                 mPerson.setNote(noteText.getText().toString());
 
                 if (getIntent().getIntExtra(Constants.REQUEST_CODE, 0) == Constants.PersonCode.ADD_PERSON_REQUEST_CODE) {
-                    RVData.personList.addOrSet(mPerson);
+                    RVData.getInstance().personList.addOrSet(mPerson);
 
-                    RVData.noteCompleteList.addToBoth(mPerson.getNote());
+                    RVData.getInstance().noteCompleteList.addToBoth(mPerson.getNote());
 
                     Intent intent = new Intent();
                     intent.putExtra(Person.PERSON, mPerson.getId());
                     setResult(Constants.PersonCode.PERSON_ADDED_RESULT_CODE, intent);
                 } else if (getIntent().getIntExtra(Constants.REQUEST_CODE, 0) == Constants.PersonCode.EDIT_PERSON_REQUEST_CODE) {
 
-                    RVData.personList.addOrSet(mPerson);
+                    RVData.getInstance().personList.addOrSet(mPerson);
 
-                    RVData.noteCompleteList.addToBoth(mPerson.getNote());
+                    RVData.getInstance().noteCompleteList.addToBoth(mPerson.getNote());
 
                     Intent intent = new Intent();
                     intent.putExtra(Person.PERSON, mPerson.getId());
@@ -314,7 +314,7 @@ public class PersonActivity extends AppCompatActivity {
     private void initDeleteButton() {
 
         Button deleteButton = (Button) findViewById(R.id.delete_button);
-        if (RVData.personList.contains(mPerson)) {
+        if (RVData.getInstance().personList.contains(mPerson)) {
             deleteButton.setVisibility(View.VISIBLE);
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override

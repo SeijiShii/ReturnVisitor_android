@@ -81,7 +81,7 @@ public class TagContainer extends LinearLayout {
         // すべてのTagを横一列に配置してみる
         for ( String id : mIds ) {
 
-            final Tag tag = RVData.tagList.getById(id);
+            final Tag tag = RVData.getInstance().tagList.getById(id);
 
             // 取得時にnullが返ってきたものはリスト内に存在しないので削除された可能性がある
             if (tag != null) {

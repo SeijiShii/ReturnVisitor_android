@@ -2,6 +2,7 @@ package net.c_kogyo.returnvisitor.data;
 
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,9 +31,14 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
     private long childCount;
     private long childCounter = 0;
 
-    DataList(final Class<T> klass) {
-        list = new ArrayList<T>();
-        this.klass = klass;
+    DataList(final Class<T> clazz) {
+        list = new ArrayList<>();
+        this.klass = clazz;
+    }
+
+    public void setListenerAndLoadData() {
+        FirebaseUser user = MapActivity.firebaseAuth.getCurrentUser();
+        if (user == null) return;
 
         this.childCount = 0;
 
@@ -63,51 +69,6 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
             }
         });
-
-
-
-//        FirebaseDatabase.getInstance().getReference().child(userId)
-//                .addChildEventListener(new ChildEventListener() {
-//                    @Override
-//                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//
-//                        Log.d(DATA_LIST_TAG, "Key: "+ dataSnapshot.getKey());
-//                        if (!dataSnapshot.getKey().equals(className)) return;
-//
-//                        Log.d(DATA_LIST_TAG, "Child Count: "+ String.valueOf(dataSnapshot.getChildrenCount()));
-//
-//                        childCount = dataSnapshot.getChildrenCount();
-//
-//                        if (childCount <= 0) {
-//                            onDataLoaded();
-//                        } else {
-//                            addChildEventListener();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                        Log.d(DATA_LIST_TAG, "Canceled!");
-//
-//                    }
-//                });
-
     }
 
     private void addChildEventListener() {
@@ -167,10 +128,6 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
             }
         });
-
-
-
-
     }
 
     private T getInstance(DataSnapshot dataSnapshot) {
@@ -294,7 +251,10 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
         return arrayList;
     }
 
+    public void clearFromLocal() {
+        list.clear();
 
+    }
 
 
     public abstract void onDataChanged(T data);

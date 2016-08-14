@@ -78,7 +78,7 @@ public class Visit extends TimePeriodDataItem{
 
     public int refreshRVCount(Context context) {
 
-        ArrayList<Person> persons = RVData.personList.getList(personIds);
+        ArrayList<Person> persons = RVData.getInstance().personList.getList(personIds);
 
         int count = 0;
 

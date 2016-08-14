@@ -271,7 +271,7 @@ public class Person extends BaseDataItem implements Cloneable{
         // Tagを実装したらappend
         for (String tagId : tagIds) {
 
-            Tag tag = RVData.tagList.getById(tagId);
+            Tag tag = RVData.getInstance().tagList.getById(tagId);
             if (tag != null) {
 
                 builder.append(tag.name).append(" ");
@@ -352,7 +352,7 @@ public class Person extends BaseDataItem implements Cloneable{
 
     public boolean isRV(Context context) {
 
-        ArrayList<Tag> tags = RVData.tagList.getList(this.tagIds);
+        ArrayList<Tag> tags = RVData.getInstance().tagList.getList(this.tagIds);
 
         for (Tag tag : tags) {
             if (tag.isBibleStudyTag(context) || tag.isMRTag(context) || tag.isRVTag(context)){

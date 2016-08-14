@@ -178,7 +178,7 @@ public class PlacementActivity extends AppCompatActivity {
         AutoCompleteTextView nameText = (AutoCompleteTextView) findViewById(R.id.name_text);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1,
-                RVData.placementCompList.getList());
+                RVData.getInstance().placementCompList.getList());
         nameText.setAdapter(adapter);
         nameText.setThreshold(1);
 

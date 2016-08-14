@@ -268,7 +268,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         //会えた人を列挙する
         for ( String id : mVisit.getPersonIds() ) {
 
-            Person person = RVData.personList.getById(id);
+            Person person = RVData.getInstance().personList.getById(id);
             if (person != null) {
 
                 PersonCell cell = new PersonCell(this,
@@ -297,7 +297,7 @@ public class RecordVisitActivity extends AppCompatActivity {
 
         for ( String id : addedIds ) {
 
-            Person person = RVData.personList.getById(id);
+            Person person = RVData.getInstance().personList.getById(id);
             if (person != null) {
 
                 PersonCell cell = new PersonCell(this,
@@ -426,7 +426,7 @@ public class RecordVisitActivity extends AppCompatActivity {
     private void initNoteText() {
 
         AutoCompleteTextView noteText = (AutoCompleteTextView) findViewById(R.id.visit_note_text);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, RVData.noteCompleteList.getList());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, RVData.getInstance().noteCompleteList.getList());
         noteText.setAdapter(adapter);
         noteText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -457,9 +457,9 @@ public class RecordVisitActivity extends AppCompatActivity {
                 mPlace.addPersonIds(mVisit.getPersonIds());
                 mVisit.setRvCount(rvCountCounter.getCount());
 
-                RVData.visitList.addOrSet(mVisit);
-                RVData.placeList.addOrSet(mPlace);
-                RVData.noteCompleteList.addToBoth(mVisit.getNote());
+                RVData.getInstance().visitList.addOrSet(mVisit);
+                RVData.getInstance().placeList.addOrSet(mPlace);
+                RVData.getInstance().noteCompleteList.addToBoth(mVisit.getNote());
 
                 finish();
             }
