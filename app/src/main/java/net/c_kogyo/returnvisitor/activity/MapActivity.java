@@ -78,6 +78,7 @@ import net.c_kogyo.returnvisitor.view.CollapseButton;
 import net.c_kogyo.returnvisitor.view.HeightChangeFrameLayout;
 
 import static net.c_kogyo.returnvisitor.activity.Constants.LogInCode.GOOGLE_SIGN_IN_RC;
+import static net.c_kogyo.returnvisitor.util.DateTimeText.getDurationString;
 
 public class MapActivity extends AppCompatActivity
                             implements OnMapReadyCallback,
@@ -94,6 +95,7 @@ public class MapActivity extends AppCompatActivity
     static final String LATITUDE = "latitude";
     static final String LONGITUDE = "longitude";
     static final String USER_EMAIL_ID = "user_email_id";
+    static public boolean isInForeground;
 
     private MapView mMapView;
     private GoogleMap mMap;
@@ -109,6 +111,7 @@ public class MapActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         isDataReady = false;
         isMapReady = false;
@@ -163,6 +166,8 @@ public class MapActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         firebaseAuth.addAuthStateListener(mAuthListener);
+        isInForeground = true;
+
     }
 
     @Override
@@ -173,8 +178,10 @@ public class MapActivity extends AppCompatActivity
             firebaseAuth.removeAuthStateListener(mAuthListener);
         }
 
-    }
+        isInForeground = false;
 
+
+    }
 
     private void initDateIfAuthed() {
 
@@ -1161,29 +1168,7 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    private String getDurationString(long duration) {
 
-        final int secMil = 1000;
-        final int minMil = secMil * 60;
-        final int hourMil = minMil * 60;
-
-        int hour = (int) duration / hourMil;
-        duration = duration - hour * hourMil;
-
-        int min = (int) duration / minMil;
-        duration = duration - min * minMil;
-
-        int sec = (int) duration / secMil;
-
-        if (hour > 0) {
-
-            return String.valueOf(hour) + ":" + String.format("%02d", min);
-
-        } else {
-
-            return String.valueOf(min) + ":" + String.format("%02d", sec);
-        }
-    }
 
     private void enableTimeCount(boolean enable) {
 
@@ -1199,7 +1184,6 @@ public class MapActivity extends AppCompatActivity
                 timeCountButton.setText(R.string.time_count_button);
                 timeCountButton.setBackgroundResource(R.drawable.trans_green_selector);
                 timeCountButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-                Toast.makeText(this, R.string.logout_time_stop, Toast.LENGTH_SHORT).show();
 
                 // TODO 実際のカウントストップを実装
                 TimeCountService.stopTimeCount();

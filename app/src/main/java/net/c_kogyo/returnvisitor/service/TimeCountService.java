@@ -1,24 +1,32 @@
 package net.c_kogyo.returnvisitor.service;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Work;
+import net.c_kogyo.returnvisitor.util.DateTimeText;
 
 import java.util.Calendar;
+
+import static android.content.Intent.ACTION_DELETE;
 
 /**
  * Created by SeijiShii on 2016/08/13.
  */
 
 public class TimeCountService extends Service {
+
+    private static final int TIME_NOTIFY_ID = 100;
 
     private static boolean timeCounting;
     private long startTime;
@@ -50,11 +58,14 @@ public class TimeCountService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, final int startId) {
 
+        duration = 0;
         timeCounting = true;
         minCounter = 0;
         countStopHandler = new Handler();
 
         startTime = Calendar.getInstance().getTimeInMillis();
+
+        initNotification(duration);
 
         new Thread(new Runnable() {
             @Override
@@ -73,8 +84,8 @@ public class TimeCountService extends Service {
                     timeBroadCastIntent.putExtra(START_TIME, startTime);
                     timeBroadCastIntent.putExtra(DURATION, duration);
 
-
                     broadcastManager.sendBroadcast(timeBroadCastIntent);
+                    updateNotification(duration);
 
                     // TODO 約1分ごとに保存するようにする
                     minCounter++;
@@ -99,11 +110,18 @@ public class TimeCountService extends Service {
                     @Override
                     public void run() {
 
-                        Toast.makeText(TimeCountService.this, R.string.logout_time_stop, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TimeCountService.this, R.string.time_stop, Toast.LENGTH_SHORT).show();
                     }
                 });
 
                 stopSelf();
+
+                if (notificationManager != null) {
+                    notificationManager.cancel(TIME_NOTIFY_ID);
+                }
+
+                mWork = null;
+
             }
         }).start();
 
@@ -117,4 +135,46 @@ public class TimeCountService extends Service {
     public static void stopTimeCount() {
         timeCounting = false;
     }
+
+
+    private NotificationManager notificationManager;
+    private NotificationCompat.Builder mBuilder;
+
+
+    private void initNotification(long duration) {
+
+        String duraString = getString(R.string.duration_text, DateTimeText.getDurationString(duration));
+
+        mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.white_rv_icon)
+                .setContentTitle(getString(R.string.app_name))
+                .setContentText(duraString);
+
+
+        Intent dummyIntent = new Intent(this, IntentCatcherDummyService.class);
+        PendingIntent dummyPendingIntent = PendingIntent.getService(this, 0, dummyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(dummyPendingIntent);
+
+        Intent deleteIntent = new Intent(this, TimeCountService.class);
+        deleteIntent.setAction(ACTION_DELETE);
+        PendingIntent deletePendingIntent = PendingIntent.getService(this, 0, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setDeleteIntent(deletePendingIntent);
+
+        // キャンセルできないようにする
+        mBuilder.setOngoing(true);
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
+    }
+
+    private void updateNotification(long duration) {
+
+        String duraString = getString(R.string.duration_text, DateTimeText.getDurationString(duration));
+        mBuilder.setContentText(duraString);
+
+        // キャンセルできないようにする
+        mBuilder.setOngoing(true);
+
+        notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
+    }
+
 }
