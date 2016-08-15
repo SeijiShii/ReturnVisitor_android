@@ -3,7 +3,10 @@ package net.c_kogyo.returnvisitor.service;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -33,10 +36,15 @@ public class TimeCountService extends Service {
     private Work mWork;
 
     private LocalBroadcastManager broadcastManager;
+    private BroadcastReceiver receiver;
 
     public static final String TIME_COUNTING_ACTION = TimeCountService.class.getName() + "_time_counting_action";
     public static final String START_TIME = TimeCountService.class.getName() + "_start_time";
     public static final String DURATION = TimeCountService.class.getName() + "_duration";
+
+    public static final String START_CHANGE_ACTION = TimeCountService.class.getName() + "_start_change";
+
+    public static final String STOP_TIME_COUNT_ACTION = TimeCountService.class.getName() + "_stop_time_count_action";
 
     @Nullable
     @Override
@@ -48,8 +56,18 @@ public class TimeCountService extends Service {
     public void onCreate() {
         super.onCreate();
         broadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
-    }
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(START_CHANGE_ACTION)) {
 
+                    startTime = intent.getLongExtra(START_TIME, startTime);
+                }
+            }
+        };
+
+        broadcastManager.registerReceiver(receiver, new IntentFilter(START_CHANGE_ACTION));
+    }
 
     private long duration;
     private int minCounter;
@@ -114,13 +132,16 @@ public class TimeCountService extends Service {
                     }
                 });
 
-                stopSelf();
-
                 if (notificationManager != null) {
                     notificationManager.cancel(TIME_NOTIFY_ID);
                 }
 
                 mWork = null;
+
+                Intent stopIntent = new Intent(STOP_TIME_COUNT_ACTION);
+                broadcastManager.sendBroadcast(stopIntent);
+
+                stopSelf();
 
             }
         }).start();

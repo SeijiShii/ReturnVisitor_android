@@ -1,6 +1,7 @@
 package net.c_kogyo.returnvisitor.activity;
 
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,6 +25,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -69,6 +71,7 @@ import android.Manifest.permission;
 
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
+import net.c_kogyo.returnvisitor.data.TimePeriodDataItem;
 import net.c_kogyo.returnvisitor.dialog.MarkerDialog;
 import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
@@ -149,8 +152,10 @@ public class MapActivity extends AppCompatActivity
 
         mMapView.getMapAsync(this);
 
-        IntentFilter timeCountFilter = new IntentFilter(TimeCountService.TIME_COUNTING_ACTION);
-        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(broadcastReceiver, timeCountFilter);
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(broadcastReceiver, new IntentFilter(TimeCountService.TIME_COUNTING_ACTION));
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(broadcastReceiver, new IntentFilter(TimeCountService.STOP_TIME_COUNT_ACTION));
 
     }
 
@@ -1139,60 +1144,45 @@ public class MapActivity extends AppCompatActivity
 
                 if (TimeCountService.isTimeCounting()) {
                     TimeCountService.stopTimeCount();
-                    timeFrame.animateHeight(false, null);
-
-                    timeCountButton.setText(R.string.time_count_button);
-                    timeCountButton.setBackgroundResource(R.drawable.trans_green_selector);
-                    timeCountButton.setTextColor(ContextCompat.getColor(MapActivity.this, R.color.colorPrimaryDark));
-
 
                 } else {
 
                     startService(new Intent(MapActivity.this, TimeCountService.class));
 
-                    timeCountButton.setText(R.string.stop_time_count);
-                    timeCountButton.setBackgroundResource(R.drawable.trans_orange_selector);
-                    timeCountButton.setTextColor(ContextCompat.getColor(MapActivity.this, R.color.colorAccent));
 
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("kk:mm", Locale.getDefault());
-                    String startTimeString
-                            = MapActivity.this.getResources().getString(R.string.start_time_text, timeFormat.format(Calendar.getInstance().getTime()));
-                    startTimeText.setText(startTimeString);
 
-                    String durationTimeString = MapActivity.this.getResources().getString(R.string.duration_text, getDurationString(0));
-                    durationText.setText(durationTimeString);
-                    timeFrame.animateHeight(true, null);
                 }
             }
         });
 
     }
 
-
-
     private void enableTimeCount(boolean enable) {
+
+        timeCountButton.setText(R.string.time_count_button);
+        timeCountButton.setBackgroundResource(R.drawable.trans_green_selector);
+        timeCountButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
         if (enable) {
 
             timeCountButton.setAlpha(1f);
             timeCountButton.setClickable(true);
 
+
         } else {
 
             if (TimeCountService.isTimeCounting()) {
-                timeFrame.animateHeight(false, null);
-                timeCountButton.setText(R.string.time_count_button);
-                timeCountButton.setBackgroundResource(R.drawable.trans_green_selector);
-                timeCountButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
 
                 // TODO 実際のカウントストップを実装
                 TimeCountService.stopTimeCount();
             }
 
+            timeFrame.animateHeight(false, null);
+
             timeCountButton.setAlpha(0.3f);
             timeCountButton.setClickable(false);
-
         }
+        timeCountButton.requestLayout();
     }
 
     //Guide barの実装
@@ -1208,6 +1198,7 @@ public class MapActivity extends AppCompatActivity
 
     }
 
+    private Calendar startCal;
     class MABroadCastReceiver extends BroadcastReceiver {
 
         @Override
@@ -1215,6 +1206,38 @@ public class MapActivity extends AppCompatActivity
             if (intent.getAction().equals(TimeCountService.TIME_COUNTING_ACTION)) {
 
                 if (TimeCountService.isTimeCounting()) {
+                    timeCountButton.setText(R.string.stop_time_count);
+                    timeCountButton.setBackgroundResource(R.drawable.trans_orange_selector);
+                    timeCountButton.setTextColor(ContextCompat.getColor(MapActivity.this, R.color.colorAccent));
+
+                    timeFrame.animateHeight(TimeCountService.isTimeCounting(), null);
+
+                    startTimeText.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            new TimePickerDialog(MapActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                                @Override
+                                public void onTimeSet(TimePicker timePicker, int i, int i1) {
+
+                                    Calendar setTime = Calendar.getInstance();
+                                    setTime.set(Calendar.HOUR_OF_DAY, i);
+                                    setTime.set(Calendar.MINUTE, i1);
+
+                                    Calendar now = Calendar.getInstance();
+                                    if (setTime.before(now)) {
+
+                                        Intent startChangeIntent = new Intent(TimeCountService.START_CHANGE_ACTION);
+                                        startChangeIntent.putExtra(TimeCountService.START_TIME, setTime.getTimeInMillis());
+
+                                        LocalBroadcastManager.getInstance(MapActivity.this).sendBroadcast(startChangeIntent);
+                                    }
+                                }
+                            },
+                                    startCal.get(Calendar.HOUR_OF_DAY),
+                                    startCal.get(Calendar.MINUTE),
+                                    true).show();
+                        }
+                    });
 
                     long duration = intent.getLongExtra(TimeCountService.DURATION, 0);
                     long startTime = intent.getLongExtra(TimeCountService.START_TIME, 0);
@@ -1222,17 +1245,26 @@ public class MapActivity extends AppCompatActivity
                     if (duration != 0 && startTime != 0) {
 
                         SimpleDateFormat timeFormat = new SimpleDateFormat("kk:mm", Locale.getDefault());
-                        Calendar startCal = Calendar.getInstance();
+                        startCal = Calendar.getInstance();
                         startCal.setTimeInMillis(startTime);
                         String startTimeString = MapActivity.this.getResources().getString(R.string.start_time_text, timeFormat.format(startCal.getTime()));
                         startTimeText.setText(startTimeString);
 
                         String durationTimeString = MapActivity.this.getResources().getString(R.string.duration_text, getDurationString(duration));
                         durationText.setText(durationTimeString);
-
-
                     }
                 }
+
+            } else if (intent.getAction().equals(TimeCountService.STOP_TIME_COUNT_ACTION)) {
+
+                timeFrame.animateHeight(TimeCountService.isTimeCounting(), null);
+
+                startTimeText.setOnClickListener(null);
+
+                timeCountButton.setText(R.string.time_count_button);
+                timeCountButton.setBackgroundResource(R.drawable.trans_green_selector);
+                timeCountButton.setTextColor(ContextCompat.getColor(MapActivity.this, R.color.colorPrimaryDark));
+
             }
         }
     }

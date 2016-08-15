@@ -22,7 +22,7 @@ public class DateTimeText {
 
         if (hour > 0) {
 
-            return String.valueOf(hour) + ":" + String.format("%02d", min);
+            return String.valueOf(hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec);
 
         } else {
 
