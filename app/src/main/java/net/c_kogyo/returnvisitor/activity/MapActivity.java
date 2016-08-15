@@ -1,8 +1,11 @@
 package net.c_kogyo.returnvisitor.activity;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -10,6 +13,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -55,8 +59,11 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import android.Manifest.permission;
 
@@ -66,6 +73,7 @@ import net.c_kogyo.returnvisitor.dialog.MarkerDialog;
 import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
+import net.c_kogyo.returnvisitor.service.TimeCountService;
 import net.c_kogyo.returnvisitor.view.CollapseButton;
 import net.c_kogyo.returnvisitor.view.HeightChangeFrameLayout;
 
@@ -94,8 +102,9 @@ public class MapActivity extends AppCompatActivity
 
     private Handler markerHandler, mapListenerHandler;
 
-
     public static AddressTextLanguage addressTextLang;
+
+    private MABroadCastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +117,9 @@ public class MapActivity extends AppCompatActivity
         mapListenerHandler = new Handler();
 
         addressTextLang = AddressTextLanguage.USE_DEVICE_LOCALE;
+
+        broadcastReceiver = new MABroadCastReceiver();
+
 
         initFirebaseAuth();
         initGoogleSignIn();
@@ -134,12 +146,15 @@ public class MapActivity extends AppCompatActivity
 
         mMapView.getMapAsync(this);
 
+        IntentFilter timeCountFilter = new IntentFilter(TimeCountService.TIME_COUNTING_ACTION);
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(broadcastReceiver, timeCountFilter);
 
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(broadcastReceiver);
 
         saveCameraPosition();
     }
@@ -1092,14 +1107,16 @@ public class MapActivity extends AppCompatActivity
     // TODO 時間管理ボタンの実装
     // ログイン、ログアウトで時間ボタンのアクセシビリティが変わる
     private HeightChangeFrameLayout timeFrame;
-    private boolean isTimeCounting;
+    private TextView startTimeText, durationText;
     private void initTimeFrame() {
 
         timeFrame = (HeightChangeFrameLayout) findViewById(R.id.time_frame);
-
-        timeFrame.setHeight(isTimeCounting);
+        timeFrame.setHeight(TimeCountService.isTimeCounting());
 
         initTimeCountButton();
+
+        startTimeText = (TextView) findViewById(R.id.start_time_text);
+        durationText = (TextView) findViewById(R.id.duration_text);
 
     }
 
@@ -1107,31 +1124,65 @@ public class MapActivity extends AppCompatActivity
     private void initTimeCountButton() {
 
         timeCountButton = (Button) findViewById(R.id.time_count_button);
+        enableTimeCount(firebaseAuth.getCurrentUser() != null);
 
         timeCountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                isTimeCounting = !isTimeCounting;
-                timeFrame.animateHeight(isTimeCounting, null);
-
-                if (isTimeCounting) {
-
-                    timeCountButton.setText(R.string.stop_time_count);
-                    timeCountButton.setBackgroundResource(R.drawable.trans_orange_selector);
-
-                    timeCountButton.setTextColor(ContextCompat.getColor(MapActivity.this, R.color.colorAccent));
-
-                } else {
+                if (TimeCountService.isTimeCounting()) {
+                    TimeCountService.stopTimeCount();
+                    timeFrame.animateHeight(false, null);
 
                     timeCountButton.setText(R.string.time_count_button);
                     timeCountButton.setBackgroundResource(R.drawable.trans_green_selector);
                     timeCountButton.setTextColor(ContextCompat.getColor(MapActivity.this, R.color.colorPrimaryDark));
 
+
+                } else {
+
+                    startService(new Intent(MapActivity.this, TimeCountService.class));
+
+                    timeCountButton.setText(R.string.stop_time_count);
+                    timeCountButton.setBackgroundResource(R.drawable.trans_orange_selector);
+                    timeCountButton.setTextColor(ContextCompat.getColor(MapActivity.this, R.color.colorAccent));
+
+                    SimpleDateFormat timeFormat = new SimpleDateFormat("kk:mm", Locale.getDefault());
+                    String startTimeString
+                            = MapActivity.this.getResources().getString(R.string.start_time_text, timeFormat.format(Calendar.getInstance().getTime()));
+                    startTimeText.setText(startTimeString);
+
+                    String durationTimeString = MapActivity.this.getResources().getString(R.string.duration_text, getDurationString(0));
+                    durationText.setText(durationTimeString);
+                    timeFrame.animateHeight(true, null);
                 }
             }
         });
 
+    }
+
+    private String getDurationString(long duration) {
+
+        final int secMil = 1000;
+        final int minMil = secMil * 60;
+        final int hourMil = minMil * 60;
+
+        int hour = (int) duration / hourMil;
+        duration = duration - hour * hourMil;
+
+        int min = (int) duration / minMil;
+        duration = duration - min * minMil;
+
+        int sec = (int) duration / secMil;
+
+        if (hour > 0) {
+
+            return String.valueOf(hour) + ":" + String.format("%02d", min);
+
+        } else {
+
+            return String.valueOf(min) + ":" + String.format("%02d", sec);
+        }
     }
 
     private void enableTimeCount(boolean enable) {
@@ -1143,13 +1194,15 @@ public class MapActivity extends AppCompatActivity
 
         } else {
 
-            if (isTimeCounting) {
+            if (TimeCountService.isTimeCounting()) {
                 timeFrame.animateHeight(false, null);
                 timeCountButton.setText(R.string.time_count_button);
                 timeCountButton.setBackgroundResource(R.drawable.trans_green_selector);
                 timeCountButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-                // TODO 実際のカウントストップを実装
                 Toast.makeText(this, R.string.logout_time_stop, Toast.LENGTH_SHORT).show();
+
+                // TODO 実際のカウントストップを実装
+                TimeCountService.stopTimeCount();
             }
 
             timeCountButton.setAlpha(0.3f);
@@ -1171,5 +1224,33 @@ public class MapActivity extends AppCompatActivity
 
     }
 
+    class MABroadCastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(TimeCountService.TIME_COUNTING_ACTION)) {
+
+                if (TimeCountService.isTimeCounting()) {
+
+                    long duration = intent.getLongExtra(TimeCountService.DURATION, 0);
+                    long startTime = intent.getLongExtra(TimeCountService.START_TIME, 0);
+
+                    if (duration != 0 && startTime != 0) {
+
+                        SimpleDateFormat timeFormat = new SimpleDateFormat("kk:mm", Locale.getDefault());
+                        Calendar startCal = Calendar.getInstance();
+                        startCal.setTimeInMillis(startTime);
+                        String startTimeString = MapActivity.this.getResources().getString(R.string.start_time_text, timeFormat.format(startCal.getTime()));
+                        startTimeText.setText(startTimeString);
+
+                        String durationTimeString = MapActivity.this.getResources().getString(R.string.duration_text, getDurationString(duration));
+                        durationText.setText(durationTimeString);
+
+
+                    }
+                }
+            }
+        }
+    }
 }
 

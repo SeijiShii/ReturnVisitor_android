@@ -59,7 +59,7 @@ public abstract class BaseDataItem  implements Cloneable{
         String sMilNum = String.valueOf(milNum);
 
         int ranNum = (int)(Math.random() * 10000);
-        String sRanNum = String.valueOf(ranNum);
+        String sRanNum = String.format("%05d", ranNum);
 
         String mId = sMilNum + sRanNum;
 

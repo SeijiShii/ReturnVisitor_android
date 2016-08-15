@@ -16,8 +16,8 @@ public class TimePeriodDataItem extends BaseDataItem{
     public static final String START = "start";
     public static final String END = "end";
 
-    private Calendar start;
-    private Calendar end;
+    protected Calendar start;
+    protected Calendar end;
 
     public TimePeriodDataItem() {
 

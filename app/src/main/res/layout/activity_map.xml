@@ -206,7 +206,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/button_height"
                     custom:CollapseHeight="@dimen/button_height"
-                    custom:ExtractHeight="150dp"
+                    custom:ExtractHeight="180dp"
                     android:id="@+id/time_frame">
 
                     <LinearLayout

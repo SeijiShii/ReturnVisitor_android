@@ -38,6 +38,7 @@ public class RVData {
     public PersonList personList;
     public VisitList visitList;
     public TagList tagList;
+    public WorkList workList;
 
     public CompleteList placementCompList;
     public CompleteList noteCompleteList;
@@ -106,6 +107,20 @@ public class RVData {
             }
         };
 
+        workList = new WorkList() {
+            @Override
+            public void onDataChanged(Work data) {
+                if ( mOnDataChangedListener != null ) {
+                    mOnDataChangedListener.onDataChanged(Work.class);
+                }
+            }
+
+            @Override
+            public void onDataLoaded() {
+
+            }
+        };
+
         placementCompList = new CompleteList("PlacementCompleteList");
         noteCompleteList = new CompleteList("NoteCompleteList");
 
@@ -119,6 +134,7 @@ public class RVData {
         personList.clearFromLocal();
         visitList.clearFromLocal();
         tagList.clearFromLocal();
+        workList.clearFromLocal();
         placementCompList.clearFromLocal();
         noteCompleteList.clearFromLocal();
 
@@ -130,6 +146,7 @@ public class RVData {
         personList.setListenerAndLoadData();
         visitList.setListenerAndLoadData();
         tagList.setListenerAndLoadData();
+        workList.setListenerAndLoadData();
 
         placementCompList.setListenerAndLoadData();
         noteCompleteList.setListenerAndLoadData();
