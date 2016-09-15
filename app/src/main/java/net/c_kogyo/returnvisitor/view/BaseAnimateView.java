@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
  */
 public abstract class BaseAnimateView extends FrameLayout{
 
-    private LinearLayout view;
+    private View view;
 
     public enum AnimateCondition {
         NONE,
@@ -34,7 +34,7 @@ public abstract class BaseAnimateView extends FrameLayout{
     public BaseAnimateView(Context context, InitialHeightCondition initCondition, int baseViewResId) {
         super(context);
 
-        view = (LinearLayout) LayoutInflater.from(context).inflate(baseViewResId, null);
+        view = LayoutInflater.from(context).inflate(baseViewResId, null);
         this.addView(view);
 
         if (initCondition == InitialHeightCondition.FROM_0) {

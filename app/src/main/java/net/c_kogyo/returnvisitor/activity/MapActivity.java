@@ -71,7 +71,6 @@ import android.Manifest.permission;
 
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
-import net.c_kogyo.returnvisitor.data.TimePeriodDataItem;
 import net.c_kogyo.returnvisitor.dialog.MarkerDialog;
 import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
@@ -103,7 +102,7 @@ public class MapActivity extends AppCompatActivity
     private MapView mMapView;
     private GoogleMap mMap;
     private boolean isMapReady;
-    private boolean isDataReady;
+//    private boolean isDataReady;
 
     private Handler markerHandler, mapListenerHandler;
 
@@ -111,12 +110,16 @@ public class MapActivity extends AppCompatActivity
 
     private MABroadCastReceiver broadcastReceiver;
 
+    // 起動時間タイマー
+    private long timer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        timer = Calendar.getInstance().getTimeInMillis();
 
-        isDataReady = false;
+//        isDataReady = false;
         isMapReady = false;
 
         markerHandler = new Handler();
@@ -188,31 +191,28 @@ public class MapActivity extends AppCompatActivity
 
     }
 
+    private static final String APP_TIMER_TAG = "AppTimer";
     private void initDateIfAuthed() {
 
-        if (firebaseAuth.getCurrentUser() != null && !isDataReady) {
+        if (firebaseAuth.getCurrentUser() != null) {
 
-            // リモートのデータを読み込むためだけに一度getInstanceを実行
+            RVData.getInstance().initWithListenersAndLoad(
+                    this,
+                    new RVData.OnDataLoadedListener() {
+                          @Override
+                          public void onDataLoaded() {
 
+                              showTimeLog("Data loaded");
+                              showMarkers(firebaseAuth.getCurrentUser() != null, markerHandler);
+                          }
+                      },
+                    new RVData.OnDataChangedListener() {
+                        @Override
+                        public void onDataChanged(Class clazz) {
 
-            markerHandler = new Handler();
-            RVData.setListeners(new RVData.OnDataReadyListener() {
-                                    @Override
-                                    public void onDataReady() {
+                        }
+                    });
 
-                                        isDataReady = true;
-                                        showMarkers(firebaseAuth.getCurrentUser() != null, markerHandler);
-                                    }
-                                },
-                                new RVData.OnDataChangedListener() {
-                                    @Override
-                                    public void onDataChanged(Class clazz) {
-                                        showMarkers(firebaseAuth.getCurrentUser() != null, markerHandler);
-                                    }
-                                });
-            RVData.getInstance().setListenerAndLoadData();
-            RVData.getInstance().setCompleteListSeed(this);
-            RVData.getInstance().setDefaultTag(this);
         }
 
     }
@@ -482,6 +482,7 @@ public class MapActivity extends AppCompatActivity
         initAnonymousLoginButton();
         initLogoutButton();
         initTimeFrame();
+        initWorkButton();
 
     }
 
@@ -538,7 +539,7 @@ public class MapActivity extends AppCompatActivity
                 // ログアウト時にデータがすべて消去されるようにする
 
                     RVData.getInstance().clearFromLocal();
-                    isDataReady = false;
+//                    isDataReady = false;
                 }
                 animateLoginButton(user == null || loggedInAnonymously());
                 animateAnonymousLoginButton(user == null);
@@ -1056,12 +1057,14 @@ public class MapActivity extends AppCompatActivity
 //    ArrayList<Marker> markers;
     private void showMarkers(final boolean show, final Handler markerHandler) {
 
+        showTimeLog("Show marker");
+
         if (show) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
 
-                    while (!isMapReady || !isDataReady) {
+                    while (!isMapReady) {
 
                         try {
                             Thread.sleep(20);
@@ -1074,6 +1077,9 @@ public class MapActivity extends AppCompatActivity
                         public void run() {
 
                             mMap.clear();
+                            showTimeLog("Marker cleared");
+
+                            showTimeLog("Place count: " + RVData.getInstance().placeList.getList().size());
 
                             // 起動時、データを読み込んだ後に表示するよう調整
                             for ( Place place : RVData.getInstance().placeList ) {
@@ -1084,7 +1090,8 @@ public class MapActivity extends AppCompatActivity
 
                                 Marker marker = mMap.addMarker(options);
                                 place.setMarkerId(marker.getId());
-//                                    markers.add(marker);
+
+                                showTimeLog("Marker Added ID: " + marker.getId());
                             }
                         }
                     });
@@ -1095,6 +1102,8 @@ public class MapActivity extends AppCompatActivity
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+
+
 
                     while (!isMapReady) {
                         try {
@@ -1116,7 +1125,7 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
-    // TODO 時間管理ボタンの実装
+    // 時間管理ボタンの実装
     // ログイン、ログアウトで時間ボタンのアクセシビリティが変わる
     private HeightChangeFrameLayout timeFrame;
     private TextView startTimeText, durationText;
@@ -1268,5 +1277,28 @@ public class MapActivity extends AppCompatActivity
             }
         }
     }
+
+    private void initWorkButton() {
+
+        Button workButton = (Button) findViewById(R.id.work_button);
+        workButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent workActivityIntent = new Intent(MapActivity.this, WorkActivity.class);
+                startActivity(workActivityIntent);
+            }
+        });
+
+    }
+
+    private void showTimeLog(String message) {
+
+        long now = Calendar.getInstance().getTimeInMillis();
+
+        Log.d(APP_TIMER_TAG, message + ", time: " + (now - timer));
+
+    }
 }
+
 

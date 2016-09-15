@@ -74,4 +74,10 @@ public class TimePeriodDataItem extends BaseDataItem{
         this.end = Calendar.getInstance();
         this.end.setTimeInMillis(Long.valueOf(map.get(END).toString()));
     }
+
+    public long getDuration() {
+
+        return end.getTimeInMillis() - start.getTimeInMillis();
+
+    }
 }

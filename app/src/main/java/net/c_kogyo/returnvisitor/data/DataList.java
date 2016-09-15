@@ -11,8 +11,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import net.c_kogyo.returnvisitor.activity.MapActivity;
+import net.c_kogyo.returnvisitor.util.CalendarUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -28,50 +30,61 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
     protected ArrayList<T> list;
     private Class<T> klass;
     private DatabaseReference reference;
-    private long childCount;
-    private long childCounter = 0;
 
     DataList(final Class<T> clazz) {
         list = new ArrayList<>();
         this.klass = clazz;
     }
 
-    public void setListenerAndLoadData() {
+//    public void setChildEventListener() {
+//        FirebaseUser user = MapActivity.firebaseAuth.getCurrentUser();
+//        if (user == null) return;
+//
+//        String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
+//
+//        reference = FirebaseDatabase.getInstance().getReference()
+//                .child(userId)
+//                .child(klass.getSimpleName());
+//
+//        reference.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+//
+//    }
+
+    public void addChildEventListener() {
+
         FirebaseUser user = MapActivity.firebaseAuth.getCurrentUser();
         if (user == null) return;
 
-        this.childCount = 0;
-
         String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
-        final String className = klass.getSimpleName();
 
         reference = FirebaseDatabase.getInstance().getReference()
                 .child(userId)
-                .child(className);
-
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Log.d(DATA_LIST_TAG, "Key: "+ dataSnapshot.getKey());
-                Log.d(DATA_LIST_TAG, "Child Count: "+ String.valueOf(dataSnapshot.getChildrenCount()));
-
-                childCount = dataSnapshot.getChildrenCount();
-                if (childCount <= 0) {
-                    onDataLoaded();
-                }
-
-                addChildEventListener();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void addChildEventListener() {
+                .child(klass.getSimpleName());
 
         reference.addChildEventListener(new ChildEventListener() {
 
@@ -87,12 +100,6 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
                 if ( data1 == null ) return;
 
                 addToListIfNotContained(data1);
-                childCounter++;
-
-                if (childCounter >= childCount) {
-                    onDataLoaded();
-                }
-
             }
 
             @Override
@@ -134,6 +141,13 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
         Object o = dataSnapshot.getValue();
         HashMap<String, Object> map = (HashMap<String, Object>) o;
+
+        return getInstanceFromMap(map);
+
+    }
+
+    private T getInstanceFromMap(HashMap<String, Object> map) {
+
         T data1 = null;
 
         try {
@@ -256,12 +270,30 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
     }
 
+    public ArrayList<T> getList() {
+        return list;
+    }
 
     public abstract void onDataChanged(T data);
 
-    public abstract void onDataLoaded();
+    public void loadFromHashMap(HashMap<String, Object> map, Class<T> clazz) {
 
+        String className = clazz.getSimpleName();
+        Object o = map.get(className);
 
+        HashMap<String, Object> map1 = (HashMap<String, Object> ) o;
+
+        list = new ArrayList<>();
+
+        if (map1 == null) return;
+
+        for (Object data : map1.values()) {
+
+            HashMap<String, Object> dataMap = (HashMap<String, Object>) data;
+            list.add(getInstanceFromMap(dataMap));
+        }
+
+    }
 
 }
 

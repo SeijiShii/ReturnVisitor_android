@@ -180,7 +180,7 @@
                     android:background="@color/text_color_normal"
                     android:id="@+id/anonymous_login_border"/>
 
-                <!-- Log out Button-->
+                <!-- Log out Button-->cd
                 <net.c_kogyo.returnvisitor.view.CollapseButton
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/button_height"
@@ -254,10 +254,11 @@
                     android:layout_marginRight="5dp"
                     android:background="@color/text_color_normal" />
 
+                <!-- Work Button -->
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/button_height"
-                    android:id="@+id/calendar_button"
+                    android:id="@+id/work_button"
                     android:background="@drawable/trans_green_selector"
                     android:text="@string/work"
                     android:textColor="@color/colorPrimaryDark"

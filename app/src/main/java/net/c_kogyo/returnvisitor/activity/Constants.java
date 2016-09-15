@@ -28,6 +28,8 @@ public class Constants {
             R.mipmap.marker_orange
     };
 
+    public static final String DATE_LONG = "date_data";
+
     public static final String REQUEST_CODE = "Request Code";
 
     public class PersonCode {
@@ -55,5 +57,7 @@ public class Constants {
 
 
     }
+
+
 
 }

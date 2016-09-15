@@ -1,5 +1,8 @@
 package net.c_kogyo.returnvisitor.util;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 /**
  * Created by SeijiShii on 2016/08/14.
  */
@@ -28,5 +31,12 @@ public class DateTimeText {
 
             return String.valueOf(min) + ":" + String.format("%02d", sec);
         }
+    }
+
+    static public String getTimeText(Calendar calendar) {
+
+        SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+        return format.format(calendar.getTime());
+
     }
 }

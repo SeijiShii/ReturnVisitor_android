@@ -153,6 +153,57 @@ public class Visit extends TimePeriodDataItem{
 
     }
 
+    public Person.Interest getInterest() {
+
+        ArrayList<Person> persons = RVData.getInstance().personList.getPersons(personIds);
+
+        Person.Interest interest = Person.Interest.NONE;
+
+        for (Person person : persons) {
+
+            if (person.getInterest().num() > interest.num()){
+                interest = person.getInterest();
+            }
+        }
+        return interest;
+    }
+
+    public Person getBestPerson() {
+
+        ArrayList<Person> persons = RVData.getInstance().personList.getPersons(personIds);
+
+        if (persons.size() <= 0) {
+            return null;
+        }
+
+        Person person = persons.get(0);
+
+        for (Person person1 : persons) {
+
+            if (person1.getInterest().num() > person.getInterest().num()){
+                person = person1;
+            }
+        }
+        return person;
+
+    }
+
+    public String toDataString(Context context) {
+
+        StringBuilder builder = new StringBuilder();
+        Person person = getBestPerson();
+
+
+        if (person != null) {
+
+            if (person.getName() != null && !person.getName().equals("")){
+                builder.append(person.getName()).append("");
+            }
+        }
+
+        return builder.toString();
+
+    }
 
 
 

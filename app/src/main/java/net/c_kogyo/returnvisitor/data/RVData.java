@@ -3,9 +3,18 @@ package net.c_kogyo.returnvisitor.data;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.activity.MapActivity;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * Created by SeijiShii on 2016/07/24.
@@ -15,23 +24,23 @@ public class RVData {
     private static RVData instance = new RVData();
 
     private static OnDataChangedListener mOnDataChangedListener;
-    private static OnDataReadyListener mOnDataReadyListener;
+    private static OnDataLoadedListener mOnDataLoadedListener;
 
-    public static void setListeners(OnDataReadyListener onDataReadyListener,
-                                    OnDataChangedListener onDataChangedListener) {
+    public void initWithListenersAndLoad(
+            Context context,
+            OnDataLoadedListener onDataLoadedListener,
+            OnDataChangedListener onDataChangedListener) {
 
-        mOnDataReadyListener = onDataReadyListener;
+
+        tagList.setDefaultTagArray(context);
+
+        mOnDataLoadedListener = onDataLoadedListener;
         mOnDataChangedListener = onDataChangedListener;
 
-    }
-    public void setCompleteListSeed(Context context) {
+        loadData();
 
-        String[] nameSeedList = context.getResources().getStringArray(R.array.complete_array);
-        instance.placementCompList.getList().addAll(Arrays.asList(nameSeedList));
-    }
+        placementCompList.setCompleteSeed(context, R.array.complete_array);
 
-    public void setDefaultTag(Context context) {
-        tagList.setDefaultTagArray(context);
     }
 
     public PlaceList placeList;
@@ -42,10 +51,6 @@ public class RVData {
 
     public CompleteList placementCompList;
     public CompleteList noteCompleteList;
-
-    private boolean isPlaceLoaded = false;
-    private boolean isPersonLoaded = false;
-    private boolean isVisitLoaded = false;
 
     public static RVData getInstance(){
         return instance;
@@ -62,10 +67,6 @@ public class RVData {
                 }
             }
 
-            @Override
-            public void onDataLoaded() {
-                isPlaceLoaded = true;
-            }
         };
 
         personList = new PersonList() {
@@ -77,10 +78,6 @@ public class RVData {
                 }
             }
 
-            @Override
-            public void onDataLoaded() {
-                isPersonLoaded = true;
-            }
         };
 
         visitList = new VisitList() {
@@ -92,10 +89,6 @@ public class RVData {
                 }
             }
 
-            @Override
-            public void onDataLoaded() {
-                isVisitLoaded = true;
-            }
         };
 
         tagList = new TagList() {
@@ -115,16 +108,10 @@ public class RVData {
                 }
             }
 
-            @Override
-            public void onDataLoaded() {
-
-            }
         };
 
         placementCompList = new CompleteList("PlacementCompleteList");
         noteCompleteList = new CompleteList("NoteCompleteList");
-
-
 
     }
 
@@ -140,42 +127,92 @@ public class RVData {
 
     }
 
-    public void setListenerAndLoadData() {
+    private void loadData() {
 
-        placeList.setListenerAndLoadData();
-        personList.setListenerAndLoadData();
-        visitList.setListenerAndLoadData();
-        tagList.setListenerAndLoadData();
-        workList.setListenerAndLoadData();
+        FirebaseUser user = MapActivity.firebaseAuth.getCurrentUser();
+        if (user == null) return;
 
-        placementCompList.setListenerAndLoadData();
-        noteCompleteList.setListenerAndLoadData();
+        String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
 
-        new Thread(new Runnable() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child(userId);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void run() {
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                while ( !isPlaceLoaded || !isPersonLoaded || !isVisitLoaded ) {
-                    try {
-                        Thread.sleep(50);
-                        Log.d("RVData", "WAIT!");
-                    } catch (InterruptedException e) {
-                        Log.d("RVData", e.getMessage());
-                    }
-                }
-                if (mOnDataReadyListener != null) {
-                    mOnDataReadyListener.onDataReady();
-                }
+                HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
+                loadFromHashMap(map);
+
+                mOnDataLoadedListener.onDataLoaded();
             }
-        }).start();
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
+
+    private void loadFromHashMap(HashMap<String, Object> map) {
+
+        placeList.loadFromHashMap(map, Place.class);
+        personList.loadFromHashMap(map, Person.class);
+        visitList.loadFromHashMap(map, Visit.class);
+        tagList.loadFromHashMap(map, Tag.class);
+        workList.loadFromHashMap(map, Work.class);
+
+        placementCompList.loadFromHashMap(map);
+        noteCompleteList.loadFromHashMap(map);
+
+        tagList.addDefaultTagsIfNeeded();
+
+        placeList.addChildEventListener();
+        personList.addChildEventListener();
+        visitList.addChildEventListener();
+        tagList.addChildEventListener();
+        workList.addChildEventListener();
+
+        placementCompList.addChildEventListener();
+        noteCompleteList.addChildEventListener();
+
+    }
+
+    //    public void setListenerAndLoadData() {
+//
+//        placeList.setListenerAndLoadData();
+//        personList.setListenerAndLoadData();
+//        visitList.setListenerAndLoadData();
+//        tagList.setListenerAndLoadData();
+//        workList.setListenerAndLoadData();
+//
+//        placementCompList.setListenerAndLoadData();
+//        noteCompleteList.setListenerAndLoadData();
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                while ( !isPlaceLoaded || !isPersonLoaded || !isVisitLoaded ) {
+//                    try {
+//                        Thread.sleep(50);
+//                        Log.d("RVData", "WAIT!");
+//                    } catch (InterruptedException e) {
+//                        Log.d("RVData", e.getMessage());
+//                    }
+//                }
+//                if (mOnDataReadyListener != null) {
+//                    mOnDataReadyListener.onDataReady();
+//                }
+//            }
+//        }).start();
+//    }
 
     public interface OnDataChangedListener {
         void onDataChanged(Class clazz);
     }
 
-    public interface OnDataReadyListener {
-        void onDataReady();
+    public interface OnDataLoadedListener {
+        void onDataLoaded();
     }
 
 }

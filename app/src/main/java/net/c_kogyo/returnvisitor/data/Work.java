@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
+import net.c_kogyo.returnvisitor.service.TimeCountService;
+
 import java.util.Calendar;
 
 /**
@@ -16,8 +18,25 @@ public class Work extends TimePeriodDataItem {
         this.start = (Calendar) startTime.clone();
     }
 
+    public Work(){
+        super();
+    }
+
     @Override
     public String getIdHeader() {
         return WORK;
+    }
+
+    public boolean isTimeCounting() {
+
+        Work workingWork = TimeCountService.getWork();
+        if (workingWork == null) {
+            return false;
+        }
+
+        if (this.getId().equals(workingWork.getId())) {
+            return TimeCountService.isTimeCounting();
+        }
+        return false;
     }
 }

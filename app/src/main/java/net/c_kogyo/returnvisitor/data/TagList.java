@@ -34,9 +34,7 @@ public abstract class TagList extends DataList<Tag> {
         return false;
     }
 
-    @Override
-    public void onDataLoaded() {
-
+    public void addDefaultTagsIfNeeded() {
         // 初期タグの追加でFirebaseに追加されすぎてしまう件
         // Firebaseからロードが終わってから、なければ追加するようにする
         for (String tagString : defaultTagArray) {

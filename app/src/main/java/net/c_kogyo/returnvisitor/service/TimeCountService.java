@@ -33,7 +33,7 @@ public class TimeCountService extends Service {
 
     private static boolean timeCounting;
     private long startTime;
-    private Work mWork;
+    private static Work mWork;
 
     private LocalBroadcastManager broadcastManager;
     private BroadcastReceiver receiver;
@@ -107,7 +107,7 @@ public class TimeCountService extends Service {
 
                     // TODO 約1分ごとに保存するようにする
                     minCounter++;
-                    if (minCounter > 100) {
+                    if (minCounter > 50) {
 
                         if (mWork == null) {
 
@@ -151,6 +151,10 @@ public class TimeCountService extends Service {
 
     public static boolean isTimeCounting() {
         return timeCounting;
+    }
+
+    public static Work getWork() {
+        return mWork;
     }
 
     public static void stopTimeCount() {
