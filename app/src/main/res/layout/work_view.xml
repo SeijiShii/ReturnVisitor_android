@@ -43,7 +43,7 @@
             android:text="@string/edit"
             android:textColor="@color/colorPrimaryDark"
             android:layout_alignParentRight="true"
-            android:background="#0000"/>
+            android:background="@drawable/trans_white_selector"/>
 
     </RelativeLayout>
 
@@ -75,7 +75,7 @@
             android:text="@string/stop_time_count"
             android:textColor="@color/colorPrimaryDark"
             android:layout_centerInParent="true"
-            android:background="#0000"/>
+            android:background="@drawable/trans_white_selector"/>
 
 
 
