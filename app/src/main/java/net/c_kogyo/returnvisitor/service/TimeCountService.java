@@ -113,6 +113,8 @@ public class TimeCountService extends Service {
                     timeBroadCastIntent.putExtra(START_TIME, startTime);
                     timeBroadCastIntent.putExtra(DURATION, duration);
 
+                    mWork.setEnd(Calendar.getInstance());
+
                     broadcastManager.sendBroadcast(timeBroadCastIntent);
                     updateNotification(duration);
 
@@ -127,7 +129,7 @@ public class TimeCountService extends Service {
                             mWork = new Work(startCal);
                         }
 
-                        mWork.setEnd(Calendar.getInstance());
+//                        mWork.setEnd(Calendar.getInstance());
 
                         RVData.getInstance().workList.addOrSet(mWork);
                         minCounter = 0;

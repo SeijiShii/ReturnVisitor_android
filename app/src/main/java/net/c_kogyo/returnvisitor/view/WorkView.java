@@ -1,5 +1,6 @@
 package net.c_kogyo.returnvisitor.view;
 
+import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,16 +12,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.data.Work;
 import net.c_kogyo.returnvisitor.service.TimeCountService;
-import net.c_kogyo.returnvisitor.util.CalendarUtil;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by SeijiShii on 2016/09/11.
@@ -43,7 +45,7 @@ public class WorkView extends BaseAnimateView {
                 updateDurationText(intent);
 
             } else if (intent.getAction().equals(TimeCountService.STOP_TIME_COUNT_ACTION)) {
-                updateStopCountButton();
+                updateEndButton();
             }
         }
     };
@@ -61,10 +63,9 @@ public class WorkView extends BaseAnimateView {
         broadcastManager.registerReceiver(receiver, timeCountFilter);
         broadcastManager.registerReceiver(receiver, stopTimeFilter);
 
-        initStartText();
+        initStartTextButton();
         initDurationText();
-        initEndText();
-        initStopCountButton();
+        initEndButton();
 
         initVisitCellContainer();
     }
@@ -83,15 +84,47 @@ public class WorkView extends BaseAnimateView {
 
     }
 
-    private void initStartText() {
+    private Button startTextButton;
+    private void initStartTextButton() {
 
-        TextView startText = (TextView) getViewById(R.id.start_time_text);
+        startTextButton = (Button) getViewById(R.id.start_time_text);
+        updateStartTextButton();
+
+        startTextButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+
+                        Calendar setTime = Calendar.getInstance();
+                        setTime.set(Calendar.HOUR_OF_DAY, i);
+                        setTime.set(Calendar.MINUTE, i1);
+
+                        if (setTime.before(mWork.getEnd())) {
+                            mWork.setStart(setTime);
+                            updateStartTextButton();
+                            updateDurationText(null);
+                        }
+
+                    }
+                },
+                mWork.getStart().get(Calendar.HOUR_OF_DAY),
+                mWork.getStart().get(Calendar.MINUTE),
+                true).show();
+            }
+        });
+
+    }
+
+    private void updateStartTextButton() {
+
         String startString = DateTimeText.getTimeText(mWork.getStart());
         startString = mContext.getString(R.string.start_time_text, startString);
 
-        startText.setText(startString);
-
+        startTextButton.setText(startString);
     }
+
 
     private TextView durationText;
     private void initDurationText() {
@@ -119,21 +152,62 @@ public class WorkView extends BaseAnimateView {
 
     }
 
-    private void initEndText() {
+    private Button endButton;
+    private void initEndButton() {
 
-        TextView endText = (TextView) getViewById(R.id.end_time_text);
+        endButton = (Button) getViewById(R.id.end_time_text);
+
+        updateEndButton();
+
+    }
+
+    private void updateEndButton() {
 
         String endString;
 
         if (mWork.isTimeCounting()) {
-            endString = mContext.getString(R.string.time_counting);
+            endString = mContext.getString(R.string.time_counting_stop);
+
+            endButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TimeCountService.stopTimeCount();
+                }
+            });
+
         } else {
             endString = DateTimeText.getTimeText(mWork.getEnd());
+
+            endButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    new TimePickerDialog(mContext, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int i, int i1) {
+
+                            Calendar setTime = Calendar.getInstance();
+                            setTime.set(Calendar.HOUR_OF_DAY, i);
+                            setTime.set(Calendar.MINUTE, i1);
+
+                            if (setTime.after(mWork.getStart())) {
+                                mWork.setEnd(setTime);
+                                updateEndButton();
+                                updateDurationText(null);
+                            }
+
+                        }
+                    },
+                    mWork.getEnd().get(Calendar.HOUR_OF_DAY),
+                    mWork.getEnd().get(Calendar.MINUTE),
+                    true).show();
+
+                }
+            });
         }
 
         endString = mContext.getString(R.string.end_time_text, endString);
-        endText.setText(endString);
-
+        endButton.setText(endString);
     }
 
     private LinearLayout visitCellContainer;
@@ -151,30 +225,6 @@ public class WorkView extends BaseAnimateView {
 
     public Work getWork() {
         return mWork;
-    }
-
-    private Button stopCountButton;
-    private void initStopCountButton() {
-
-        stopCountButton = (Button) getViewById(R.id.stop_time_count_button);
-        updateStopCountButton();
-    }
-
-    private void updateStopCountButton() {
-
-        if (mWork.isTimeCounting()) {
-            stopCountButton.setVisibility(VISIBLE);
-            stopCountButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    TimeCountService.stopTimeCount();
-
-                }
-            });
-        } else {
-            stopCountButton.setVisibility(INVISIBLE);
-        }
     }
 
 }

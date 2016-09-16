@@ -3,9 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
-    android:paddingLeft="3dp"
-    android:paddingRight="3dp">
+    android:background="@color/colorPrimary">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFF"/>
 
     <View
         android:layout_width="match_parent"
@@ -18,7 +21,7 @@
         android:background="@color/colorPrimary"
         android:padding="5dp">
 
-        <TextView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textColor="#FFF"
@@ -26,7 +29,7 @@
             android:gravity="center"
             android:id="@+id/start_time_text"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/white_trans_circle"/>
+            android:background="@drawable/white_circle_selector"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,7 +48,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/visit_cell_container"/>
+        android:id="@+id/visit_cell_container"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -53,7 +58,7 @@
         android:background="@color/colorPrimary"
         android:padding="5dp">
 
-        <TextView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textColor="#FFF"
@@ -63,18 +68,7 @@
             android:layout_alignParentLeft="true"
             android:paddingRight="3dp"
             android:paddingLeft="3dp"
-            android:background="@drawable/white_trans_circle"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/stop_time_count_button"
-            android:text="@string/stop_time_count"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/trans_white_selector"/>
-
-
+            android:background="@drawable/white_circle_selector"/>
 
     </RelativeLayout>
 
@@ -82,5 +76,10 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorPrimaryDark"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFF"/>
 
 </LinearLayout>
