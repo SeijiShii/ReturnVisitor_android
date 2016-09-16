@@ -43,7 +43,10 @@ public class WorkView extends BaseAnimateView {
                 String durationString = DateTimeText.getDurationString(duration);
                 Log.d(WORK_VIEW_TEST_TAG, "Duration updated: " + durationString);
 
-                durationText.setText(durationString);
+                if (mWork.isTimeCounting()) {
+
+                    durationText.setText(durationString);
+                }
             }
         }
     };
