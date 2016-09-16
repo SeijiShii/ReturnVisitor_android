@@ -1,6 +1,11 @@
 package net.c_kogyo.returnvisitor.view;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -10,10 +15,11 @@ import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.data.Work;
+import net.c_kogyo.returnvisitor.service.TimeCountService;
+import net.c_kogyo.returnvisitor.util.CalendarUtil;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * Created by SeijiShii on 2016/09/11.
@@ -21,9 +27,26 @@ import java.util.Calendar;
 
 public class WorkView extends BaseAnimateView {
 
+    private static final String WORK_VIEW_TEST_TAG = "WorkViewTest";
+
     private Context mContext;
     private Work mWork;
     private ArrayList<Visit> visitsInWork;
+    private LocalBroadcastManager broadcastManager;
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (intent.getAction().equals(TimeCountService.TIME_COUNTING_ACTION)) {
+
+                long duration = intent.getLongExtra(TimeCountService.DURATION, 0);
+                String durationString = DateTimeText.getDurationString(duration);
+                Log.d(WORK_VIEW_TEST_TAG, "Duration updated: " + durationString);
+
+                durationText.setText(durationString);
+            }
+        }
+    };
 
     public WorkView(Work work, Context context, InitialHeightCondition initCondition) {
         super(context, initCondition, R.layout.work_view);
@@ -31,8 +54,12 @@ public class WorkView extends BaseAnimateView {
         mContext = context;
         mWork = work;
 
+        broadcastManager = LocalBroadcastManager.getInstance(mContext);
+        IntentFilter timeCountFilter = new IntentFilter(TimeCountService.TIME_COUNTING_ACTION);
+        broadcastManager.registerReceiver(receiver, timeCountFilter);
+
         initStartText();
-        initTimeText();
+        initDurationText();
         initEndText();
         initEditButton();
         initStopCountButton();
@@ -64,16 +91,16 @@ public class WorkView extends BaseAnimateView {
 
     }
 
-    private void initTimeText() {
+    private TextView durationText;
+    private void initDurationText() {
 
-        TextView timeText = (TextView) getViewById(R.id.time_text);
+        durationText = (TextView) getViewById(R.id.time_text);
 
         String timeString = DateTimeText.getDurationString(mWork.getDuration());
         timeString = mContext.getString(R.string.time_text, timeString);
-
-        timeText.setText(timeString);
-
+        durationText.setText(timeString);
     }
+
 
     private void initEndText() {
 
