@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -39,14 +40,11 @@ public class WorkView extends BaseAnimateView {
 
             if (intent.getAction().equals(TimeCountService.TIME_COUNTING_ACTION)) {
 
-                long duration = intent.getLongExtra(TimeCountService.DURATION, 0);
-                String durationString = DateTimeText.getDurationString(duration);
-                Log.d(WORK_VIEW_TEST_TAG, "Duration updated: " + durationString);
+                updateDurationText(intent);
 
-                if (mWork.isTimeCounting()) {
-
-                    durationText.setText(durationString);
-                }
+            } else if (intent.getAction().equals(TimeCountService.STOP_TIME_COUNT_ACTION)) {
+                updateStopCountButton();
+                updateEditButton();
             }
         }
     };
@@ -59,7 +57,10 @@ public class WorkView extends BaseAnimateView {
 
         broadcastManager = LocalBroadcastManager.getInstance(mContext);
         IntentFilter timeCountFilter = new IntentFilter(TimeCountService.TIME_COUNTING_ACTION);
+        IntentFilter stopTimeFilter = new IntentFilter(TimeCountService.STOP_TIME_COUNT_ACTION);
+
         broadcastManager.registerReceiver(receiver, timeCountFilter);
+        broadcastManager.registerReceiver(receiver, stopTimeFilter);
 
         initStartText();
         initDurationText();
@@ -98,12 +99,27 @@ public class WorkView extends BaseAnimateView {
     private void initDurationText() {
 
         durationText = (TextView) getViewById(R.id.time_text);
-
-        String timeString = DateTimeText.getDurationString(mWork.getDuration());
-        timeString = mContext.getString(R.string.time_text, timeString);
-        durationText.setText(timeString);
+        updateDurationText(null);
     }
 
+    private void updateDurationText(@Nullable Intent intent) {
+
+        if (mWork.isTimeCounting() && intent != null) {
+
+            long duration = intent.getLongExtra(TimeCountService.DURATION, 0);
+            String durationString = DateTimeText.getDurationString(duration);
+            Log.d(WORK_VIEW_TEST_TAG, "Duration updated: " + durationString);
+
+            durationText.setText(durationString);
+
+        } else {
+
+            String timeString = DateTimeText.getDurationString(mWork.getDuration());
+            timeString = mContext.getString(R.string.time_text, timeString);
+            durationText.setText(timeString);
+        }
+
+    }
 
     private void initEndText() {
 
@@ -139,10 +155,16 @@ public class WorkView extends BaseAnimateView {
         return mWork;
     }
 
+    private Button editButton;
     private void initEditButton() {
 
-        Button editButton = (Button) getViewById(R.id.edit_button);
+        editButton = (Button) getViewById(R.id.edit_button);
 
+        updateEditButton();
+
+    }
+
+    private void updateEditButton() {
         if (mWork.isTimeCounting()) {
             editButton.setVisibility(INVISIBLE);
         } else {
@@ -157,14 +179,22 @@ public class WorkView extends BaseAnimateView {
         }
     }
 
+    private Button stopCountButton;
     private void initStopCountButton() {
 
-        Button stopCountButton = (Button) getViewById(R.id.stop_time_count_button);
+        stopCountButton = (Button) getViewById(R.id.stop_time_count_button);
+        updateStopCountButton();
+    }
+
+    private void updateStopCountButton() {
+
         if (mWork.isTimeCounting()) {
             stopCountButton.setVisibility(VISIBLE);
             stopCountButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    TimeCountService.stopTimeCount();
 
                 }
             });
@@ -172,6 +202,5 @@ public class WorkView extends BaseAnimateView {
             stopCountButton.setVisibility(INVISIBLE);
         }
     }
-
 
 }

@@ -39,7 +39,6 @@ public class TimeCountService extends Service {
     private BroadcastReceiver receiver;
 
     public static final String TIME_COUNTING_ACTION = TimeCountService.class.getName() + "_time_counting_action";
-    public static final String SECOND_COUNT_ACTION = TimeCountService.class.getName() + "_second_count_action";
 
     public static final String START_TIME = TimeCountService.class.getName() + "_start_time";
     public static final String DURATION = TimeCountService.class.getName() + "_duration";

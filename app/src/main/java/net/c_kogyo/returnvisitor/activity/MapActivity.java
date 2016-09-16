@@ -1164,8 +1164,6 @@ public class MapActivity extends AppCompatActivity
 
                     startService(new Intent(MapActivity.this, TimeCountService.class));
 
-
-
                 }
             }
         });
@@ -1188,7 +1186,7 @@ public class MapActivity extends AppCompatActivity
 
             if (TimeCountService.isTimeCounting()) {
 
-                // TODO 実際のカウントストップを実装
+                // 実際のカウントストップを実装
                 TimeCountService.stopTimeCount();
             }
 
