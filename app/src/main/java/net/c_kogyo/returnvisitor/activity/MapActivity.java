@@ -111,7 +111,7 @@ public class MapActivity extends AppCompatActivity
     private MABroadCastReceiver broadcastReceiver;
 
     // 起動時間タイマー
-    private long timer;
+    private static long timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +191,6 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    private static final String APP_TIMER_TAG = "AppTimer";
     private void initDateIfAuthed() {
 
         if (firebaseAuth.getCurrentUser() != null) {
@@ -204,6 +203,7 @@ public class MapActivity extends AppCompatActivity
 
                               showTimeLog("Data loaded");
                               showMarkers(firebaseAuth.getCurrentUser() != null, markerHandler);
+                              showTimeLog("showMarker called in RVDataCallback");
                           }
                       },
                     new RVData.OnDataChangedListener() {
@@ -292,6 +292,8 @@ public class MapActivity extends AppCompatActivity
 
         loadCameraPosition();
         setMapListeners(firebaseAuth.getCurrentUser() != null);
+
+        showTimeLog("showMarker called in onMapReady");
         showMarkers(firebaseAuth.getCurrentUser() != null, markerHandler);
 
     }
@@ -351,6 +353,7 @@ public class MapActivity extends AppCompatActivity
                                                 new MarkerDialog.OnPlaceRemoveListener() {
                                                     @Override
                                                     public void onPlaceRemoved(Place place) {
+                                                        showTimeLog("showMarker called in onMarkerClick");
                                                         showMarkers(firebaseAuth.getCurrentUser() != null, markerHandler);
                                                     }
                                                 }).show(getFragmentManager(), null);
@@ -544,7 +547,10 @@ public class MapActivity extends AppCompatActivity
                 animateLoginButton(user == null || loggedInAnonymously());
                 animateAnonymousLoginButton(user == null);
                 animateLogoutButton(user != null);
+
+                showTimeLog("showMarker called in onAuthStateChange");
                 showMarkers(user != null, markerHandler);
+
                 setMapListeners(user != null);
                 enableTimeCount(user != null);
                 initGuideText();
@@ -1292,7 +1298,8 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    private void showTimeLog(String message) {
+    private static final String APP_TIMER_TAG = "AppTimer";
+    public static void showTimeLog(String message) {
 
         long now = Calendar.getInstance().getTimeInMillis();
 

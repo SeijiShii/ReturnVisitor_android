@@ -29,7 +29,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
     protected ArrayList<T> list;
     private Class<T> klass;
-    private DatabaseReference reference;
+//    private DatabaseReference reference;
 
     DataList(final Class<T> clazz) {
         list = new ArrayList<>();
@@ -82,7 +82,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
         String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
 
-        reference = FirebaseDatabase.getInstance().getReference()
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
                 .child(userId)
                 .child(klass.getSimpleName());
 
@@ -146,7 +146,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
     }
 
-    private T getInstanceFromMap(HashMap<String, Object> map) {
+    public T getInstanceFromMap(HashMap<String, Object> map) {
 
         T data1 = null;
 
@@ -179,6 +179,15 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
             list.set(indexOf(data), data);
 
         }
+
+        FirebaseUser user = MapActivity.firebaseAuth.getCurrentUser();
+        if (user == null) return;
+
+        String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child(userId)
+                .child(klass.getSimpleName());
 
         DatabaseReference node = reference.child(data.getId());
         node.setValue(data.toMap());
@@ -222,6 +231,15 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
         list.remove(data);
 
+        FirebaseUser user = MapActivity.firebaseAuth.getCurrentUser();
+        if (user == null) return;
+
+        String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child(userId)
+                .child(klass.getSimpleName());
+
         DatabaseReference node = reference.child(data.getId());
         node.setValue(null);
         // この後onChildRemovedが呼ばれる
@@ -250,7 +268,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
     @Override
     public Iterator<T> iterator() {
-        return ((ArrayList<T>) list).iterator();
+        return list.iterator();
     }
 
     public ArrayList<T> getList(ArrayList<String> ids) {
@@ -283,7 +301,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 
         HashMap<String, Object> map1 = (HashMap<String, Object> ) o;
 
-        list = new ArrayList<>();
+        list.clear();
 
         if (map1 == null) return;
 

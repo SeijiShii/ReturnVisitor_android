@@ -152,4 +152,5 @@ public abstract class BaseDataItem  implements Cloneable{
         this.timeStamp.setTimeInMillis(Long.valueOf(map.get(TIME_STAMP).toString()));
     }
 
+
 }

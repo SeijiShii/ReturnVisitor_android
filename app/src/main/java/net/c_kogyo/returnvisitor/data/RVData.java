@@ -1,7 +1,6 @@
 package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -13,7 +12,6 @@ import com.google.firebase.database.ValueEventListener;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.activity.MapActivity;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -22,6 +20,7 @@ import java.util.HashMap;
 public class RVData {
 
     private static RVData instance = new RVData();
+    private static boolean isFirstCallbackAdded;
 
     private static OnDataChangedListener mOnDataChangedListener;
     private static OnDataLoadedListener mOnDataLoadedListener;
@@ -37,7 +36,7 @@ public class RVData {
         mOnDataLoadedListener = onDataLoadedListener;
         mOnDataChangedListener = onDataChangedListener;
 
-        loadData();
+        loadDataIfNeeded();
 
         placementCompList.setCompleteSeed(context, R.array.complete_array);
 
@@ -57,6 +56,8 @@ public class RVData {
     }
 
     private RVData() {
+
+        isFirstCallbackAdded = false;
 
         placeList = new PlaceList(){
             @Override
@@ -127,7 +128,9 @@ public class RVData {
 
     }
 
-    private void loadData() {
+    private void loadDataIfNeeded() {
+
+        if (isFirstCallbackAdded) return;
 
         FirebaseUser user = MapActivity.firebaseAuth.getCurrentUser();
         if (user == null) return;
@@ -138,9 +141,22 @@ public class RVData {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                MapActivity.showTimeLog("Firebase callback called");
 
                 HashMap<String, Object> map = (HashMap<String, Object>) dataSnapshot.getValue();
                 loadFromHashMap(map);
+
+                // その他のリスナをつけるのは最初のロードが終わってから～
+                tagList.addDefaultTagsIfNeeded();
+
+                placeList.addChildEventListener();
+                personList.addChildEventListener();
+                visitList.addChildEventListener();
+                tagList.addChildEventListener();
+                workList.addChildEventListener();
+
+                placementCompList.addChildEventListener();
+                noteCompleteList.addChildEventListener();
 
                 mOnDataLoadedListener.onDataLoaded();
             }
@@ -151,6 +167,10 @@ public class RVData {
             }
         });
 
+        isFirstCallbackAdded = true;
+        MapActivity.showTimeLog("Firebase Callback added");
+
+
     }
 
     private void loadFromHashMap(HashMap<String, Object> map) {
@@ -158,22 +178,12 @@ public class RVData {
         placeList.loadFromHashMap(map, Place.class);
         personList.loadFromHashMap(map, Person.class);
         visitList.loadFromHashMap(map, Visit.class);
-        tagList.loadFromHashMap(map, Tag.class);
         workList.loadFromHashMap(map, Work.class);
+
+        tagList.loadFromHashMap(map);
 
         placementCompList.loadFromHashMap(map);
         noteCompleteList.loadFromHashMap(map);
-
-        tagList.addDefaultTagsIfNeeded();
-
-        placeList.addChildEventListener();
-        personList.addChildEventListener();
-        visitList.addChildEventListener();
-        tagList.addChildEventListener();
-        workList.addChildEventListener();
-
-        placementCompList.addChildEventListener();
-        noteCompleteList.addChildEventListener();
 
     }
 

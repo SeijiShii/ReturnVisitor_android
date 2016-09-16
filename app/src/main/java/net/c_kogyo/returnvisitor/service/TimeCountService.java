@@ -83,6 +83,16 @@ public class TimeCountService extends Service {
 
         startTime = Calendar.getInstance().getTimeInMillis();
 
+        if (mWork == null) {
+
+            Calendar startCal = Calendar.getInstance();
+            startCal.setTimeInMillis(startTime);
+            mWork = new Work(startCal);
+        }
+
+        mWork.setEnd(Calendar.getInstance());
+        RVData.getInstance().workList.addOrSet(mWork);
+
         initNotification(duration);
 
         new Thread(new Runnable() {

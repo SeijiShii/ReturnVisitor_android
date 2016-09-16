@@ -46,11 +46,12 @@ CompleteList{
 
         list = new ArrayList<>();
 
-        for (Object o : map.entrySet()) {
+        Object o = map.get(mNodeName);
 
-            String s = String.valueOf(o);
-            list.add(s);
-        }
+        if (o == null) return;
+
+        list.addAll((ArrayList<String>) o);
+
     }
 
     public void addChildEventListener() {
