@@ -25,7 +25,8 @@
             android:text="@string/start_time_text"
             android:gravity="center"
             android:id="@+id/start_time_text"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/white_trans_circle"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,16 +35,9 @@
             android:text="@string/time_text"
             android:gravity="center"
             android:id="@+id/time_text"
-            android:layout_centerInParent="true"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/edit_button"
-            android:text="@string/edit"
-            android:textColor="@color/colorPrimaryDark"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/trans_white_selector"/>
+            android:paddingRight="3dp"
+            android:paddingLeft="3dp"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 
@@ -66,7 +60,10 @@
             android:text="@string/end_time_text"
             android:gravity="center"
             android:id="@+id/end_time_text"
-            android:layout_alignParentLeft="true"/>
+            android:layout_alignParentLeft="true"
+            android:paddingRight="3dp"
+            android:paddingLeft="3dp"
+            android:background="@drawable/white_trans_circle"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -74,7 +71,7 @@
             android:id="@+id/stop_time_count_button"
             android:text="@string/stop_time_count"
             android:textColor="@color/colorPrimaryDark"
-            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
             android:background="@drawable/trans_white_selector"/>
 
 

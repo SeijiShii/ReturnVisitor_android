@@ -44,7 +44,6 @@ public class WorkView extends BaseAnimateView {
 
             } else if (intent.getAction().equals(TimeCountService.STOP_TIME_COUNT_ACTION)) {
                 updateStopCountButton();
-                updateEditButton();
             }
         }
     };
@@ -65,7 +64,6 @@ public class WorkView extends BaseAnimateView {
         initStartText();
         initDurationText();
         initEndText();
-        initEditButton();
         initStopCountButton();
 
         initVisitCellContainer();
@@ -153,30 +151,6 @@ public class WorkView extends BaseAnimateView {
 
     public Work getWork() {
         return mWork;
-    }
-
-    private Button editButton;
-    private void initEditButton() {
-
-        editButton = (Button) getViewById(R.id.edit_button);
-
-        updateEditButton();
-
-    }
-
-    private void updateEditButton() {
-        if (mWork.isTimeCounting()) {
-            editButton.setVisibility(INVISIBLE);
-        } else {
-            editButton.setVisibility(VISIBLE);
-
-            editButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-        }
     }
 
     private Button stopCountButton;
