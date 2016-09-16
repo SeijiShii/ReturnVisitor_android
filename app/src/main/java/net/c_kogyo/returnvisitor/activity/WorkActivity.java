@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import net.c_kogyo.returnvisitor.R;
@@ -60,8 +61,26 @@ public class WorkActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.work_visit_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
 
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        boolean result = true;
+
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+            default:
+                result = super.onOptionsItemSelected(item);
+        }
+
+        return result;
+
     }
 
     private LinearLayout container;
