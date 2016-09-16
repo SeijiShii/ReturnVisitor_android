@@ -31,16 +31,15 @@
             android:layout_alignParentLeft="true"
             android:background="@drawable/white_circle_selector"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textColor="#FFF"
-            android:text="@string/time_text"
-            android:gravity="center"
-            android:id="@+id/time_text"
-            android:paddingRight="3dp"
-            android:paddingLeft="3dp"
-            android:layout_alignParentRight="true"/>
+        <Button
+            android:layout_margin="5dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/white_x_selector"
+            android:id="@+id/delete_button"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"/>
+
 
     </RelativeLayout>
 
@@ -69,6 +68,17 @@
             android:paddingRight="3dp"
             android:paddingLeft="3dp"
             android:background="@drawable/white_circle_selector"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="#FFF"
+            android:text="@string/time_text"
+            android:gravity="center"
+            android:id="@+id/time_text"
+            android:paddingRight="3dp"
+            android:paddingLeft="3dp"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 

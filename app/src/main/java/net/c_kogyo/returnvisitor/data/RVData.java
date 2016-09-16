@@ -126,6 +126,8 @@ public class RVData {
         placementCompList.clearFromLocal();
         noteCompleteList.clearFromLocal();
 
+        isFirstCallbackAdded = false;
+
     }
 
     private void loadDataIfNeeded() {

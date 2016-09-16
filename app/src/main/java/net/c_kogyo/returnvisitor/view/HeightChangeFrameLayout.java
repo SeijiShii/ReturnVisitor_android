@@ -48,39 +48,50 @@ public class HeightChangeFrameLayout extends FrameLayout {
 
     }
 
-    public void animateHeight(boolean extract, Animator.AnimatorListener animatorListener) {
+    public void changeHeight(boolean extract, boolean animate, Animator.AnimatorListener animatorListener) {
 
-        int originalHeight, targetHeight;
+        if (animate) {
+            int originalHeight, targetHeight;
 
-        originalHeight = this.getLayoutParams().height;
+            originalHeight = this.getLayoutParams().height;
 
-        if (extract) {
+            if (extract) {
 
-            targetHeight = extractHeight;
+                targetHeight = extractHeight;
 
+            } else {
+
+                targetHeight = collapseHeight;
+
+            }
+            if (originalHeight == targetHeight) return;
+
+            ValueAnimator animator = ValueAnimator.ofInt(originalHeight, targetHeight);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    HeightChangeFrameLayout.this.getLayoutParams().height = (int) valueAnimator.getAnimatedValue();
+                    requestLayout();
+                }
+            });
+            animator.setDuration(Math.abs(targetHeight - originalHeight) * 3);
+
+            if (animatorListener != null) {
+
+                animator.addListener(animatorListener);
+            }
+
+            animator.start();
         } else {
 
-            targetHeight = collapseHeight;
-
-        }
-        if (originalHeight == targetHeight) return;
-
-        ValueAnimator animator = ValueAnimator.ofInt(originalHeight, targetHeight);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                HeightChangeFrameLayout.this.getLayoutParams().height = (int) valueAnimator.getAnimatedValue();
-                requestLayout();
+            if (extract) {
+                this.getLayoutParams().height = extractHeight;
+            } else {
+                this.getLayoutParams().height = collapseHeight;
             }
-        });
-        animator.setDuration(Math.abs(targetHeight - originalHeight) * 3);
-
-        if (animatorListener != null) {
-
-            animator.addListener(animatorListener);
+            requestLayout();
         }
 
-        animator.start();
     }
 
 

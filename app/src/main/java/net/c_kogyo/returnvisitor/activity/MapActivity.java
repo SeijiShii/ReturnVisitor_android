@@ -160,6 +160,10 @@ public class MapActivity extends AppCompatActivity
         LocalBroadcastManager.getInstance(this)
                 .registerReceiver(broadcastReceiver, new IntentFilter(TimeCountService.STOP_TIME_COUNT_ACTION));
 
+        enableTimeCount(TimeCountService.isTimeCounting());
+
+        timeFrame.changeHeight(TimeCountService.isTimeCounting(), false, null);
+
     }
 
     @Override
@@ -542,7 +546,7 @@ public class MapActivity extends AppCompatActivity
                 // ログアウト時にデータがすべて消去されるようにする
 
                     RVData.getInstance().clearFromLocal();
-//                    isDataReady = false;
+
                 }
                 animateLoginButton(user == null || loggedInAnonymously());
                 animateAnonymousLoginButton(user == null);
@@ -1147,11 +1151,38 @@ public class MapActivity extends AppCompatActivity
 
     }
 
+    // Login, off
+    private void enableTimeCount(boolean enable) {
+
+        timeCountButton.setText(R.string.time_count_button);
+        timeCountButton.setBackgroundResource(R.drawable.trans_green_selector);
+        timeCountButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
+
+        if (enable) {
+
+            timeCountButton.setAlpha(1f);
+            timeCountButton.setClickable(true);
+
+        } else {
+
+            if (TimeCountService.isTimeCounting()) {
+
+                // 実際のカウントストップを実装
+                TimeCountService.stopTimeCount();
+            }
+
+            timeCountButton.setAlpha(0.3f);
+            timeCountButton.setClickable(false);
+
+            timeFrame.changeHeight(false, true, null);
+        }
+        timeCountButton.requestLayout();
+    }
+
     private Button timeCountButton;
     private void initTimeCountButton() {
 
         timeCountButton = (Button) findViewById(R.id.time_count_button);
-        enableTimeCount(firebaseAuth.getCurrentUser() != null);
 
         timeCountButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1170,33 +1201,6 @@ public class MapActivity extends AppCompatActivity
 
     }
 
-    private void enableTimeCount(boolean enable) {
-
-        timeCountButton.setText(R.string.time_count_button);
-        timeCountButton.setBackgroundResource(R.drawable.trans_green_selector);
-        timeCountButton.setTextColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-
-        if (enable) {
-
-            timeCountButton.setAlpha(1f);
-            timeCountButton.setClickable(true);
-
-
-        } else {
-
-            if (TimeCountService.isTimeCounting()) {
-
-                // 実際のカウントストップを実装
-                TimeCountService.stopTimeCount();
-            }
-
-            timeFrame.animateHeight(false, null);
-
-            timeCountButton.setAlpha(0.3f);
-            timeCountButton.setClickable(false);
-        }
-        timeCountButton.requestLayout();
-    }
 
     //Guide barの実装
     private void initGuideText() {
@@ -1223,7 +1227,7 @@ public class MapActivity extends AppCompatActivity
                     timeCountButton.setBackgroundResource(R.drawable.trans_orange_selector);
                     timeCountButton.setTextColor(ContextCompat.getColor(MapActivity.this, R.color.colorAccent));
 
-                    timeFrame.animateHeight(TimeCountService.isTimeCounting(), null);
+                    timeFrame.changeHeight(TimeCountService.isTimeCounting(), true, null);
 
                     startTimeText.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -1270,7 +1274,7 @@ public class MapActivity extends AppCompatActivity
 
             } else if (intent.getAction().equals(TimeCountService.STOP_TIME_COUNT_ACTION)) {
 
-                timeFrame.animateHeight(TimeCountService.isTimeCounting(), null);
+                timeFrame.changeHeight(TimeCountService.isTimeCounting(), true, null);
 
                 startTimeText.setOnClickListener(null);
 
