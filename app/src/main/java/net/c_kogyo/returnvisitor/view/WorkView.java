@@ -1,8 +1,11 @@
 package net.c_kogyo.returnvisitor.view;
 
+import android.animation.Animator;
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.Nullable;
@@ -28,7 +31,7 @@ import java.util.Calendar;
  * Created by SeijiShii on 2016/09/11.
  */
 
-public class WorkView extends BaseAnimateView {
+public abstract class WorkView extends BaseAnimateView {
 
     private static final String WORK_VIEW_TEST_TAG = "WorkViewTest";
 
@@ -46,6 +49,7 @@ public class WorkView extends BaseAnimateView {
 
             } else if (intent.getAction().equals(TimeCountService.STOP_TIME_COUNT_ACTION)) {
                 updateEndButton();
+                updateDeleteButton();
             }
         }
     };
@@ -66,6 +70,7 @@ public class WorkView extends BaseAnimateView {
         initStartTextButton();
         initDurationText();
         initEndButton();
+        initDeleteButton();
 
         initVisitCellContainer();
     }
@@ -227,4 +232,74 @@ public class WorkView extends BaseAnimateView {
         return mWork;
     }
 
+    private Button deleteButton;
+    private void initDeleteButton() {
+
+        deleteButton = (Button) getViewById(R.id.delete_button);
+        updateDeleteButton();
+    }
+
+    private void updateDeleteButton() {
+
+        if (mWork.isTimeCounting()) {
+            deleteButton.setVisibility(INVISIBLE);
+        } else {
+            deleteButton.setVisibility(VISIBLE);
+            deleteButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deleteConfirm();
+                }
+            });
+        }
+    }
+
+    private void deleteConfirm() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        String deleteWorkTitle = mContext.getString(R.string.work);
+        deleteWorkTitle = mContext.getString(R.string.delete_title, deleteWorkTitle);
+        builder.setTitle(deleteWorkTitle);
+
+        String deleteWorkMessage = mContext.getString(R.string.work);
+        deleteWorkMessage = mContext.getString(R.string.delete_message, deleteWorkMessage);
+        builder.setMessage(deleteWorkMessage);
+
+        builder.setNegativeButton(R.string.cancel_text, null);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                RVData.getInstance().workList.removeFromBoth(mWork);
+                WorkView.this.changeViewHeight
+                        (AnimateCondition.FROM_HEIGHT_TO_O, true, new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animator) {
+
+                                postCompress(WorkView.this, visitsInWork);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animator) {
+
+                            }
+                        }, 3);
+            }
+        });
+
+        builder.create().show();
+    }
+
+    public abstract void postCompress(WorkView workView, ArrayList<Visit> visitsExpelled);
 }

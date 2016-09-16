@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import net.c_kogyo.returnvisitor.R;
@@ -145,7 +146,58 @@ public class WorkActivity extends AppCompatActivity {
 
         for (Work work : works) {
 
-            workViews.add(new WorkView(work, this, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT));
+            workViews.add(new WorkView(work, this, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT){
+
+                @Override
+                public void postCompress(WorkView workView, ArrayList<Visit> visitsExpelled) {
+
+                    container.removeView(workView);
+                    addVisitCells(visitsExpelled);
+                }
+            });
+        }
+    }
+
+    private int getInsertPosition(Calendar time) {
+
+        for ( int i = 0 ; i < container.getChildCount() ; i++ ) {
+
+            Calendar time1 = null;
+
+            View view = container.getChildAt(i);
+            if (view instanceof VisitCell) {
+
+                VisitCell visitCell = (VisitCell) view;
+                Visit visit = visitCell.getVisit();
+                time1 = visit.getStart();
+
+            } else if (view instanceof WorkView) {
+
+                WorkView workView = (WorkView) view;
+                Work work = workView.getWork();
+                time1 = work.getStart();
+            }
+
+            if (time1 != null) {
+
+                if (time.before(time1)) {
+                    return i;
+                }
+            }
+        }
+        return container.getChildCount();
+    }
+
+    private void insertVisitCell(Visit visit) {
+
+        VisitCell visitCell = new VisitCell(visit, this, BaseAnimateView.InitialHeightCondition.FROM_0);
+        container.addView(visitCell, getInsertPosition(visit.getStart()));
+    }
+
+    private void addVisitCells(ArrayList<Visit> visits) {
+
+        for (Visit visit : visits) {
+            insertVisitCell(visit);
         }
     }
 }

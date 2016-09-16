@@ -35,7 +35,7 @@ public class DateTimeText {
 
     static public String getTimeText(Calendar calendar) {
 
-        SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat format = new SimpleDateFormat("kk:mm");
         return format.format(calendar.getTime());
 
     }
