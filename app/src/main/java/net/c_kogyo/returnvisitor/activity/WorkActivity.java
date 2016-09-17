@@ -234,6 +234,7 @@ public class WorkActivity extends AppCompatActivity {
         if (requestCode == Constants.RecordVisitActions.EDIT_VISIT_REQUEST_CODE) {
 
             if (resultCode == Constants.RecordVisitActions.DELETE_VISIT_RESULT_CODE) {
+                // VisitCellが削除されたとき
 
                 String visitId = data.getStringExtra(Visit.VISIT);
                 if (visitId == null) return;
@@ -266,6 +267,7 @@ public class WorkActivity extends AppCompatActivity {
                             }
                         }, 5);
             } else if (resultCode == Constants.RecordVisitActions.VISIT_CHANGED_RESULT_CODE) {
+                // VisitCellの内容が変更されたとき
 
                 String visitId = data.getStringExtra(Visit.VISIT);
                 if (visitId == null) return;
@@ -277,6 +279,9 @@ public class WorkActivity extends AppCompatActivity {
                 if (visitCell == null) return;
 
                 visitCell.updataData(visit);
+                // TODO VisitCellの時間を変化させたときに適正なポジションにあるかどうかをVerifyする必要あり
+                // 必要なら位置を変更する
+                moveVisitCellIfNeeded(visitCell);
 
             }
 
@@ -295,8 +300,107 @@ public class WorkActivity extends AppCompatActivity {
                 if (visitCell.getVisit().getId().equals(visitId)) {
                     return visitCell;
                 }
+            } else if (view instanceof WorkView) {
+
+                WorkView workView = (WorkView) view;
+                VisitCell visitCell = workView.getVisitCell(visitId);
+
+                if (visitCell != null) {
+                    return visitCell;
+                }
+
             }
         }
         return null;
     }
+
+    private WorkView getWorkView(String workId) {
+
+        for ( int i = 0 ; i < container.getChildCount() ; i++ ) {
+
+            View view = container.getChildAt(i);
+
+            if (view instanceof WorkView) {
+
+                WorkView workView = (WorkView) view;
+
+                if (workView.getWork().getId().equals(workId)) {
+                    return workView;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void moveVisitCellIfNeeded(final VisitCell visitCell) {
+        // 必要ならVisitCellの位置を変更する
+        // このVisitCellをふくむべきWorkViewは存在するか
+        if (getWorkViewOfVisit(visitCell.getVisit()) != null) {
+            // 存在した
+            WorkView workView = getWorkViewOfVisit(visitCell.getVisit());
+            workView.addVisitCell(visitCell.getVisit());
+
+            visitCell.changeViewHeight(BaseAnimateView.AnimateCondition.FROM_HEIGHT_TO_O,
+                    true,
+                    new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animator) {
+
+                    container.removeView(visitCell);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animator) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animator) {
+
+                }
+            }, 3);
+
+        } else {
+            // このVisitCellを含むべきWorkViewは存在しなかった
+        }
+    }
+
+    /**
+     *
+     * @param visit
+     * @return もしそのVisitを含むべきWorkViewがあれば返す。なければNULL
+     */
+    @Nullable
+    private WorkView getWorkViewOfVisit(Visit visit) {
+
+        // 現状containerにあるWorkViewsを検証する
+
+        for ( int i = 0 ; i < container.getChildCount() ; i++ ) {
+
+            View view = container.getChildAt(i);
+            if (view instanceof WorkView) {
+
+                WorkView workView = (WorkView) view;
+                Work work = workView.getWork();
+
+                if (work.isVisitInWork(visit)) {
+                    return workView;
+                }
+            }
+        }
+        return null;
+    }
+
+
+//    private int getProperPosition(VisitCell visitCell) {
+//
+//
+//
+//    }
+
 }

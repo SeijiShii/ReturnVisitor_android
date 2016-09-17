@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
+import android.support.annotation.Nullable;
+
 import net.c_kogyo.returnvisitor.util.CalendarUtil;
 
 import java.util.ArrayList;
@@ -36,6 +38,17 @@ public abstract class WorkList extends DataList<Work> {
         });
 
         return works;
+    }
+
+    @Nullable
+    public Work getWorkOfVisit(Visit visit) {
+
+        for (Work work : list) {
+            if (work.isVisitInWork(visit)) {
+                return work;
+            }
+        }
+        return null;
     }
 
 }

@@ -130,7 +130,6 @@ public abstract class WorkView extends BaseAnimateView {
         startTextButton.setText(startString);
     }
 
-
     private TextView durationText;
     private void initDurationText() {
 
@@ -233,6 +232,27 @@ public abstract class WorkView extends BaseAnimateView {
         }
     }
 
+    public void addVisitCell(Visit visit) {
+
+        // この引数VISITはすでにRVDataに追加されているものとする
+
+        // 再度読み込むと引数VISITもvisitsInWorkに含まれているはず
+        visitsInWork = RVData.getInstance().visitList.getVisitsInWork(mWork);
+
+        // 挿入ポジションを特定
+        int pos = visitsInWork.indexOf(visit);
+
+        VisitCell visitCell = new VisitCell(visit, mContext, InitialHeightCondition.FROM_0) {
+            @Override
+            public void onLongClick(Visit visit) {
+                onVisitCellLongClick(visit);
+            }
+        };
+
+        visitCellContainer.addView(visitCell, pos);
+
+    }
+
     public Work getWork() {
         return mWork;
     }
@@ -306,7 +326,22 @@ public abstract class WorkView extends BaseAnimateView {
         builder.create().show();
     }
 
+    @Nullable
+    public VisitCell getVisitCell(String visitId) {
+
+        for (int i = 0 ; i < visitCellContainer.getChildCount() ; i++ ) {
+
+            VisitCell visitCell = (VisitCell) visitCellContainer.getChildAt(i);
+
+            if (visitCell.getVisit().getId().equals(visitId)) {
+                return visitCell;
+            }
+        }
+        return null;
+    }
+
     public abstract void postCompress(WorkView workView, ArrayList<Visit> visitsExpelled);
 
     public abstract void onVisitCellLongClick(Visit visit);
+
 }

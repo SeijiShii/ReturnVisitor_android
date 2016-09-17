@@ -39,4 +39,10 @@ public class Work extends TimePeriodDataItem {
         }
         return false;
     }
+
+    public boolean isVisitInWork(Visit visit) {
+
+        return this.getStart().before(visit.getStart()) && this.getEnd().after(visit.getStart());
+
+    }
 }
