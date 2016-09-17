@@ -22,7 +22,7 @@ public abstract class VisitCell extends BaseAnimateView {
     private Context mContext;
 
     public VisitCell(Visit visit, Context context, InitialHeightCondition initCondition) {
-        super(context, initCondition, R.layout.visit_cell);
+        super(context, initCondition, R.layout.visit_cell, 5);
 
         mContext = context;
         mVisit = visit;

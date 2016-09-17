@@ -31,7 +31,7 @@ public abstract class BaseAnimateView extends FrameLayout{
 
 
 
-    public BaseAnimateView(Context context, InitialHeightCondition initCondition, int baseViewResId) {
+    public BaseAnimateView(Context context, InitialHeightCondition initCondition, int baseViewResId, int multi) {
         super(context);
 
         view = LayoutInflater.from(context).inflate(baseViewResId, null);
@@ -40,7 +40,7 @@ public abstract class BaseAnimateView extends FrameLayout{
         if (initCondition == InitialHeightCondition.FROM_0) {
 
             this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0));
-            animatePostDrawn();
+            animatePostDrawn(multi);
         }
 //        else {
 //            this.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getViewHeight()));
@@ -52,7 +52,7 @@ public abstract class BaseAnimateView extends FrameLayout{
     }
 
 
-    public void animatePostDrawn() {
+    public void animatePostDrawn(final int multi) {
 
         this.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0));
         final Handler handler = new Handler();
@@ -71,7 +71,7 @@ public abstract class BaseAnimateView extends FrameLayout{
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        changeViewHeight(AnimateCondition.FROM_0_TO_HEIGHT, true, null, 3);
+                        changeViewHeight(AnimateCondition.FROM_0_TO_HEIGHT, true, null, multi);
                     }
                 });
             }

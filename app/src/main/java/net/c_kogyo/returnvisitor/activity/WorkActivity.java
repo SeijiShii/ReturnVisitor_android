@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 
 import net.c_kogyo.returnvisitor.R;
@@ -351,7 +352,10 @@ public class WorkActivity extends AppCompatActivity {
                 @Override
                 public void onAnimationEnd(Animator animator) {
 
-                    container.removeView(visitCell);
+                    ViewParent parent = visitCell.getParent();
+                    LinearLayout linearLayout = (LinearLayout) parent;
+                    linearLayout.removeView(visitCell);
+
                 }
 
                 @Override
@@ -363,10 +367,38 @@ public class WorkActivity extends AppCompatActivity {
                 public void onAnimationRepeat(Animator animator) {
 
                 }
-            }, 3);
+            }, 5);
 
         } else {
             // このVisitCellを含むべきWorkViewは存在しなかった
+            insertVisitCell(visitCell.getVisit());
+
+            visitCell.changeViewHeight(BaseAnimateView.AnimateCondition.FROM_HEIGHT_TO_O,
+                    true,
+                    new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+
+                            ViewParent parent = visitCell.getParent();
+                            LinearLayout linearLayout = (LinearLayout) parent;
+                            linearLayout.removeView(visitCell);
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    }, 3);
         }
     }
 

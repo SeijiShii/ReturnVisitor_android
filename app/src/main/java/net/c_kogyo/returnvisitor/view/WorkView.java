@@ -55,7 +55,7 @@ public abstract class WorkView extends BaseAnimateView {
     };
 
     public WorkView(Work work, Context context, InitialHeightCondition initCondition) {
-        super(context, initCondition, R.layout.work_view);
+        super(context, initCondition, R.layout.work_view, 5);
 
         mContext = context;
         mWork = work;

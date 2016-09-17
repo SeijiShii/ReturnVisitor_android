@@ -24,7 +24,7 @@ public class PersonCell extends BaseAnimateView {
                       Person person,
                       InitialHeightCondition initCondition,
                       PostRemoveAnimationListener listener) {
-        super(context, initCondition, R.layout.person_cell);
+        super(context, initCondition, R.layout.person_cell, 3);
 
         mContext = context;
         mPerson = person;

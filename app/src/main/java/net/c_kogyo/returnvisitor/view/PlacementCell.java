@@ -20,7 +20,7 @@ public class PlacementCell extends BaseAnimateView {
     private PostRemoveAnimationListener mListener;
 
     public PlacementCell(Placement placement, Context context, InitialHeightCondition initCondition, PostRemoveAnimationListener listener) {
-        super(context, initCondition, R.layout.placement_cell);
+        super(context, initCondition, R.layout.placement_cell, 5);
 
         mPlacement = placement;
         mListener = listener;
