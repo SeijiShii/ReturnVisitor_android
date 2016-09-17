@@ -118,7 +118,7 @@ public class TimeCountService extends Service {
                     broadcastManager.sendBroadcast(timeBroadCastIntent);
                     updateNotification(duration);
 
-                    // TODO 約1分ごとに保存するようにする
+                    // 約1分ごとに保存するようにする
                     minCounter++;
                     if (minCounter > 50) {
 

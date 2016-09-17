@@ -51,4 +51,64 @@ public abstract class WorkList extends DataList<Work> {
         return null;
     }
 
+    //TODO 要素の時間が変更されたとき前後に向かって調整するメソッド
+
+    /**
+     *
+     * @param work 時間の変更された
+     * @return 調整の結果削除されたWorkのリスト
+     */
+    public ArrayList<Work> onChangeTime(Work work) {
+
+        ArrayList<Work> removedWork = new ArrayList<>();
+
+        // 念のため存在チェック
+        if (!list.contains(work)) return removedWork;
+
+        // すべてのリストを開始時間で整列
+        Collections.sort(list, new Comparator<Work>() {
+            @Override
+            public int compare(Work work, Work t1) {
+                return work.getStart().compareTo(t1.getStart());
+            }
+        });
+
+        // 対象の要素のindexを取得
+        int index = list.indexOf(work);
+
+        // 過去に向かってさかのぼり
+        for ( int i = index - 1 ; i >= 0 ; i-- ) {
+
+            Work work1 = list.get(i);
+
+            if (work.getStart().before(work1.getStart())) {
+                removedWork.add(work1);
+            } else if (work.getStart().before(work1.getEnd())) {
+                work.setStart(work1.getStart());
+                removedWork.add(work1);
+            } else {
+                break;
+            }
+        }
+
+        // 未来にむかって!!
+        for (int i = index + 1 ; i < list.size() ; i++ ) {
+
+            Work work1 = list.get(i);
+
+            if (work.getEnd().after(work1.getEnd())) {
+                removedWork.add(work1);
+            } else if (work.getEnd().after(work1.getStart())) {
+                work.setEnd(work1.getEnd());
+                removedWork.add(work1);
+            } else {
+                break;
+            }
+        }
+
+        list.removeAll(removedWork);
+
+        return removedWork;
+
+    }
 }

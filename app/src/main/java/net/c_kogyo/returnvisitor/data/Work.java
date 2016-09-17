@@ -45,4 +45,16 @@ public class Work extends TimePeriodDataItem {
         return this.getStart().before(visit.getStart()) && this.getEnd().after(visit.getStart());
 
     }
+
+    @Override
+    public void setStart(Calendar start) {
+        super.setStart(start);
+        RVData.getInstance().workList.addOrSet(this);
+    }
+
+    @Override
+    public void setEnd(Calendar end) {
+        super.setEnd(end);
+        RVData.getInstance().workList.addOrSet(this);
+    }
 }

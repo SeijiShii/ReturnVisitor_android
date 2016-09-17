@@ -110,6 +110,8 @@ public abstract class WorkView extends BaseAnimateView {
                             mWork.setStart(setTime);
                             updateStartTextButton();
                             updateDurationText(null);
+
+                            onTimeChange(WorkView.this);
                         }
 
                     }
@@ -198,6 +200,8 @@ public abstract class WorkView extends BaseAnimateView {
                                 mWork.setEnd(setTime);
                                 updateEndButton();
                                 updateDurationText(null);
+
+                                onTimeChange(WorkView.this);
                             }
 
                         }
@@ -296,34 +300,41 @@ public abstract class WorkView extends BaseAnimateView {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                RVData.getInstance().workList.removeFromBoth(mWork);
-                WorkView.this.changeViewHeight
-                        (AnimateCondition.FROM_HEIGHT_TO_O, true, new Animator.AnimatorListener() {
-                            @Override
-                            public void onAnimationStart(Animator animator) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animator animator) {
-
-                                postCompress(WorkView.this, visitsInWork);
-                            }
-
-                            @Override
-                            public void onAnimationCancel(Animator animator) {
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animator animator) {
-
-                            }
-                        }, 3);
+                compressAndRemove();
             }
         });
 
         builder.create().show();
+    }
+
+    public void compressAndRemove() {
+
+        RVData.getInstance().workList.removeFromBoth(mWork);
+        WorkView.this.changeViewHeight
+                (AnimateCondition.FROM_HEIGHT_TO_O, true, new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {
+
+                        postCompress(WorkView.this, visitsInWork);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animator) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animator) {
+
+                    }
+                }, 3);
+
+
     }
 
     @Nullable
@@ -340,8 +351,20 @@ public abstract class WorkView extends BaseAnimateView {
         return null;
     }
 
+    public void updateTime() {
+
+        updateStartTextButton();
+        updateEndButton();
+
+    }
+
+
     public abstract void postCompress(WorkView workView, ArrayList<Visit> visitsExpelled);
 
     public abstract void onVisitCellLongClick(Visit visit);
+
+    public abstract void onTimeChange(WorkView workView);
+
+
 
 }

@@ -167,6 +167,16 @@ public class WorkActivity extends AppCompatActivity {
                 public void onVisitCellLongClick(Visit visit) {
                     startRecordVisitForEdit(visit);
                 }
+
+                @Override
+                public void onTimeChange(WorkView workView) {
+
+                    Work work1 = workView.getWork();
+                    ArrayList<Work> worksRemoved = RVData.getInstance().workList.onChangeTime(work1);
+
+                    workView.updateTime();
+                    removeWorkViews(worksRemoved);
+                }
             });
         }
     }
@@ -209,6 +219,10 @@ public class WorkActivity extends AppCompatActivity {
                 startRecordVisitForEdit(visit);
             }
         };
+
+        // TODO WorkViewまたはcontainerの適切なほうに挿入する
+        
+
         container.addView(visitCell, getInsertPosition(visit.getStart()));
     }
 
@@ -280,7 +294,7 @@ public class WorkActivity extends AppCompatActivity {
                 if (visitCell == null) return;
 
                 visitCell.updataData(visit);
-                // TODO VisitCellの時間を変化させたときに適正なポジションにあるかどうかをVerifyする必要あり
+                // VisitCellの時間を変化させたときに適正なポジションにあるかどうかをVerifyする必要あり
                 // 必要なら位置を変更する
                 moveVisitCellIfNeeded(visitCell);
 
@@ -428,6 +442,18 @@ public class WorkActivity extends AppCompatActivity {
         return null;
     }
 
+    private void removeWorkViews(ArrayList<Work> works) {
+
+        for (Work work : works) {
+
+            WorkView workView = getWorkView(work.getId());
+
+            if (workView != null) {
+                workView.compressAndRemove();
+            }
+
+        }
+    }
 
 //    private int getProperPosition(VisitCell visitCell) {
 //
