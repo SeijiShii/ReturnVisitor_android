@@ -4,6 +4,8 @@ import net.c_kogyo.returnvisitor.util.CalendarUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by SeijiShii on 2016/07/28.
@@ -40,6 +42,13 @@ public abstract class VisitList extends DataList<Visit> {
                 visits.add(visit);
             }
         }
+
+        Collections.sort(visits, new Comparator<Visit>() {
+            @Override
+            public int compare(Visit visit, Visit t1) {
+                return visit.getStart().compareTo(t1.getStart());
+            }
+        });
         return visits;
 
     }
@@ -49,6 +58,14 @@ public abstract class VisitList extends DataList<Visit> {
         ArrayList<Visit> visitsOfDayOutOfWork = getVisitsOfDay(date);
 
         visitsOfDayOutOfWork.removeAll(getVisitsInDayInWork(date));
+
+        Collections.sort(visitsOfDayOutOfWork, new Comparator<Visit>() {
+            @Override
+            public int compare(Visit visit, Visit t1) {
+                return visit.getStart().compareTo(t1.getStart());
+            }
+        });
+
 
         return visitsOfDayOutOfWork;
     }
