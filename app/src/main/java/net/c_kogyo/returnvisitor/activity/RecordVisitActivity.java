@@ -1,10 +1,12 @@
 package net.c_kogyo.returnvisitor.activity;
 
 import android.animation.Animator;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -60,10 +62,9 @@ public class RecordVisitActivity extends AppCompatActivity {
 
         setContentView(R.layout.record_visit_activity);
 
-        mVisit = new Visit();
+        onActions();
 
         initBroadcastingForAddress();
-        initPlace();
 
         initToolBar();
         initPlaceText();
@@ -80,16 +81,13 @@ public class RecordVisitActivity extends AppCompatActivity {
 
     }
 
-    private void initPlace() {
+    private void onActions() {
 
         Intent intent = getIntent();
+        String action = intent.getAction();
 
-        String placeId = intent.getStringExtra(Place.PLACE);
-        if (placeId != null) {
-            // マーカのクリックから来た場合
-            mPlace = RVData.getInstance().placeList.getById(placeId);
-            mVisit.setPlaceId(mPlace.getId());
-        } else {
+        if (action.equals(Constants.RecordVisitActions.NEW_PLACE_ACTION)) {
+
             // 地図上のロングクリックから来た場合
             double latitude = intent.getDoubleExtra(MapActivity.LATITUDE, 1000);
             double longitude = intent.getDoubleExtra(MapActivity.LONGITUDE, 1000);
@@ -101,9 +99,26 @@ public class RecordVisitActivity extends AppCompatActivity {
                 startFetchAddressIntentService();
 
             }
+        } else if (action.equals(Constants.RecordVisitActions.NEW_VISIT_ACTION)) {
+
+            // マーカのクリックから来た場合
+
+            String placeId = intent.getStringExtra(Place.PLACE);
+
+            mPlace = RVData.getInstance().placeList.getById(placeId);
+            mVisit.setPlaceId(mPlace.getId());
+
+        } else if (action.equals(Constants.RecordVisitActions.EDIT_VISIT_ACTION)) {
+
+            String visitId = getIntent().getStringExtra(Visit.VISIT);
+
+            mVisit = RVData.getInstance().visitList.getById(visitId);
+            mPlace = RVData.getInstance().placeList.getById(mVisit.getPlaceId());
         }
 
     }
+
+
 
     public static final String LAT_LNG_EXTRA = "lat_lng_extra";
 
@@ -461,7 +476,16 @@ public class RecordVisitActivity extends AppCompatActivity {
                 RVData.getInstance().placeList.addOrSet(mPlace);
                 RVData.getInstance().noteCompleteList.addToBoth(mVisit.getNote());
 
+                // WorkActivityから来ているか否か
+                if (getIntent().getAction().equals(Constants.RecordVisitActions.EDIT_VISIT_ACTION)) {
+
+                    Intent intent = new Intent();
+                    intent.putExtra(Visit.VISIT, mVisit.getId());
+                    setResult(Constants.RecordVisitActions.VISIT_CHANGED_RESULT_CODE, intent);
+
+                }
                 finish();
+
             }
         });
     }
@@ -479,18 +503,49 @@ public class RecordVisitActivity extends AppCompatActivity {
 
     private void initDeleteButton() {
 
-        Button deleteButton = (Button) findViewById(R.id.delete_button);
-        if (RVData.getInstance().visitList.contains(mVisit)) {
+        final Button deleteButton = (Button) findViewById(R.id.delete_button);
+        if ( getIntent().getAction().equals(Constants.RecordVisitActions.EDIT_VISIT_ACTION)) {
             deleteButton.setVisibility(View.VISIBLE);
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
+                    deleteConfirm();
                 }
             });
         } else {
             deleteButton.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void deleteConfirm() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        String deleteVisitTitle = getString(R.string.visit);
+        deleteVisitTitle = getString(R.string.delete_title, deleteVisitTitle);
+        builder.setTitle(deleteVisitTitle);
+
+        String deleteVisitMessage = getString(R.string.visit);
+        deleteVisitMessage = getString(R.string.delete_message, deleteVisitMessage);
+        builder.setMessage(deleteVisitMessage);
+
+        builder.setNegativeButton(R.string.cancel_text, null);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                RVData.getInstance().visitList.removeFromBoth(mVisit);
+
+                Intent deleteVisitIntent = new Intent();
+                deleteVisitIntent.putExtra(Visit.VISIT, mVisit.getId());
+
+                setResult(Constants.RecordVisitActions.DELETE_VISIT_RESULT_CODE, deleteVisitIntent);
+                finish();
+            }
+        });
+
+        builder.create().show();
     }
 
     @Override

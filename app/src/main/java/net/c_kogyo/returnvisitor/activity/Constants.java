@@ -58,6 +58,23 @@ public class Constants {
 
     }
 
+    public class RecordVisitActions {
 
+        public static final String NEW_PLACE_ACTION = "new_place_action";
+        public static final String NEW_VISIT_ACTION = "new_visit_action";
+        public static final String EDIT_VISIT_ACTION = "edit_visit_action";
+
+        public static final int EDIT_VISIT_REQUEST_CODE = 4000;
+        public static final int DELETE_VISIT_RESULT_CODE = 4010;
+        public static final int VISIT_CHANGED_RESULT_CODE = 4020;
+
+    }
+
+    public class WorkActivityActions {
+
+        public static final String SHOW_GENERAL_WORKS = "show_general_works";
+        public static final String POST_DELETE_VISIT = "post_delete_visit";
+
+    }
 
 }

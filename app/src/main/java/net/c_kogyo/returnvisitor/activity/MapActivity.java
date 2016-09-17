@@ -387,6 +387,7 @@ public class MapActivity extends AppCompatActivity
     private void startRecordVisitActivityByPosition(LatLng latLng) {
 
         Intent recordVisitIntent = new Intent(this, RecordVisitActivity.class);
+        recordVisitIntent.setAction(Constants.RecordVisitActions.NEW_VISIT_ACTION);
         if (latLng != null) {
 
             recordVisitIntent.putExtra(LATITUDE, latLng.latitude);
@@ -398,6 +399,7 @@ public class MapActivity extends AppCompatActivity
 
     private void startRecordVisitByPlaceId(String id) {
         Intent recordVisitIntent = new Intent(this, RecordVisitActivity.class);
+        recordVisitIntent.setAction(Constants.RecordVisitActions.NEW_PLACE_ACTION);
         recordVisitIntent.putExtra(Place.PLACE, id);
         startActivity(recordVisitIntent);
     }

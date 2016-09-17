@@ -224,7 +224,12 @@ public abstract class WorkView extends BaseAnimateView {
 
         for (Visit visit : visitsInWork) {
 
-            visitCellContainer.addView(new VisitCell(visit, mContext, InitialHeightCondition.VIEW_HEIGHT));
+            visitCellContainer.addView(new VisitCell(visit, mContext, InitialHeightCondition.VIEW_HEIGHT){
+                @Override
+                public void onLongClick(Visit visit) {
+                    onVisitCellLongClick(visit);
+                }
+            });
         }
     }
 
@@ -302,4 +307,6 @@ public abstract class WorkView extends BaseAnimateView {
     }
 
     public abstract void postCompress(WorkView workView, ArrayList<Visit> visitsExpelled);
+
+    public abstract void onVisitCellLongClick(Visit visit);
 }

@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.activity;
 
+import android.animation.Animator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -134,7 +136,12 @@ public class WorkActivity extends AppCompatActivity {
 
         for (Visit visit : visitsOutOfWork) {
 
-            visitCells.add(new VisitCell(visit, this, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT));
+            visitCells.add(new VisitCell(visit, this, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT){
+                @Override
+                public void onLongClick(Visit visit) {
+                    startRecordVisitForEdit(visit);
+                }
+            });
         }
     }
 
@@ -153,6 +160,11 @@ public class WorkActivity extends AppCompatActivity {
 
                     container.removeView(workView);
                     addVisitCells(visitsExpelled);
+                }
+
+                @Override
+                public void onVisitCellLongClick(Visit visit) {
+                    startRecordVisitForEdit(visit);
                 }
             });
         }
@@ -190,7 +202,12 @@ public class WorkActivity extends AppCompatActivity {
 
     private void insertVisitCell(Visit visit) {
 
-        VisitCell visitCell = new VisitCell(visit, this, BaseAnimateView.InitialHeightCondition.FROM_0);
+        VisitCell visitCell = new VisitCell(visit, this, BaseAnimateView.InitialHeightCondition.FROM_0){
+            @Override
+            public void onLongClick(Visit visit) {
+                startRecordVisitForEdit(visit);
+            }
+        };
         container.addView(visitCell, getInsertPosition(visit.getStart()));
     }
 
@@ -199,5 +216,87 @@ public class WorkActivity extends AppCompatActivity {
         for (Visit visit : visits) {
             insertVisitCell(visit);
         }
+    }
+
+    private void startRecordVisitForEdit(Visit visit) {
+
+        Intent editVisitIntent = new Intent(this, RecordVisitActivity.class);
+        editVisitIntent.setAction(Constants.RecordVisitActions.EDIT_VISIT_ACTION);
+        editVisitIntent.putExtra(Visit.VISIT, visit.getId());
+
+        startActivityForResult(editVisitIntent, Constants.RecordVisitActions.EDIT_VISIT_REQUEST_CODE);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == Constants.RecordVisitActions.EDIT_VISIT_REQUEST_CODE) {
+
+            if (resultCode == Constants.RecordVisitActions.DELETE_VISIT_RESULT_CODE) {
+
+                String visitId = data.getStringExtra(Visit.VISIT);
+                if (visitId == null) return;
+
+                final VisitCell visitCell = getVisitCell(visitId);
+                if (visitCell == null) return;
+
+                visitCell.changeViewHeight(BaseAnimateView.AnimateCondition.FROM_HEIGHT_TO_O,
+                        true,
+                        new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animator) {
+
+                                container.removeView(visitCell);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animator) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animator) {
+
+                            }
+                        }, 5);
+            } else if (resultCode == Constants.RecordVisitActions.VISIT_CHANGED_RESULT_CODE) {
+
+                String visitId = data.getStringExtra(Visit.VISIT);
+                if (visitId == null) return;
+
+                Visit visit = RVData.getInstance().visitList.getById(visitId);
+                if (visit == null) return;
+
+                VisitCell visitCell = getVisitCell(visitId);
+                if (visitCell == null) return;
+
+                visitCell.updataData(visit);
+
+            }
+
+        }
+    }
+
+    private VisitCell getVisitCell(String visitId) {
+
+        for ( int i = 0 ; i < container.getChildCount() ; i++ ) {
+
+            View view = container.getChildAt(i);
+
+            if (view instanceof VisitCell) {
+
+                VisitCell visitCell = (VisitCell) view;
+                if (visitCell.getVisit().getId().equals(visitId)) {
+                    return visitCell;
+                }
+            }
+        }
+        return null;
     }
 }

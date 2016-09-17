@@ -11,6 +11,22 @@
 
         android:theme="@style/AppTheme"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="#555">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/long_press_visit"
+            android:textColor="#FFF"
+            android:textSize="15sp"
+            android:layout_centerInParent="true"/>
+
+
+    </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
