@@ -407,7 +407,13 @@ public class WorkPagerActivity extends AppCompatActivity {
                 }
             }
             notifyDataSetChanged();
+            pager.setCurrentItem(getClosestPosition(date), true);
+            updateButtons();
         }
 
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
     }
 }

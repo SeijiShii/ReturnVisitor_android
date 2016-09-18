@@ -215,4 +215,6 @@ public class TimeCountService extends Service {
         notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
     }
 
+    // TODO エラーで停止した後通知が消えない
+
 }
