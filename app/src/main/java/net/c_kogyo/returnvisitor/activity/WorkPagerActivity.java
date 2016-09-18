@@ -97,7 +97,25 @@ public class WorkPagerActivity extends AppCompatActivity {
         datePagerAdapter = new DatePagerAdapter(getSupportFragmentManager());
 
         pager.setAdapter(datePagerAdapter);
+        pager.setCurrentItem(datePagerAdapter.getClosestPosition(date));
 
+        pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+                updateButtons();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
     }
 
@@ -227,9 +245,9 @@ public class WorkPagerActivity extends AppCompatActivity {
 
                         // ここがUIの一番浅い場所なので原初データをいじる
                         RVData.getInstance().workList.addOrSet(work);
-                        ArrayList<Work> worksRemoved = RVData.getInstance().workList.onChangeTime(work);
+                        RVData.getInstance().workList.onChangeTime(work);
 
-                        pager.setCurrentItem(datePagerAdapter.onAddWork(work, worksRemoved), true);
+                        pager.setCurrentItem(datePagerAdapter.onAddWork(work), true);
                         updateButtons();
 
                         WorkFragment fragment = (WorkFragment) datePagerAdapter.instantiateItem(pager, datePagerAdapter.getPosition(work.getStart()));
@@ -263,9 +281,13 @@ public class WorkPagerActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
 
-            return WorkFragment.newInstance(mDates.get(position));
+            return WorkFragment.newInstance(mDates.get(position), new WorkFragment.OnAllItemRemoveListener() {
+                @Override
+                public void onAllItemRemoved(Calendar date) {
+                    removeDate(date);
+                }
+            });
         }
-
 
         @Override
         public int getCount() {
@@ -328,15 +350,13 @@ public class WorkPagerActivity extends AppCompatActivity {
             return false;
         }
 
-        public int onAddWork(Work work, ArrayList<Work> worksRemoved) {
+        public int onAddWork(Work work) {
 
             // Workが追加された時点ですでにmDatesにある日付かどうか
             int datePos = getPosition(work.getStart());
 
             if (datePos >= 0) {
                 // 日付がすでにある
-
-                pager.findViewWithTag(datePos);
 
             } else {
                 // 日付が存在しない(その日にはまだ何のデータもなかった)
@@ -351,6 +371,43 @@ public class WorkPagerActivity extends AppCompatActivity {
             return datePos;
         }
 
+        public int getClosestPosition(Calendar date) {
+
+            if (getCount() <= 0) return 0;
+
+            if (getPosition(date) >= 0) {
+                return getPosition(date);
+            }
+
+            Calendar dateFuture = (Calendar) date.clone();
+            Calendar datePast = (Calendar) date.clone();
+
+            while (true) {
+
+                dateFuture.add(Calendar.DAY_OF_MONTH, 1);
+                datePast.add(Calendar.DAY_OF_MONTH, -1);
+
+                if (getPosition(datePast) >= 0) {
+                    return getPosition(datePast);
+                }
+
+                if (getPosition(dateFuture) >= 0) {
+                    return getPosition(dateFuture);
+                }
+
+            }
+        }
+
+        private void removeDate(Calendar date) {
+
+            for (Calendar date1 : mDates) {
+                if (CalendarUtil.isSameDay(date, date1)){
+                    mDates.remove(date1);
+                    break;
+                }
+            }
+            notifyDataSetChanged();
+        }
 
     }
 }

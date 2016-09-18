@@ -32,8 +32,11 @@ import java.util.Calendar;
 public class WorkFragment extends Fragment {
 
     private Calendar mDate;
+    private static OnAllItemRemoveListener mOnAllItemRemoveListener;
 
-    public static WorkFragment newInstance(Calendar date) {
+    public static WorkFragment newInstance(Calendar date, OnAllItemRemoveListener onAllItemRemoveListener) {
+
+        mOnAllItemRemoveListener = onAllItemRemoveListener;
 
         WorkFragment workFragment = new WorkFragment();
 
@@ -237,6 +240,7 @@ public class WorkFragment extends Fragment {
                             public void onAnimationEnd(Animator animator) {
 
                                 container.removeView(visitCell);
+                                verifyItemRemains();
                             }
 
                             @Override
@@ -339,6 +343,7 @@ public class WorkFragment extends Fragment {
                             ViewParent parent = visitCell.getParent();
                             LinearLayout linearLayout = (LinearLayout) parent;
                             linearLayout.removeView(visitCell);
+                            verifyItemRemains();
 
                         }
 
@@ -371,6 +376,7 @@ public class WorkFragment extends Fragment {
                             ViewParent parent = visitCell.getParent();
                             LinearLayout linearLayout = (LinearLayout) parent;
                             linearLayout.removeView(visitCell);
+                            verifyItemRemains();
                         }
 
                         @Override
@@ -451,6 +457,7 @@ public class WorkFragment extends Fragment {
                         ViewParent parent = visitCell.getParent();
                         LinearLayout linearLayout = (LinearLayout) parent;
                         linearLayout.removeView(visitCell);
+                        verifyItemRemains();
 
                     }
 
@@ -513,6 +520,7 @@ public class WorkFragment extends Fragment {
 
                 container.removeView(workView);
                 addVisitCells(visitsExpelled);
+                verifyItemRemains();
             }
 
             @Override
@@ -541,6 +549,18 @@ public class WorkFragment extends Fragment {
 
         }
 
+    }
+
+    private void verifyItemRemains() {
+
+        if (container.getChildCount() <= 0) {
+            mOnAllItemRemoveListener.onAllItemRemoved(mDate);
+        }
+
+    }
+
+    public interface OnAllItemRemoveListener {
+        void onAllItemRemoved(Calendar date);
     }
 
 }

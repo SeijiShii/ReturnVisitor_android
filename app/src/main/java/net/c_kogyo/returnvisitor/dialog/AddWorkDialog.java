@@ -99,11 +99,7 @@ public class AddWorkDialog extends DialogFragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
 
-                        mFrom.set(Calendar.YEAR, i);
-                        mFrom.set(Calendar.MONTH, i1);
-                        mFrom.set(Calendar.DAY_OF_MONTH, i2);
-
-                        updateFromDateText();
+                        postDateSet(i, i1, i2);
                         validateFromCalendar();
 
                     }
@@ -168,12 +164,9 @@ public class AddWorkDialog extends DialogFragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
 
-                        mTo.set(Calendar.YEAR, i);
-                        mTo.set(Calendar.MONTH, i1);
-                        mTo.set(Calendar.DAY_OF_MONTH, i2);
-
-                        updateToDateText();
+                        postDateSet(i, i1, i2);
                         validateToCalendar();
+
                     }
                 },
                 mTo.get(Calendar.YEAR),
@@ -224,6 +217,20 @@ public class AddWorkDialog extends DialogFragment {
 
         toTimeText.setText(DateTimeText.getTimeText(mTo));
 
+    }
+
+    private void postDateSet(int i, int i1, int i2) {
+
+        mFrom.set(Calendar.YEAR, i);
+        mFrom.set(Calendar.MONTH, i1);
+        mFrom.set(Calendar.DAY_OF_MONTH, i2);
+
+        mTo.set(Calendar.YEAR, i);
+        mTo.set(Calendar.MONTH, i1);
+        mTo.set(Calendar.DAY_OF_MONTH, i2);
+
+        updateFromDateText();
+        updateToDateText();
     }
 
     private void validateFromCalendar() {
