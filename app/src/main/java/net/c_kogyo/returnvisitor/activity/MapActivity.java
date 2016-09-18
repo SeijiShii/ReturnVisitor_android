@@ -347,7 +347,7 @@ public class MapActivity extends AppCompatActivity
 
                                     if (place != null) {
 
-                                        MarkerDialog.getInstance(place,
+                                        MarkerDialog.newInstance(place,
                                                 new MarkerDialog.OnVisitRecordClickListener() {
                                                     @Override
                                                     public void onVisitRecordClick(Place place) {
@@ -406,7 +406,7 @@ public class MapActivity extends AppCompatActivity
 
 //    private DatabaseReference reference;
 //    private void initFirebaseDatabase() {
-//        reference = FirebaseDatabase.getInstance().getReference();
+//        reference = FirebaseDatabase.newInstance().getReference();
 //
 //    }
 

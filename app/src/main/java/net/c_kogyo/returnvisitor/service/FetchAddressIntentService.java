@@ -98,7 +98,7 @@ public class FetchAddressIntentService extends IntentService {
 //                    Intent sendAddressIntent = new Intent(SEND_ADDRESS);
 //                    sendAddressIntent.putExtra(ADDRESS_DATA, addressString);
 //
-//                    LocalBroadcastManager.getInstance(this).sendBroadcast(sendAddressIntent);
+//                    LocalBroadcastManager.newInstance(this).sendBroadcast(sendAddressIntent);
 //
 //                    break;
 //

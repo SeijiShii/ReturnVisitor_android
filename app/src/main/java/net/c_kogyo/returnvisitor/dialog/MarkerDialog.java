@@ -27,7 +27,7 @@ public class MarkerDialog extends DialogFragment {
     static private OnPlaceRemoveListener mRemoveListener;
     static private OnVisitRecordClickListener mRecordListener;
 
-    public static MarkerDialog getInstance(Place place,
+    public static MarkerDialog newInstance(Place place,
                                            OnVisitRecordClickListener recordListener,
                                            OnPlaceRemoveListener removeListener) {
 

@@ -57,7 +57,8 @@
             android:layout_margin="5dp"
             android:background="@drawable/white_plus_selector"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"/>
+            android:layout_alignParentTop="true"
+            android:id="@+id/add_button"/>
 
         <TextView
             android:layout_width="wrap_content"

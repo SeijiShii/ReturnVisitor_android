@@ -18,6 +18,9 @@ import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.RVData;
+import net.c_kogyo.returnvisitor.data.Work;
+import net.c_kogyo.returnvisitor.dialog.AddSelectDialog;
+import net.c_kogyo.returnvisitor.dialog.AddWorkDialog;
 import net.c_kogyo.returnvisitor.fragment.WorkFragment;
 import net.c_kogyo.returnvisitor.util.CalendarUtil;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
@@ -145,6 +148,8 @@ public class WorkPagerActivity extends AppCompatActivity {
 
             }
         });
+
+        initAddButton();
     }
 
     private void updateLeftButton() {
@@ -203,6 +208,25 @@ public class WorkPagerActivity extends AppCompatActivity {
         updateLeftButton();
         updateRightButton();
         updateDateText();
+    }
+
+    private void initAddButton() {
+
+        Button addButton = (Button) findViewById(R.id.add_button);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AddSelectDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem()), new AddWorkDialog.OnWorkSetListener() {
+                    @Override
+                    public void onWorkSet(Work work) {
+
+                    }
+                }).show(getFragmentManager(), null);
+
+            }
+        });
+
     }
 
     @Override

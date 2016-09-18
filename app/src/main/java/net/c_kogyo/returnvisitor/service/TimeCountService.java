@@ -129,7 +129,7 @@ public class TimeCountService extends Service {
                             mWork = new Work(startCal);
                         }
 
-//                        mWork.setEnd(Calendar.getInstance());
+//                        mWork.setEnd(Calendar.newInstance());
 
                         RVData.getInstance().workList.addOrSet(mWork);
                         minCounter = 0;

@@ -42,7 +42,7 @@ public abstract class DataList<T extends BaseDataItem> implements Iterable<T>{
 //
 //        String userId = MapActivity.firebaseAuth.getCurrentUser().getUid();
 //
-//        reference = FirebaseDatabase.getInstance().getReference()
+//        reference = FirebaseDatabase.newInstance().getReference()
 //                .child(userId)
 //                .child(klass.getSimpleName());
 //
