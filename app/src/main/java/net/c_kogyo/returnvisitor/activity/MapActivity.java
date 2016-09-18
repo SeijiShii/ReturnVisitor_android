@@ -1295,7 +1295,7 @@ public class MapActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                Intent workActivityIntent = new Intent(MapActivity.this, WorkActivity.class);
+                Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
                 startActivity(workActivityIntent);
             }
         });

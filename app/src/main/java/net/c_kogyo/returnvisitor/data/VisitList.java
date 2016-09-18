@@ -119,4 +119,32 @@ public abstract class VisitList extends DataList<Visit> {
         }
     }
 
+    public ArrayList<Calendar> getDates() {
+
+        ArrayList<Calendar> dates = new ArrayList<>();
+
+        for (Visit visit : list) {
+            dates.add(visit.start);
+        }
+
+        ArrayList<Calendar> datesToRemove = new ArrayList<>();
+
+        for (int i = 0 ; i < dates.size() - 1 ; i++ ) {
+
+            Calendar date0 = dates.get(i);
+
+            for ( int j = i + 1 ; j < dates.size() ; j++ ) {
+
+                Calendar date1 = dates.get(j);
+
+                if (CalendarUtil.isSameDay(date0, date1)) {
+
+                    datesToRemove.add(date1);
+                }
+            }
+        }
+        dates.removeAll(datesToRemove);
+        return dates;
+    }
+
 }
