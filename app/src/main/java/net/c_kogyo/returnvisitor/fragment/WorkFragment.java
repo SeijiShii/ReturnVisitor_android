@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -26,7 +24,6 @@ import net.c_kogyo.returnvisitor.view.WorkView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.zip.Inflater;
 
 /**
  * Created by SeijiShii on 2016/09/17.
@@ -49,16 +46,17 @@ public class WorkFragment extends Fragment {
         return workFragment;
     }
 
+    private View view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         setDate();
 
-        View view = inflater.inflate(R.layout.work_fragment, container, false);
+        view = inflater.inflate(R.layout.work_fragment, container, false);
 
-        initContainer(view);
-
+        initContainer();
 
         return view;
     }
@@ -78,12 +76,12 @@ public class WorkFragment extends Fragment {
     }
 
     private LinearLayout container;
-    private void initContainer(View view) {
+    private void initContainer() {
 
         container = (LinearLayout) view.findViewById(R.id.container);
 
-        initVisitCells();
-        initWorkViews();
+        ArrayList<VisitCell> visitCells = initVisitCells();
+        ArrayList<WorkView> workViews = initWorkViews();
 
         int visitCounter = 0;
         int workCounter = 0;
@@ -116,13 +114,11 @@ public class WorkFragment extends Fragment {
             }
         }
 
-
     }
 
-    ArrayList<VisitCell> visitCells;
-    private void initVisitCells() {
+    private ArrayList<VisitCell> initVisitCells() {
 
-        visitCells = new ArrayList<>();
+        ArrayList<VisitCell> visitCells = new ArrayList<>();
         ArrayList<Visit> visitsOutOfWork = RVData.getInstance().visitList.getVisitsInDayOutOfWork(mDate);
 
         for (Visit visit : visitsOutOfWork) {
@@ -134,42 +130,20 @@ public class WorkFragment extends Fragment {
                 }
             });
         }
+
+        return visitCells;
     }
 
-    ArrayList<WorkView> workViews;
-    private void initWorkViews() {
+    private ArrayList<WorkView> initWorkViews() {
 
-        workViews = new ArrayList<>();
+        ArrayList<WorkView> workViews = new ArrayList<>();
         ArrayList<Work> works = RVData.getInstance().workList.getWorksOfDay(mDate);
 
         for (Work work : works) {
 
-            workViews.add(new WorkView(work, getActivity(), BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT){
-
-                @Override
-                public void postCompress(WorkView workView, ArrayList<Visit> visitsExpelled) {
-
-                    container.removeView(workView);
-                    addVisitCells(visitsExpelled);
-                }
-
-                @Override
-                public void onVisitCellLongClick(Visit visit) {
-                    startRecordVisitForEdit(visit);
-                }
-
-                @Override
-                public void onTimeChange(WorkView workView, VisitList.VisitsMoved visitsMoved, ArrayList<Work> worksRemoved) {
-
-                    removeWorkViews(worksRemoved);
-                    addVisitCells(visitsMoved.visitsExpelled);
-                    removeVisitCells(visitsMoved.visitsSwallowed);
-
-                }
-
-
-            });
+            workViews.add(instantiateWorkView(work, BaseAnimateView.InitialHeightCondition.VIEW_HEIGHT));
         }
+        return workViews;
     }
 
     private int getInsertPosition(Calendar time) {
@@ -496,4 +470,77 @@ public class WorkFragment extends Fragment {
     public Calendar getDate() {
         return mDate;
     }
+
+    public void refreshContent(){
+
+        ArrayList<Work> worksAdded = RVData.getInstance().workList.getWorksOfDay(mDate);
+        ArrayList<Work> worksInContainer = new ArrayList<>();
+
+        ArrayList<Visit> visitsAdded = RVData.getInstance().visitList.getVisitsInDayOutOfWork(mDate);
+        ArrayList<Visit> visitsInContainer = new ArrayList<>();
+
+        for ( int i = 0 ; i < container.getChildCount() ; i++ ) {
+
+            View view = container.getChildAt(i);
+            if (view instanceof WorkView) {
+                worksInContainer.add(((WorkView) view).getWork());
+            } else if (view instanceof VisitCell) {
+                visitsInContainer.add(((VisitCell) view).getVisit());
+            }
+        }
+
+        ArrayList<Work> worksRemoved = new ArrayList<>(worksInContainer);
+        worksRemoved.removeAll(worksAdded);
+        worksAdded.removeAll(worksInContainer);
+
+        ArrayList<Visit> visitsRemoved = new ArrayList<>(visitsInContainer);
+        visitsRemoved.removeAll(visitsAdded);
+        visitsAdded.removeAll(visitsInContainer);
+
+        removeVisitCells(visitsRemoved);
+        removeWorkViews(worksRemoved);
+
+        addVisitCells(visitsAdded);
+        addWorkViews(worksAdded);
+
+    }
+
+    private WorkView instantiateWorkView(Work work, BaseAnimateView.InitialHeightCondition condition) {
+
+        return new WorkView(work, getActivity(), condition) {
+            @Override
+            public void postCompress(WorkView workView, ArrayList<Visit> visitsExpelled) {
+
+                container.removeView(workView);
+                addVisitCells(visitsExpelled);
+            }
+
+            @Override
+            public void onVisitCellLongClick(Visit visit) {
+
+                startRecordVisitForEdit(visit);
+            }
+
+            @Override
+            public void onTimeChange(WorkView workView, VisitList.VisitsMoved visitsMoved, ArrayList<Work> worksRemoved) {
+
+                removeWorkViews(worksRemoved);
+                addVisitCells(visitsMoved.visitsExpelled);
+                removeVisitCells(visitsMoved.visitsSwallowed);
+            }
+        };
+    }
+
+    private void addWorkViews(ArrayList<Work> works) {
+
+        for (Work work : works) {
+
+            int pos = getInsertPosition(work.getStart());
+
+            container.addView(instantiateWorkView(work, BaseAnimateView.InitialHeightCondition.FROM_0), pos);
+
+        }
+
+    }
+
 }

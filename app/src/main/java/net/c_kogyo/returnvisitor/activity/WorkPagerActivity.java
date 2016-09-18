@@ -7,17 +7,20 @@ import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.RVData;
+import net.c_kogyo.returnvisitor.data.VisitList;
 import net.c_kogyo.returnvisitor.data.Work;
 import net.c_kogyo.returnvisitor.dialog.AddSelectDialog;
 import net.c_kogyo.returnvisitor.dialog.AddWorkDialog;
@@ -217,10 +220,21 @@ public class WorkPagerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                AddSelectDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem()), new AddWorkDialog.OnWorkSetListener() {
+                AddSelectDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem()),
+                        new AddWorkDialog.OnWorkSetListener() {
                     @Override
                     public void onWorkSet(Work work) {
 
+                        // ここがUIの一番浅い場所なので原初データをいじる
+                        RVData.getInstance().workList.addOrSet(work);
+                        ArrayList<Work> worksRemoved = RVData.getInstance().workList.onChangeTime(work);
+
+                        pager.setCurrentItem(datePagerAdapter.onAddWork(work, worksRemoved), true);
+                        updateButtons();
+
+                        WorkFragment fragment = (WorkFragment) datePagerAdapter.instantiateItem(pager, datePagerAdapter.getPosition(work.getStart()));
+
+                        fragment.refreshContent();
                     }
                 }).show(getFragmentManager(), null);
 
@@ -244,7 +258,6 @@ public class WorkPagerActivity extends AppCompatActivity {
             super(fm);
 
             setDates();
-
         }
 
         @Override
@@ -252,6 +265,7 @@ public class WorkPagerActivity extends AppCompatActivity {
 
             return WorkFragment.newInstance(mDates.get(position));
         }
+
 
         @Override
         public int getCount() {
@@ -313,6 +327,30 @@ public class WorkPagerActivity extends AppCompatActivity {
             }
             return false;
         }
+
+        public int onAddWork(Work work, ArrayList<Work> worksRemoved) {
+
+            // Workが追加された時点ですでにmDatesにある日付かどうか
+            int datePos = getPosition(work.getStart());
+
+            if (datePos >= 0) {
+                // 日付がすでにある
+
+                pager.findViewWithTag(datePos);
+
+            } else {
+                // 日付が存在しない(その日にはまだ何のデータもなかった)
+                // この日には削除されるWorkも存在しない
+                setDates();
+
+                // 気を取り直して…
+                datePos = getPosition(work.getStart());
+                notifyDataSetChanged();
+            }
+
+            return datePos;
+        }
+
 
     }
 }

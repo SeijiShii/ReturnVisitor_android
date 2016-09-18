@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Work;
 import net.c_kogyo.returnvisitor.util.CalendarUtil;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
@@ -62,7 +63,12 @@ public class AddWorkDialog extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                mOnWorkSetListener.onWorkSet(null);
+                Work work = new Work(mFrom);
+                work.setEnd(mTo);
+
+                // UIの深いところで元データをいじっていはいけない。データ変更結果の伝播がうまくいかない。
+                // ここではコールバックで返すだけ
+                mOnWorkSetListener.onWorkSet(work);
             }
         });
 
