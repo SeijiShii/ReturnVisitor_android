@@ -60,10 +60,10 @@ public abstract class WorkList extends DataList<Work> {
      */
     public ArrayList<Work> onChangeTime(Work work) {
 
-        ArrayList<Work> removedWork = new ArrayList<>();
+        ArrayList<Work> worksRemoved = new ArrayList<>();
 
         // 念のため存在チェック
-        if (!list.contains(work)) return removedWork;
+        if (!list.contains(work)) return worksRemoved;
 
         // すべてのリストを開始時間で整列
         Collections.sort(list, new Comparator<Work>() {
@@ -82,10 +82,10 @@ public abstract class WorkList extends DataList<Work> {
             Work work1 = list.get(i);
 
             if (work.getStart().before(work1.getStart())) {
-                removedWork.add(work1);
+                worksRemoved.add(work1);
             } else if (work.getStart().before(work1.getEnd())) {
                 work.setStart(work1.getStart());
-                removedWork.add(work1);
+                worksRemoved.add(work1);
             } else {
                 break;
             }
@@ -97,18 +97,19 @@ public abstract class WorkList extends DataList<Work> {
             Work work1 = list.get(i);
 
             if (work.getEnd().after(work1.getEnd())) {
-                removedWork.add(work1);
+                worksRemoved.add(work1);
             } else if (work.getEnd().after(work1.getStart())) {
                 work.setEnd(work1.getEnd());
-                removedWork.add(work1);
+                worksRemoved.add(work1);
             } else {
                 break;
             }
         }
 
-        list.removeAll(removedWork);
+        list.removeAll(worksRemoved);
 
-        return removedWork;
-
+        return worksRemoved;
     }
+
+
 }

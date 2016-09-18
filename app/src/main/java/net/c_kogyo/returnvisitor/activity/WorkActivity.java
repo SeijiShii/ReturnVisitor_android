@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
+import net.c_kogyo.returnvisitor.data.VisitList;
 import net.c_kogyo.returnvisitor.data.Work;
 import net.c_kogyo.returnvisitor.view.BaseAnimateView;
 import net.c_kogyo.returnvisitor.view.VisitCell;
@@ -169,14 +170,15 @@ public class WorkActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onTimeChange(WorkView workView) {
+                public void onTimeChange(WorkView workView, VisitList.VisitsMoved visitsMoved, ArrayList<Work> worksRemoved) {
 
-                    Work work1 = workView.getWork();
-                    ArrayList<Work> worksRemoved = RVData.getInstance().workList.onChangeTime(work1);
-
-                    workView.updateTime();
                     removeWorkViews(worksRemoved);
+                    addVisitCells(visitsMoved.visitsExpelled);
+                    removeVisitCells(visitsMoved.visitsSwallowed);
+
                 }
+
+
             });
         }
     }
@@ -220,10 +222,13 @@ public class WorkActivity extends AppCompatActivity {
             }
         };
 
-        // TODO WorkViewまたはcontainerの適切なほうに挿入する
-        
-
-        container.addView(visitCell, getInsertPosition(visit.getStart()));
+        //WorkViewまたはcontainerの適切なほうに挿入する
+        WorkView workView = getWorkViewOfVisit(visit);
+        if (workView != null) {
+            workView.addVisitCell(visit);
+        } else {
+            container.addView(visitCell, getInsertPosition(visit.getStart()));
+        }
     }
 
     private void addVisitCells(ArrayList<Visit> visits) {
@@ -254,7 +259,7 @@ public class WorkActivity extends AppCompatActivity {
                 String visitId = data.getStringExtra(Visit.VISIT);
                 if (visitId == null) return;
 
-                final VisitCell visitCell = getVisitCell(visitId);
+                final VisitCell visitCell = getVisitCell(visitId, true);
                 if (visitCell == null) return;
 
                 visitCell.changeViewHeight(BaseAnimateView.AnimateCondition.FROM_HEIGHT_TO_O,
@@ -290,7 +295,7 @@ public class WorkActivity extends AppCompatActivity {
                 Visit visit = RVData.getInstance().visitList.getById(visitId);
                 if (visit == null) return;
 
-                VisitCell visitCell = getVisitCell(visitId);
+                VisitCell visitCell = getVisitCell(visitId, true);
                 if (visitCell == null) return;
 
                 visitCell.updataData(visit);
@@ -303,7 +308,7 @@ public class WorkActivity extends AppCompatActivity {
         }
     }
 
-    private VisitCell getVisitCell(String visitId) {
+    private VisitCell getVisitCell(String visitId, boolean fromDeep) {
 
         for ( int i = 0 ; i < container.getChildCount() ; i++ ) {
 
@@ -317,13 +322,15 @@ public class WorkActivity extends AppCompatActivity {
                 }
             } else if (view instanceof WorkView) {
 
-                WorkView workView = (WorkView) view;
-                VisitCell visitCell = workView.getVisitCell(visitId);
+                if (fromDeep){
 
-                if (visitCell != null) {
-                    return visitCell;
+                    WorkView workView = (WorkView) view;
+                    VisitCell visitCell = workView.getVisitCell(visitId);
+
+                    if (visitCell != null) {
+                        return visitCell;
+                    }
                 }
-
             }
         }
         return null;
@@ -412,7 +419,7 @@ public class WorkActivity extends AppCompatActivity {
                         public void onAnimationRepeat(Animator animator) {
 
                         }
-                    }, 3);
+                    }, 5);
         }
     }
 
@@ -455,10 +462,46 @@ public class WorkActivity extends AppCompatActivity {
         }
     }
 
-//    private int getProperPosition(VisitCell visitCell) {
-//
-//
-//
-//    }
+    private void removeVisitCells(ArrayList<Visit> visits) {
+
+        for (Visit visit : visits) {
+            removeVisitCell(visit);
+        }
+    }
+
+    private void removeVisitCell(Visit visit) {
+
+        final VisitCell visitCell = getVisitCell(visit.getId(), false);
+
+        if (visitCell == null) return;
+
+        visitCell.changeViewHeight(BaseAnimateView.AnimateCondition.FROM_HEIGHT_TO_O,
+                true,
+                new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                ViewParent parent = visitCell.getParent();
+                LinearLayout linearLayout = (LinearLayout) parent;
+                linearLayout.removeView(visitCell);
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        }, 5);
+
+    }
 
 }

@@ -11,8 +11,6 @@ import java.util.HashMap;
  */
 public class TimePeriodDataItem extends BaseDataItem{
 
-    public static final String VISIT_ID = "visit_id";
-
     public static final String START = "start";
     public static final String END = "end";
 
@@ -79,5 +77,16 @@ public class TimePeriodDataItem extends BaseDataItem{
 
         return end.getTimeInMillis() - start.getTimeInMillis();
 
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+
+        TimePeriodDataItem item = (TimePeriodDataItem) super.clone();
+
+        item.start = (Calendar) this.start.clone();
+        item.end = (Calendar) this.end.clone();
+
+        return item;
     }
 }

@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
+import android.support.annotation.Nullable;
+
 import net.c_kogyo.returnvisitor.util.CalendarUtil;
 
 import java.util.ArrayList;
@@ -82,6 +84,39 @@ public abstract class VisitList extends DataList<Visit> {
         }
         return visitsOfDayInWork;
 
+    }
+
+    public static class VisitsMoved {
+
+        public ArrayList<Visit> visitsSwallowed;
+        public ArrayList<Visit> visitsExpelled;
+
+        public VisitsMoved(@Nullable Work workBefore, Work workAfter) {
+
+            if (workBefore == null) {
+                visitsSwallowed = new ArrayList<>();
+                visitsExpelled = new ArrayList<>();
+            } else {
+
+                try {
+
+                    Work workBefore1 = (Work) workBefore.clone();
+                    Work workAfter1 = (Work) workAfter.clone();
+
+                    visitsSwallowed = RVData.getInstance().visitList.getVisitsInWork(workAfter1);
+                    visitsSwallowed.removeAll(RVData.getInstance().visitList.getVisitsInWork(workBefore1));
+
+                    visitsExpelled = RVData.getInstance().visitList.getVisitsInWork(workBefore1);
+                    visitsExpelled.removeAll(RVData.getInstance().visitList.getVisitsInWork(workAfter1));
+
+                } catch (CloneNotSupportedException e) {
+
+                    visitsSwallowed = new ArrayList<>();
+                    visitsExpelled = new ArrayList<>();
+                }
+            }
+
+        }
     }
 
 }

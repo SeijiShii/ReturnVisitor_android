@@ -1,7 +1,10 @@
 package net.c_kogyo.returnvisitor.data;
 
+import android.support.annotation.Nullable;
+
 import net.c_kogyo.returnvisitor.service.TimeCountService;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -46,15 +49,29 @@ public class Work extends TimePeriodDataItem {
 
     }
 
-    @Override
-    public void setStart(Calendar start) {
+    public VisitList.VisitsMoved setTimes(Calendar start, Calendar end) {
+
+        Work workBefore = null;
+        try {
+            workBefore = (Work) this.clone();
+        }catch (CloneNotSupportedException e) {
+            //
+        }
+
         super.setStart(start);
+        super.setEnd(end);
+
         RVData.getInstance().workList.addOrSet(this);
+
+        return new VisitList.VisitsMoved( workBefore, this);
     }
 
+
+
     @Override
-    public void setEnd(Calendar end) {
-        super.setEnd(end);
-        RVData.getInstance().workList.addOrSet(this);
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
+
+
 }

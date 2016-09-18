@@ -20,6 +20,7 @@ import android.widget.TimePicker;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Visit;
+import net.c_kogyo.returnvisitor.data.VisitList;
 import net.c_kogyo.returnvisitor.data.Work;
 import net.c_kogyo.returnvisitor.service.TimeCountService;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
@@ -93,7 +94,7 @@ public abstract class WorkView extends BaseAnimateView {
     private void initStartTextButton() {
 
         startTextButton = (Button) getViewById(R.id.start_time_text);
-        updateStartTextButton();
+        updateStartButton();
 
         startTextButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -107,11 +108,14 @@ public abstract class WorkView extends BaseAnimateView {
                         setTime.set(Calendar.MINUTE, i1);
 
                         if (setTime.before(mWork.getEnd())) {
-                            mWork.setStart(setTime);
-                            updateStartTextButton();
-                            updateDurationText(null);
 
-                            onTimeChange(WorkView.this);
+                            VisitList.VisitsMoved visitsMoved = mWork.setTimes(setTime, mWork.getEnd());
+
+                            ArrayList<Work> worksRemoved = RVData.getInstance().workList.onChangeTime(mWork);
+                            removeAndAddVisitCells(visitsMoved);
+                            onTimeChange(WorkView.this, visitsMoved, worksRemoved);
+
+                            updateTime();
                         }
 
                     }
@@ -124,7 +128,7 @@ public abstract class WorkView extends BaseAnimateView {
 
     }
 
-    private void updateStartTextButton() {
+    private void updateStartButton() {
 
         String startString = DateTimeText.getTimeText(mWork.getStart());
         startString = mContext.getString(R.string.start_time_text, startString);
@@ -197,11 +201,15 @@ public abstract class WorkView extends BaseAnimateView {
                             setTime.set(Calendar.MINUTE, i1);
 
                             if (setTime.after(mWork.getStart())) {
-                                mWork.setEnd(setTime);
-                                updateEndButton();
-                                updateDurationText(null);
 
-                                onTimeChange(WorkView.this);
+                                VisitList.VisitsMoved visitsMoved = mWork.setTimes(mWork.getStart(), setTime);
+
+                                ArrayList<Work> worksRemoved = RVData.getInstance().workList.onChangeTime(mWork);
+                                removeAndAddVisitCells(visitsMoved);
+                                onTimeChange(WorkView.this, visitsMoved, worksRemoved);
+
+                                updateTime();
+
                             }
 
                         }
@@ -334,7 +342,6 @@ public abstract class WorkView extends BaseAnimateView {
                     }
                 }, 3);
 
-
     }
 
     @Nullable
@@ -351,19 +358,73 @@ public abstract class WorkView extends BaseAnimateView {
         return null;
     }
 
-    public void updateTime() {
+    private void updateTime() {
 
-        updateStartTextButton();
+        updateStartButton();
         updateEndButton();
+        updateDurationText(null);
 
     }
 
+    private void removeVisitCell(String visitId) {
+
+        final VisitCell visitCell = getVisitCell(visitId);
+        if (visitCell == null) return;
+
+        visitCell.changeViewHeight(AnimateCondition.FROM_HEIGHT_TO_O, true, new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+
+                visitCellContainer.removeView(visitCell);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        }, 5);
+
+    }
+
+    private void removeVisitCells(ArrayList<Visit> visits) {
+
+        for (Visit visit : visits) {
+
+            removeVisitCell(visit.getId());
+
+        }
+    }
+
+
+    private void addVisitCells(ArrayList<Visit> visits) {
+
+        for (Visit visit : visits) {
+            addVisitCell(visit);
+        }
+    }
+
+    private void removeAndAddVisitCells(VisitList.VisitsMoved visitsMoved) {
+
+        removeVisitCells(visitsMoved.visitsExpelled);
+        addVisitCells(visitsMoved.visitsSwallowed);
+
+    }
 
     public abstract void postCompress(WorkView workView, ArrayList<Visit> visitsExpelled);
 
     public abstract void onVisitCellLongClick(Visit visit);
 
-    public abstract void onTimeChange(WorkView workView);
+    public abstract void onTimeChange(WorkView workView, VisitList.VisitsMoved visitsMoved, ArrayList<Work> worksRemoved);
 
 
 
