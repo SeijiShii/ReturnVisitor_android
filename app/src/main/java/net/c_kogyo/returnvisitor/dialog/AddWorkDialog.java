@@ -29,10 +29,12 @@ import java.util.Calendar;
 public class AddWorkDialog extends DialogFragment {
 
     private static OnWorkSetListener mOnWorkSetListener;
+    private static Calendar mDate;
     private Calendar mFrom, mTo;
 
-    public static AddWorkDialog newInstance(OnWorkSetListener onWorkSetListener) {
+    public static AddWorkDialog newInstance(Calendar date, OnWorkSetListener onWorkSetListener) {
 
+        mDate = date;
         mOnWorkSetListener = onWorkSetListener;
 
         return new AddWorkDialog();
@@ -78,6 +80,11 @@ public class AddWorkDialog extends DialogFragment {
     private void initCalendars() {
 
         mFrom = Calendar.getInstance();
+
+        // AddWorkDialog 開いているページの日付が初期で入るように
+        mFrom.set(Calendar.YEAR, mDate.get(Calendar.YEAR));
+        mFrom.set(Calendar.MONTH, mDate.get(Calendar.MONTH));
+        mFrom.set(Calendar.DAY_OF_MONTH, mDate.get(Calendar.DAY_OF_MONTH));
 
         mTo = (Calendar) mFrom.clone();
         mTo.add(Calendar.MINUTE, 5);

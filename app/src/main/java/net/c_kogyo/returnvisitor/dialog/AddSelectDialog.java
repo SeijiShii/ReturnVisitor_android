@@ -22,7 +22,8 @@ public class AddSelectDialog extends DialogFragment {
     private static Calendar mDate;
     private static AddWorkDialog.OnWorkSetListener mOnWorkSetListener;
 
-    public static AddSelectDialog newInstance(Calendar date, AddWorkDialog.OnWorkSetListener onWorkSetListener) {
+    public static AddSelectDialog newInstance(Calendar date,
+                                              AddWorkDialog.OnWorkSetListener onWorkSetListener) {
 
         mDate = date;
         mOnWorkSetListener = onWorkSetListener;
@@ -54,7 +55,7 @@ public class AddSelectDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
 
-                AddWorkDialog.newInstance(mOnWorkSetListener).show(getFragmentManager(), null);
+                AddWorkDialog.newInstance(mDate, mOnWorkSetListener).show(getFragmentManager(), null);
                 dismiss();
             }
         });
