@@ -130,10 +130,15 @@ public class SelectPersonDialog extends DialogFragment{
      */
     private void refreshSuggestedPersons(String searchString) {
 
-        ArrayList<String> personIds;
+        ArrayList<String> personIds = new ArrayList<>();
 
         if (searchString == null || isStringAllBlank(searchString)) {
-            personIds = mPlace.getPersonIds();
+
+            if (mPlace != null) {
+
+                personIds = mPlace.getPersonIds();
+
+            }
 
         } else {
             personIds = RVData.getInstance().personList.getSearchedPersonIds(searchString, getActivity());
@@ -167,7 +172,6 @@ public class SelectPersonDialog extends DialogFragment{
         });
     }
 
-    private static final String GESTURE_TAG = "Gesture";
     private void setPersonCells() {
 
         personContainer.removeAllViews();

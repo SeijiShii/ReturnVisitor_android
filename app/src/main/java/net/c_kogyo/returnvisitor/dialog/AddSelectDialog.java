@@ -3,12 +3,15 @@ package net.c_kogyo.returnvisitor.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.activity.Constants;
+import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
 import net.c_kogyo.returnvisitor.data.Work;
 
 import java.util.Calendar;
@@ -68,6 +71,12 @@ public class AddSelectDialog extends DialogFragment {
         addVisitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Intent addVisitIntent = new Intent(getActivity(), RecordVisitActivity.class);
+                addVisitIntent.setAction(Constants.RecordVisitActions.NEW_VISIT_ACTION_NO_PLACE);
+                addVisitIntent.putExtra(Constants.DATE_LONG, mDate.getTimeInMillis());
+
+                startActivityForResult(addVisitIntent, Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE);
 
                 dismiss();
             }

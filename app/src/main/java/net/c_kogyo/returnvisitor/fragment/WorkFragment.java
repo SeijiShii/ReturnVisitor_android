@@ -214,7 +214,6 @@ public class WorkFragment extends Fragment {
 
     }
 
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == Constants.RecordVisitActions.EDIT_VISIT_REQUEST_CODE) {
@@ -272,6 +271,13 @@ public class WorkFragment extends Fragment {
 
             }
 
+        } else if (requestCode == Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE) {
+
+            if (resultCode == Constants.RecordVisitActions.VISIT_ADDED_RESULT_CODE) {
+
+                refreshContent();
+
+            }
         }
     }
 

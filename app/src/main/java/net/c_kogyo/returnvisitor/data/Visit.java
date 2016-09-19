@@ -205,6 +205,7 @@ public class Visit extends TimePeriodDataItem{
 
     }
 
+    // TODO そう考えると場所無き訪問もあるよね
 
 
 }

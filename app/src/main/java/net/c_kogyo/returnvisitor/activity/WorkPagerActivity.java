@@ -265,7 +265,8 @@ public class WorkPagerActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        datePagerAdapter.getItem(pager.getCurrentItem()).onActivityResult(requestCode, resultCode, data);
+        //TODO ここをgetItemでやるべきか　要検証
+        ((WorkFragment) datePagerAdapter.instantiateItem(pager, pager.getCurrentItem())).onActivityResult(requestCode, resultCode, data);
     }
 
     class DatePagerAdapter extends FragmentStatePagerAdapter {

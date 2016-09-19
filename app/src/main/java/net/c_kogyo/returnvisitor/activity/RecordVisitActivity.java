@@ -36,6 +36,7 @@ import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.dialog.PlaceDialog;
 import net.c_kogyo.returnvisitor.dialog.PlacementSelectDialog;
 import net.c_kogyo.returnvisitor.dialog.SelectPersonDialog;
+import net.c_kogyo.returnvisitor.dialog.SelectPlaceDialog;
 import net.c_kogyo.returnvisitor.service.FetchAddressIntentService;
 import net.c_kogyo.returnvisitor.view.BaseAnimateView;
 import net.c_kogyo.returnvisitor.view.PersonCell;
@@ -85,37 +86,69 @@ public class RecordVisitActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String action = intent.getAction();
+        String placeId = intent.getStringExtra(Place.PLACE);
 
-        if (action.equals(Constants.RecordVisitActions.NEW_PLACE_ACTION)) {
-            // 地図上のロングクリックから来た場合
+        switch (action) {
+            case Constants.RecordVisitActions.NEW_PLACE_ACTION:
 
-            mVisit = new Visit();
+                // 地図上のロングクリックから来た場合
 
-            double latitude = intent.getDoubleExtra(MapActivity.LATITUDE, 1000);
-            double longitude = intent.getDoubleExtra(MapActivity.LONGITUDE, 1000);
+                mVisit = new Visit();
 
-            if ( latitude < 1000 && longitude < 1000 ) {
-                mPlace = new Place(new LatLng(latitude, longitude));
+                double latitude = intent.getDoubleExtra(MapActivity.LATITUDE, 1000);
+                double longitude = intent.getDoubleExtra(MapActivity.LONGITUDE, 1000);
+
+                if ( latitude < 1000 && longitude < 1000 ) {
+                    mPlace = new Place(new LatLng(latitude, longitude));
+                    mVisit.setPlaceId(mPlace.getId());
+
+                    startFetchAddressIntentService();
+
+                }
+
+                break;
+
+            case Constants.RecordVisitActions.NEW_VISIT_ACTION_WITH_PLACE:
+
+                // マーカのクリックから来た場合
+                mVisit = new Visit();
+
+                mPlace = RVData.getInstance().placeList.getById(placeId);
                 mVisit.setPlaceId(mPlace.getId());
 
-                startFetchAddressIntentService();
+                break;
 
-            }
-        } else if (action.equals(Constants.RecordVisitActions.NEW_VISIT_ACTION)) {
-            // マーカのクリックから来た場合
+            case Constants.RecordVisitActions.EDIT_VISIT_ACTION:
 
-            mVisit = new Visit();
+                // Visitだけで来た
 
-            String placeId = intent.getStringExtra(Place.PLACE);
-            mPlace = RVData.getInstance().placeList.getById(placeId);
-            mVisit.setPlaceId(mPlace.getId());
+                String visitId = intent.getStringExtra(Visit.VISIT);
 
-        } else if (action.equals(Constants.RecordVisitActions.EDIT_VISIT_ACTION)) {
+                mVisit = RVData.getInstance().visitList.getById(visitId);
 
-            String visitId = getIntent().getStringExtra(Visit.VISIT);
+                mPlace = RVData.getInstance().placeList.getById(mVisit.getPlaceId());
 
-            mVisit = RVData.getInstance().visitList.getById(visitId);
-            mPlace = RVData.getInstance().placeList.getById(mVisit.getPlaceId());
+                break;
+
+            case Constants.RecordVisitActions.NEW_VISIT_ACTION_NO_PLACE:
+
+                // WorkActivityなど場所指定なしで来た場合
+
+                mVisit = new Visit();
+                long dLong = intent.getLongExtra(Constants.DATE_LONG, 0);
+                if (dLong != 0) {
+
+                    Calendar setDate = Calendar.getInstance();
+                    setDate.setTimeInMillis(dLong);
+
+                    mVisit.getStart().set(Calendar.YEAR, setDate.get(Calendar.YEAR));
+                    mVisit.getStart().set(Calendar.MONTH, setDate.get(Calendar.MONTH));
+                    mVisit.getStart().set(Calendar.DAY_OF_MONTH, setDate.get(Calendar.DAY_OF_MONTH));
+
+                    mVisit.setEnd((Calendar) mVisit.getStart().clone());
+                }
+
+                break;
         }
 
     }
@@ -161,27 +194,39 @@ public class RecordVisitActivity extends AppCompatActivity {
     private void initPlaceText() {
 
         placeText = (TextView) findViewById(R.id.place_text);
-        setPlaceText();
+        updatePlaceText();
         placeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PlaceDialog.getInstance(RecordVisitActivity.this, mPlace, new PlaceDialog.OnOkClickListener() {
-                    @Override
-                    public void onOkClick(Place place) {
-                        setPlaceText();
-                    }
-                }).show(getFragmentManager(), "");
+
+                if (mPlace == null) {
+
+                    SelectPlaceDialog.newInstance(mVisit.getPersonIds(), new SelectPlaceDialog.OnPlaceSelectedListener() {
+                        @Override
+                        public void onSelected(Place place) {
+
+                            mPlace = place;
+                            mVisit.setPlaceId(place.getId());
+                            updatePlaceText();
+                        }
+                    }).show(getFragmentManager(), null);
+
+                } else {
+                    PlaceDialog.getInstance(RecordVisitActivity.this, mPlace, new PlaceDialog.OnOkClickListener() {
+                        @Override
+                        public void onOkClick(Place place) {
+                            updatePlaceText();
+                        }
+                    }).show(getFragmentManager(), null);
+                }
             }
         });
     }
 
-    private void setPlaceText() {
+    private void updatePlaceText() {
+
         if (mPlace != null) {
-            if (!mPlace.getName().equals("")) {
-                placeText.setText(mPlace.getName());
-            } else if (mPlace.getAddress() != null){
-                placeText.setText(mPlace.getAddress());
-            }
+            placeText.setText(mPlace.toString());
         }
     }
 
@@ -476,14 +521,25 @@ public class RecordVisitActivity extends AppCompatActivity {
                 RVData.getInstance().placeList.addOrSet(mPlace);
                 RVData.getInstance().noteCompleteList.addToBoth(mVisit.getNote());
 
-                // WorkActivityから来ているか否か
-                if (getIntent().getAction().equals(Constants.RecordVisitActions.EDIT_VISIT_ACTION)) {
+                switch (getIntent().getAction()) {
 
-                    Intent intent = new Intent();
-                    intent.putExtra(Visit.VISIT, mVisit.getId());
-                    setResult(Constants.RecordVisitActions.VISIT_CHANGED_RESULT_CODE, intent);
+                    case Constants.RecordVisitActions.EDIT_VISIT_ACTION:
 
+                        Intent intent = new Intent();
+                        intent.putExtra(Visit.VISIT, mVisit.getId());
+                        setResult(Constants.RecordVisitActions.VISIT_CHANGED_RESULT_CODE, intent);
+
+                        break;
+
+                    case  Constants.RecordVisitActions.NEW_VISIT_ACTION_NO_PLACE:
+
+                        Intent intent1 = new Intent();
+                        intent1.putExtra(Visit.VISIT, mVisit.getId());
+                        setResult(Constants.RecordVisitActions.VISIT_ADDED_RESULT_CODE, intent1);
+
+                        break;
                 }
+
                 finish();
 
             }

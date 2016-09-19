@@ -1,6 +1,5 @@
 package net.c_kogyo.returnvisitor.dialog;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -9,16 +8,11 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
-import net.c_kogyo.returnvisitor.activity.RecordVisitActivity;
 import net.c_kogyo.returnvisitor.data.Place;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by SeijiShii on 2016/07/21.
@@ -28,13 +22,13 @@ public class PlaceDialog extends DialogFragment {
 
     private static Context mContext;
     private static Place mPlace;
-    private static PlaceDialog.OnOkClickListener mLlstener;
+    private static PlaceDialog.OnOkClickListener mListener;
 
     public static PlaceDialog getInstance(Context context, Place place, PlaceDialog.OnOkClickListener listener){
 
         mContext = context;
         mPlace = place;
-        mLlstener = listener;
+        mListener = listener;
         return new PlaceDialog();
     }
 
@@ -59,7 +53,7 @@ public class PlaceDialog extends DialogFragment {
 
                 mPlace.setName(nameText.getText().toString());
                 mPlace.setAddress(addressText.getText().toString());
-                mLlstener.onOkClick(mPlace);
+                mListener.onOkClick(mPlace);
             }
         });
         builder.setNegativeButton(R.string.cancel_text, null);

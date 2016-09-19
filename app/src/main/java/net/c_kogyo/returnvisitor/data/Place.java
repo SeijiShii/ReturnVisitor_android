@@ -75,7 +75,7 @@ public class Place extends BaseDataItem {
 
     @Override
     public String toStringForSearch(Context context) {
-        return null;
+        return name + " " + address;
     }
 
     public String getMarkerId() {
@@ -198,5 +198,16 @@ public class Place extends BaseDataItem {
         return interest;
     }
 
+    public boolean hasPersonId(String personId) {
+        return personIds.contains(personId);
+    }
 
+    @Override
+    public String toString() {
+
+        if (name.length() > 0) return name;
+        if (address.length() > 0) return address;
+
+        return "";
+    }
 }

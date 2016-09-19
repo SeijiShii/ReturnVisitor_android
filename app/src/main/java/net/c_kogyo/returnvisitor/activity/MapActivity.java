@@ -399,7 +399,7 @@ public class MapActivity extends AppCompatActivity
 
     private void startRecordVisitByPlaceId(String id) {
         Intent recordVisitIntent = new Intent(this, RecordVisitActivity.class);
-        recordVisitIntent.setAction(Constants.RecordVisitActions.NEW_VISIT_ACTION);
+        recordVisitIntent.setAction(Constants.RecordVisitActions.NEW_VISIT_ACTION_WITH_PLACE);
         recordVisitIntent.putExtra(Place.PLACE, id);
         startActivity(recordVisitIntent);
     }
