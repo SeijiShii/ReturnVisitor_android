@@ -135,6 +135,8 @@ public class RecordVisitActivity extends AppCompatActivity {
                 // WorkActivityなど場所指定なしで来た場合
 
                 mVisit = new Visit();
+
+                // 特にDateが送られてこなければ今日の日付になる
                 long dLong = intent.getLongExtra(Constants.DATE_LONG, 0);
                 if (dLong != 0) {
 

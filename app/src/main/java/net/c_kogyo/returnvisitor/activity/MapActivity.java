@@ -71,6 +71,8 @@ import android.Manifest.permission;
 
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
+import net.c_kogyo.returnvisitor.data.Work;
+import net.c_kogyo.returnvisitor.dialog.AddWorkDialog;
 import net.c_kogyo.returnvisitor.dialog.MarkerDialog;
 import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
@@ -137,7 +139,7 @@ public class MapActivity extends AppCompatActivity
         // ログアウト状態でアプリを起動したら墜ちた
         initDateIfAuthed();
 
-        setContentView(R.layout.activity_map);
+        setContentView(R.layout.map_activity);
 
         mMapView = (MapView) findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
@@ -492,6 +494,8 @@ public class MapActivity extends AppCompatActivity
         initLogoutButton();
         initTimeFrame();
         initWorkButton();
+        initAddWorkButton();
+        initAddVisitButton();
 
     }
 
@@ -822,6 +826,14 @@ public class MapActivity extends AppCompatActivity
         if (requestCode == GOOGLE_SIGN_IN_RC) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
+        } else if (requestCode == Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE) {
+
+            if (resultCode == Constants.RecordVisitActions.VISIT_ADDED_RESULT_CODE) {
+
+                Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
+                startActivity(workActivityIntent);
+            }
+
         } else {
 
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
@@ -1297,6 +1309,47 @@ public class MapActivity extends AppCompatActivity
 
                 Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
                 startActivity(workActivityIntent);
+            }
+        });
+
+    }
+
+    private void initAddWorkButton() {
+
+        Button addWorkButton = (Button) findViewById(R.id.add_work_button);
+        addWorkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AddWorkDialog.newInstance(Calendar.getInstance(),
+                        new AddWorkDialog.OnWorkSetListener() {
+                    @Override
+                    public void onWorkSet(Work work) {
+
+                        RVData.getInstance().workList.addOrSet(work);
+
+                        // TODO WorkActivityに遷移
+                        Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
+                        startActivity(workActivityIntent);
+                    }
+                }).show(getFragmentManager(), null);
+            }
+        });
+
+    }
+
+    private void initAddVisitButton() {
+
+        Button addVisitButton = (Button) findViewById(R.id.add_visit_button);
+        addVisitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent addVisitIntent = new Intent(MapActivity.this, RecordVisitActivity.class);
+                addVisitIntent.setAction(Constants.RecordVisitActions.NEW_VISIT_ACTION_NO_PLACE);
+
+                startActivityForResult(addVisitIntent, Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE);
+                // TODO onActivityResult内にWorkActivityへの遷移を仕込む
             }
         });
 

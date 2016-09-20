@@ -41,6 +41,7 @@ import java.util.Comparator;
 public class WorkPagerActivity extends AppCompatActivity {
 
 
+    // TODO 日付指定で遷移するためのプロセス
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
