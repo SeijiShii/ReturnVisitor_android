@@ -514,11 +514,15 @@ public class RecordVisitActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                mPlace.addPersonIds(mVisit.getPersonIds());
+                // 場所NULLでも登録できるように
+                if (mPlace != null) {
+                    mPlace.addPersonIds(mVisit.getPersonIds());
+                    RVData.getInstance().placeList.addOrSet(mPlace);
+                }
+
                 mVisit.setRvCount(rvCountCounter.getCount());
 
                 RVData.getInstance().visitList.addOrSet(mVisit);
-                RVData.getInstance().placeList.addOrSet(mPlace);
                 RVData.getInstance().noteCompleteList.addToBoth(mVisit.getNote());
 
                 switch (getIntent().getAction()) {
@@ -615,7 +619,10 @@ public class RecordVisitActivity extends AppCompatActivity {
                 if (id != null) {
                     mVisit.addPersonId(id);
                     updatePersonContainer();
-                    mPlace.addPersonId(id);
+
+                    if  (mPlace != null) {
+                        mPlace.addPersonId(id);
+                    }
                     rvCountCounter.setCount(mVisit.refreshRVCount(this));
 
                 }
@@ -627,7 +634,9 @@ public class RecordVisitActivity extends AppCompatActivity {
                 if (id != null) {
                     mVisit.addPersonId(id);
                     updatePersonContainer();
-                    mPlace.addPersonId(id);
+                    if  (mPlace != null) {
+                        mPlace.addPersonId(id);
+                    }
                     rvCountCounter.setCount(mVisit.refreshRVCount(this));
 
 

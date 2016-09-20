@@ -47,6 +47,7 @@ public class Visit extends TimePeriodDataItem{
 
         HashMap<String, Object> map = super.toMap();
 
+        // NULLなら特に何も記録しない
         map.put(PLACE_ID, placeId);
         map.put(PERSON_IDS, personIds);
         map.put(RV_COUNT, rvCount);
@@ -125,7 +126,10 @@ public class Visit extends TimePeriodDataItem{
     public void setMap(HashMap<String, Object> map) {
         super.setMap(map);
 
-        this.placeId = map.get(PLACE_ID).toString();
+        // NULL場所訪問もあるからね
+        if (map.containsKey(PLACE_ID)) {
+            this.placeId = map.get(PLACE_ID).toString();
+        }
         this.rvCount = Integer.valueOf(map.get(RV_COUNT).toString());
 
         // HashMap to ArrayList
