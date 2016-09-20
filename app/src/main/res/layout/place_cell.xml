@@ -7,11 +7,18 @@
     android:padding="3dp"
     android:layout_margin="2dp">
 
-    <ImageView
+    <RelativeLayout
         android:layout_width="20dp"
-        android:layout_height="match_parent"
-        android:id="@+id/rater_mark"
-        android:contentDescription="@string/rater_marker"/>
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/rater_mark"
+            android:contentDescription="@string/rater_marker"/>
+
+    </RelativeLayout>
 
     <View
         android:layout_width="20dp"

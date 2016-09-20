@@ -76,7 +76,8 @@ public class AddSelectDialog extends DialogFragment {
                 addVisitIntent.setAction(Constants.RecordVisitActions.NEW_VISIT_ACTION_NO_PLACE);
                 addVisitIntent.putExtra(Constants.DATE_LONG, mDate.getTimeInMillis());
 
-                startActivityForResult(addVisitIntent, Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE);
+                // fragmentからstartActivityForResultをするときはgetActivity()しないともとのActivityには帰らない
+                getActivity().startActivityForResult(addVisitIntent, Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE);
 
                 dismiss();
             }
