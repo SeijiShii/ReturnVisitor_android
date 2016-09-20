@@ -71,6 +71,7 @@ import android.Manifest.permission;
 
 import net.c_kogyo.returnvisitor.data.Place;
 import net.c_kogyo.returnvisitor.data.RVData;
+import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.data.Work;
 import net.c_kogyo.returnvisitor.dialog.AddWorkDialog;
 import net.c_kogyo.returnvisitor.dialog.MarkerDialog;
@@ -831,6 +832,18 @@ public class MapActivity extends AppCompatActivity
             if (resultCode == Constants.RecordVisitActions.VISIT_ADDED_RESULT_CODE) {
 
                 Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
+
+                // TODO Intentにvisitの日付を仕込む
+                String visitId = data.getStringExtra(Visit.VISIT);
+                if (visitId != null) {
+                    Visit visit = RVData.getInstance().visitList.getById(visitId);
+
+                    if (visit != null) {
+                        Calendar date = visit.getStart();
+                        workActivityIntent.putExtra(Constants.DATE_LONG, date.getTimeInMillis());
+                    }
+                }
+
                 startActivity(workActivityIntent);
             }
 
@@ -1328,8 +1341,13 @@ public class MapActivity extends AppCompatActivity
 
                         RVData.getInstance().workList.addOrSet(work);
 
-                        // TODO WorkActivityに遷移
+                        // WorkActivityに遷移
                         Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
+
+                        // TODO Intentにworkの日付を仕込む
+
+                        workActivityIntent.putExtra(Constants.DATE_LONG, work.getStart().getTimeInMillis());
+
                         startActivity(workActivityIntent);
                     }
                 }).show(getFragmentManager(), null);
@@ -1349,7 +1367,7 @@ public class MapActivity extends AppCompatActivity
                 addVisitIntent.setAction(Constants.RecordVisitActions.NEW_VISIT_ACTION_NO_PLACE);
 
                 startActivityForResult(addVisitIntent, Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE);
-                // TODO onActivityResult内にWorkActivityへの遷移を仕込む
+                // onActivityResult内にWorkActivityへの遷移を仕込む
             }
         });
 
