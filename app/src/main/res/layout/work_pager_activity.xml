@@ -36,7 +36,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:gravity="center"
-                android:id="@+id/date_text"
+                android:id="@+id/month_text"
                 android:background="@drawable/white_trans_circle"
                 android:textColor="#FFF"
                 android:textSize="15sp"/>

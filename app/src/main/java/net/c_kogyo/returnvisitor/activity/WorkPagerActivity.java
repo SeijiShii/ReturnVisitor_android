@@ -1,32 +1,26 @@
 package net.c_kogyo.returnvisitor.activity;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.RVData;
-import net.c_kogyo.returnvisitor.data.VisitList;
 import net.c_kogyo.returnvisitor.data.Work;
 import net.c_kogyo.returnvisitor.dialog.AddSelectDialog;
 import net.c_kogyo.returnvisitor.dialog.AddWorkDialog;
+import net.c_kogyo.returnvisitor.dialog.CalendarDialog;
 import net.c_kogyo.returnvisitor.fragment.WorkFragment;
 import net.c_kogyo.returnvisitor.util.CalendarUtil;
-import net.c_kogyo.returnvisitor.util.DateTimeText;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -140,7 +134,7 @@ public class WorkPagerActivity extends AppCompatActivity {
 
         leftButton = (Button) findViewById(R.id.left_button);
         rightButton = (Button) findViewById(R.id.right_button);
-        dateText = (TextView) findViewById(R.id.date_text);
+        dateText = (TextView) findViewById(R.id.month_text);
 
         updateButtons();
 
@@ -148,25 +142,28 @@ public class WorkPagerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Calendar date = datePagerAdapter.getDate(pager.getCurrentItem());
-                new DatePickerDialog(WorkPagerActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                CalendarDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem())).show(getFragmentManager(), null);
 
-                        Calendar daySet = Calendar.getInstance();
-                        daySet.set(Calendar.YEAR, i);
-                        daySet.set(Calendar.MONTH, i1);
-                        daySet.set(Calendar.DAY_OF_MONTH, i2);
 
-                        if (datePagerAdapter.containsDate(daySet)) {
-
-                            pager.setCurrentItem(datePagerAdapter.getPosition(daySet), true);
-                            updateButtons();
-                        }
-                    }
-                }, date.get(Calendar.YEAR),
-                        date.get(Calendar.MONTH),
-                        date.get(Calendar.DAY_OF_MONTH)).show();
+//                Calendar date = datePagerAdapter.getDate(pager.getCurrentItem());
+//                new DatePickerDialog(WorkPagerActivity.this, new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+//
+//                        Calendar daySet = Calendar.getInstance();
+//                        daySet.set(Calendar.YEAR, i);
+//                        daySet.set(Calendar.MONTH, i1);
+//                        daySet.set(Calendar.DAY_OF_MONTH, i2);
+//
+//                        if (datePagerAdapter.containsDate(daySet)) {
+//
+//                            pager.setCurrentItem(datePagerAdapter.getPosition(daySet), true);
+//                            updateButtons();
+//                        }
+//                    }
+//                }, date.get(Calendar.YEAR),
+//                        date.get(Calendar.MONTH),
+//                        date.get(Calendar.DAY_OF_MONTH)).show();
 
             }
         });

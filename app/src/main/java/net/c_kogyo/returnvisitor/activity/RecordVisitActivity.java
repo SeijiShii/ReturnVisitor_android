@@ -235,7 +235,7 @@ public class RecordVisitActivity extends AppCompatActivity {
     private TextView dateText;
     private void initDateText() {
 
-        dateText = (TextView) findViewById(R.id.date_text);
+        dateText = (TextView) findViewById(R.id.month_text);
 
         DateFormat format = android.text.format.DateFormat.getDateFormat(getApplicationContext());
         String dateString = format.format(mVisit.getStart().getTime());

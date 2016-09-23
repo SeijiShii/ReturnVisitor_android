@@ -833,7 +833,7 @@ public class MapActivity extends AppCompatActivity
 
                 Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
 
-                // TODO Intentにvisitの日付を仕込む
+                // Intentにvisitの日付を仕込む
                 String visitId = data.getStringExtra(Visit.VISIT);
                 if (visitId != null) {
                     Visit visit = RVData.getInstance().visitList.getById(visitId);
