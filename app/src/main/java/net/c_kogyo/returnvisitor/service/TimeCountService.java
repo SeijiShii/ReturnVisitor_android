@@ -181,7 +181,7 @@ public class TimeCountService extends Service {
 
     private void initNotification(long duration) {
 
-        String duraString = getString(R.string.duration_text, DateTimeText.getDurationString(duration));
+        String duraString = getString(R.string.duration_text, DateTimeText.getDurationString(duration, true));
 
         mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.white_rv_icon)
@@ -206,7 +206,7 @@ public class TimeCountService extends Service {
 
     private void updateNotification(long duration) {
 
-        String duraString = getString(R.string.duration_text, DateTimeText.getDurationString(duration));
+        String duraString = getString(R.string.duration_text, DateTimeText.getDurationString(duration, true));
         mBuilder.setContentText(duraString);
 
         // キャンセルできないようにする

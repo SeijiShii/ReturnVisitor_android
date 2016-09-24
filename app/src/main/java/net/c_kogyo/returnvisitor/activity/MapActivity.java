@@ -1294,7 +1294,7 @@ public class MapActivity extends AppCompatActivity
                         String startTimeString = MapActivity.this.getResources().getString(R.string.start_time_text, timeFormat.format(startCal.getTime()));
                         startTimeText.setText(startTimeString);
 
-                        String durationTimeString = MapActivity.this.getResources().getString(R.string.duration_text, getDurationString(duration));
+                        String durationTimeString = MapActivity.this.getResources().getString(R.string.duration_text, getDurationString(duration, true));
                         durationText.setText(durationTimeString);
                     }
                 }

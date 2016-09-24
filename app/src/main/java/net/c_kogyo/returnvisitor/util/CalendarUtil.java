@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.util;
 
+import net.c_kogyo.returnvisitor.data.RVData;
+
 import java.util.Calendar;
 
 /**
@@ -20,4 +22,5 @@ public class CalendarUtil {
 
         return year0 == year1 && month0 == month1 && day0 == day1;
     }
+
 }

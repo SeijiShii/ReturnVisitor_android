@@ -11,7 +11,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.activity.MapActivity;
+import net.c_kogyo.returnvisitor.util.CalendarUtil;
 
+import java.lang.annotation.Retention;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -187,6 +193,44 @@ public class RVData {
         placementCompList.loadFromHashMap(map);
         noteCompleteList.loadFromHashMap(map);
 
+    }
+
+    public ArrayList<Calendar> getDatesWithData() {
+
+        ArrayList<Calendar> datesOfVisit = visitList.getDates();
+        ArrayList<Calendar> datesOfWork = workList.getDates();
+        ArrayList<Calendar> datesDoubled = new ArrayList<>();
+
+        for (Calendar date0 : datesOfVisit) {
+            for (Calendar date1 : datesOfWork) {
+
+                if (CalendarUtil.isSameDay(date0, date1)) {
+                    datesDoubled.add(date1);
+                }
+            }
+        }
+
+        datesOfWork.removeAll(datesDoubled);
+        datesOfVisit.addAll(datesOfWork);
+
+        Collections.sort(datesOfVisit, new Comparator<Calendar>() {
+            @Override
+            public int compare(Calendar calendar, Calendar t1) {
+                return calendar.compareTo(t1);
+            }
+        });
+
+        return new ArrayList<>(datesOfVisit);
+    }
+
+    public boolean theDayHasData(Calendar date) {
+
+        for (Calendar date1 : getDatesWithData()) {
+            if (CalendarUtil.isSameDay(date1, date)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     //    public void setListenerAndLoadData() {

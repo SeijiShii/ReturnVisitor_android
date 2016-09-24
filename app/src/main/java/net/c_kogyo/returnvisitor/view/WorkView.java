@@ -148,14 +148,14 @@ public abstract class WorkView extends BaseAnimateView {
         if (mWork.isTimeCounting() && intent != null) {
 
             long duration = intent.getLongExtra(TimeCountService.DURATION, 0);
-            String durationString = DateTimeText.getDurationString(duration);
+            String durationString = DateTimeText.getDurationString(duration, true);
             Log.d(WORK_VIEW_TEST_TAG, "Duration updated: " + durationString);
 
             durationText.setText(durationString);
 
         } else {
 
-            String timeString = DateTimeText.getDurationString(mWork.getDuration());
+            String timeString = DateTimeText.getDurationString(mWork.getDuration(), true);
             timeString = mContext.getString(R.string.time_text, timeString);
             durationText.setText(timeString);
         }

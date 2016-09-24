@@ -142,7 +142,11 @@ public class WorkPagerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                CalendarDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem())).show(getFragmentManager(), null);
+//                CalendarDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem())).show(getFragmentManager(), null);
+                Intent calendarIntent = new Intent(WorkPagerActivity.this, CalendarActivity.class);
+                calendarIntent.putExtra(Constants.DATE_LONG, datePagerAdapter.getDate(pager.getCurrentItem()));
+
+                startActivity(calendarIntent);
 
 
 //                Calendar date = datePagerAdapter.getDate(pager.getCurrentItem());
@@ -309,30 +313,7 @@ public class WorkPagerActivity extends AppCompatActivity {
 
         private void setDates() {
 
-            ArrayList<Calendar> datesOfVisit = RVData.getInstance().visitList.getDates();
-            ArrayList<Calendar> datesOfWork = RVData.getInstance().workList.getDates();
-            ArrayList<Calendar> datesDoubled = new ArrayList<>();
-
-            for (Calendar date0 : datesOfVisit) {
-                for (Calendar date1 : datesOfWork) {
-
-                    if (CalendarUtil.isSameDay(date0, date1)) {
-                        datesDoubled.add(date1);
-                    }
-                }
-            }
-
-            datesOfWork.removeAll(datesDoubled);
-            datesOfVisit.addAll(datesOfWork);
-
-            Collections.sort(datesOfVisit, new Comparator<Calendar>() {
-                @Override
-                public int compare(Calendar calendar, Calendar t1) {
-                    return calendar.compareTo(t1);
-                }
-            });
-
-            mDates = new ArrayList<>(datesOfVisit);
+            mDates = RVData.getInstance().getDatesWithData();
         }
 
         public Calendar getDate(int pos) {

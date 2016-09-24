@@ -139,4 +139,16 @@ public abstract class WorkList extends DataList<Work> {
         return dates;
     }
 
+    public long getTimeInDay(Calendar date) {
+
+        ArrayList<Work> dayWorks = getWorksOfDay(date);
+        long time = 0;
+
+        for (Work work : dayWorks) {
+
+            time += work.getDuration();
+        }
+        return time;
+    }
+
 }

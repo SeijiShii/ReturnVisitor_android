@@ -9,7 +9,7 @@ import java.util.Calendar;
 
 public class DateTimeText {
 
-    static public String getDurationString(long duration) {
+    static public String getDurationString(long duration, boolean showSec) {
 
         final int secMil = 1000;
         final int minMil = secMil * 60;
@@ -23,13 +23,20 @@ public class DateTimeText {
 
         int sec = (int) duration / secMil;
 
-        if (hour > 0) {
+//        if (hour > 0) {
+//
+//            return String.valueOf(hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec);
+//
+//        } else {
+//
+//            return String.valueOf(min) + ":" + String.format("%02d", sec);
+//
+//        }
 
+        if (showSec) {
             return String.valueOf(hour) + ":" + String.format("%02d", min) + ":" + String.format("%02d", sec);
-
         } else {
-
-            return String.valueOf(min) + ":" + String.format("%02d", sec);
+            return String.valueOf(hour) + ":" + String.format("%02d", min);
         }
     }
 
