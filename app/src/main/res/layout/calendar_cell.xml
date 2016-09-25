@@ -37,6 +37,45 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:orientation="horizontal">
+
+        <!-- plc -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:id="@+id/plc_marker"
+            android:background="@color/light_red"/>
+
+        <!-- rv -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:id="@+id/rv_marker"
+            android:background="@color/facebook_blue"/>
+
+        <!-- show video -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="2dp"
+            android:id="@+id/video_marker"
+            android:background="@color/colorAccent"/>
+
+
+    </LinearLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#666"/>
+
 
 
 </LinearLayout>

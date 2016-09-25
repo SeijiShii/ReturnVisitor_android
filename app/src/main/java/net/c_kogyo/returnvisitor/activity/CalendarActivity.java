@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.data.AggregationOfDay;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
 
@@ -366,6 +367,7 @@ public class CalendarActivity extends AppCompatActivity{
     class CalendarCell extends FrameLayout{
 
         private Calendar mDate;
+        private AggregationOfDay aggregation;
 
         public CalendarCell(Context context, Calendar date) {
 
@@ -384,6 +386,8 @@ public class CalendarActivity extends AppCompatActivity{
 
         private void initCommon() {
 
+            aggregation = new AggregationOfDay(mDate);
+
             View.inflate(CalendarActivity.this, R.layout.calendar_cell, this);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -394,6 +398,9 @@ public class CalendarActivity extends AppCompatActivity{
             initDateText();
             initTimeBar();
             initTimeText();
+            initPLCMarker();
+            initRVMarker();
+            initVideoMarker();
 
         }
 
@@ -433,6 +440,33 @@ public class CalendarActivity extends AppCompatActivity{
                 timeBar.setVisibility(VISIBLE);
             } else {
                 timeBar.setVisibility(INVISIBLE);
+            }
+        }
+
+        private void initPLCMarker() {
+            View plcMarker = findViewById(R.id.plc_marker);
+            if (aggregation.getPlacementCount() > 0) {
+                plcMarker.setVisibility(VISIBLE);
+            } else {
+                plcMarker.setVisibility(INVISIBLE);
+            }
+        }
+
+        private void initRVMarker() {
+            View rvMarker = findViewById(R.id.rv_marker);
+            if (aggregation.getRvCount() > 0) {
+                rvMarker.setVisibility(VISIBLE);
+            } else {
+                rvMarker.setVisibility(INVISIBLE);
+            }
+        }
+
+        private void initVideoMarker() {
+            View videoMarker = findViewById(R.id.video_marker);
+            if (aggregation.getShowVideoCount() > 0) {
+                videoMarker.setVisibility(VISIBLE);
+            } else {
+                videoMarker.setVisibility(INVISIBLE);
             }
         }
     }

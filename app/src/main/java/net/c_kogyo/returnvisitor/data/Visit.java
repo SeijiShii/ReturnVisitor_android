@@ -15,11 +15,13 @@ public class Visit extends TimePeriodDataItem{
     public static final String PERSON_IDS = "person_ids";
     public static final String PLACEMENTS = "placements";
     public static final String RV_COUNT = "rv_count";
+    public static final String IS_BS = "is_bs";
 
     private String placeId;
     private ArrayList<String> personIds;
     private ArrayList<Placement> placements;
     private int rvCount;
+    private boolean isBS;
 
     public Visit() {
         super();
@@ -28,6 +30,7 @@ public class Visit extends TimePeriodDataItem{
         this.personIds = new ArrayList<>();
         this.placements = new ArrayList<>();
         this.rvCount = 0;
+        this.isBS = false;
     }
 
     @Override
@@ -51,6 +54,7 @@ public class Visit extends TimePeriodDataItem{
         map.put(PLACE_ID, placeId);
         map.put(PERSON_IDS, personIds);
         map.put(RV_COUNT, rvCount);
+        map.put(IS_BS, isBS);
 
         ArrayList<HashMap<String, Object>> mapList = new ArrayList<>();
         for ( int i = 0 ; i < placements.size() ; i++ ) {
@@ -130,7 +134,14 @@ public class Visit extends TimePeriodDataItem{
         if (map.containsKey(PLACE_ID)) {
             this.placeId = map.get(PLACE_ID).toString();
         }
-        this.rvCount = Integer.valueOf(map.get(RV_COUNT).toString());
+
+        if (map.containsKey(RV_COUNT)) {
+            this.rvCount = Integer.valueOf(map.get(RV_COUNT).toString());
+        }
+
+        if (map.containsKey(IS_BS)) {
+            this.isBS = Boolean.valueOf(map.get(IS_BS).toString());
+        }
 
         // HashMap to ArrayList
         Object o = map.get(PERSON_IDS);
@@ -210,6 +221,53 @@ public class Visit extends TimePeriodDataItem{
     }
 
     // TODO そう考えると場所無き訪問もあるよね
+
+    public int getPlacementCount() {
+
+        int count = 0;
+        for (Placement plc : placements) {
+            if (plc.getCategory() != Placement.Category.SHOW_VIDEO
+                    && plc.getCategory() != Placement.Category.OTHER) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public int getShowVideoCount() {
+
+        int count = 0;
+        for (Placement plc : placements) {
+            if (plc.getCategory() == Placement.Category.SHOW_VIDEO) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public boolean isBS() {
+        return isBS;
+    }
+
+    public void setBS(boolean bs) {
+        isBS = bs;
+    }
+
+    // BSに挨拶で立ち寄ることもあるので
+    public boolean canBeBS(Context context) {
+
+        for (String id  : personIds) {
+
+            Person person = RVData.getInstance().personList.getById(id);
+            if (person != null) {
+                if (person.isBS(context)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
 
 }

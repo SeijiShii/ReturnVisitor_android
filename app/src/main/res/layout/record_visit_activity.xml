@@ -46,8 +46,11 @@
             <!-- Date Time -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="@dimen/button_height"
+                android:orientation="horizontal"
+                android:background="@drawable/gray_trans_circle"
+                android:padding="5dp"
+                android:layout_margin="5dp">
 
                 <TextView
                     android:layout_width="0dp"
@@ -56,8 +59,6 @@
                     android:id="@+id/month_text"
                     android:textSize="15sp"
                     android:minHeight="@dimen/button_height"
-                    android:background="@drawable/gray_trans_circle"
-                    android:layout_margin="5dp"
                     android:gravity="center"/>
 
                 <TextView
@@ -67,8 +68,6 @@
                     android:id="@+id/time_text"
                     android:textSize="15sp"
                     android:minHeight="@dimen/button_height"
-                    android:background="@drawable/gray_trans_circle"
-                    android:layout_margin="5dp"
                     android:gravity="center"/>
 
             </LinearLayout>
@@ -106,11 +105,29 @@
 
             </FrameLayout>
 
+            <!-- RVCounter -->
             <net.c_kogyo.returnvisitor.view.RefreshableCounterView
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 customView:Title="@string/rv_count"
                 android:id="@+id/rv_count_text"/>
+
+            <!-- is BS -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height"
+                android:id="@+id/bs_container">
+
+                <android.support.v7.widget.SwitchCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/is_bs_switch"
+                    android:textSize="15sp"
+                    android:text="@string/is_bs"
+                    android:textColor="#888"
+                    android:layout_alignParentRight="true"/>
+
+            </RelativeLayout>
 
             <!-- Placements -->
             <TextView

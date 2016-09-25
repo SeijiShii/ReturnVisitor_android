@@ -19,7 +19,7 @@ public abstract class VisitList extends DataList<Visit> {
         super(Visit.class);
     }
 
-    private ArrayList<Visit> getVisitsOfDay(Calendar date) {
+    public ArrayList<Visit> getVisitsOfDay(Calendar date) {
 
         ArrayList<Visit> visits = new ArrayList<>();
 

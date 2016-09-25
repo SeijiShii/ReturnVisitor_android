@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,8 +21,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -73,6 +76,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         initTimeText();
         initPersonContainer();
         initRCountCounter();
+        initBSSwitch();
         initPlacementContainer();
         initNoteText();
 
@@ -410,6 +414,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         }
 
         updatePersonTouchText();
+        updateBSSwitch();
 
     }
 
@@ -429,6 +434,7 @@ public class RecordVisitActivity extends AppCompatActivity {
         mVisit.getPersonIds().remove(cell.getPerson().getId());
         updatePersonTouchText();
         rvCountCounter.setCount(mVisit.refreshRVCount(this));
+        updateBSSwitch();
     }
 
     private ArrayList<String> getPersonIdsInContainer() {
@@ -456,6 +462,32 @@ public class RecordVisitActivity extends AppCompatActivity {
                 refreshableCounterView.setCount(mVisit.refreshRVCount(RecordVisitActivity.this));
             }
         });
+    }
+
+    private SwitchCompat bsSwitch;
+    private RelativeLayout bsContainer;
+    private void initBSSwitch() {
+
+        bsContainer = (RelativeLayout) findViewById(R.id.bs_container);
+        bsSwitch = (SwitchCompat) findViewById(R.id.is_bs_switch);
+        updateBSSwitch();
+    }
+
+    private void updateBSSwitch() {
+
+        if (mVisit.canBeBS(this)) {
+            bsSwitch.setVisibility(View.VISIBLE);
+            bsContainer.getLayoutParams().height = 60;
+            bsSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    mVisit.setBS(b);
+                }
+            });
+        } else {
+            bsSwitch.setVisibility(View.INVISIBLE);
+            bsContainer.getLayoutParams().height = 0;
+        }
     }
 
     // Placement Frame
