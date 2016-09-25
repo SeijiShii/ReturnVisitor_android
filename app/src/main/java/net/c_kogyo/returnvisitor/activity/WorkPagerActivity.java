@@ -142,7 +142,7 @@ public class WorkPagerActivity extends AppCompatActivity {
 
 //                CalendarDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem())).show(getFragmentManager(), null);
                 Intent calendarIntent = new Intent(WorkPagerActivity.this, CalendarActivity.class);
-                calendarIntent.setAction(Constants.CalendarActions.START_CALENDAR_ACTION);
+                calendarIntent.setAction(Constants.CalendarActions.START_CALENDAR_FROM_WORK_ACTION);
                 calendarIntent.putExtra(Constants.DATE_LONG,
                         datePagerAdapter.getDay(pager.getCurrentItem()).getDate().getTimeInMillis());
 

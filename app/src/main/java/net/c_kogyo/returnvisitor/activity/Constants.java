@@ -78,7 +78,8 @@ public class Constants {
 
     public class CalendarActions {
 
-        public static final String START_CALENDAR_ACTION = "start_calendar_action";
+        public static final String START_CALENDAR_FROM_WORK_ACTION = "start_calendar_from_work_action";
+        public static final String START_CALENDAR_FROM_MAP_ACTION = "start_calendar_from_map_action";
         public static final int START_CALENDAR_REQUEST_CODE = 5000;
         public static final int PRESS_DATE_RESULT_CODE = 5010;
     }

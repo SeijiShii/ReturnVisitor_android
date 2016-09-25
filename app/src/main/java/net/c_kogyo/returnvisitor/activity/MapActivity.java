@@ -148,7 +148,7 @@ public class MapActivity extends AppCompatActivity
 
         createToolBar();
         initGuideText();
-        createDrawer();
+        initDrawer();
 
     }
 
@@ -492,7 +492,7 @@ public class MapActivity extends AppCompatActivity
 
     private DrawerLayout navDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
-    private void createDrawer() {
+    private void initDrawer() {
 
         navDrawer = (DrawerLayout) findViewById(R.id.drawer);
         // toolBarを設定するコンストラクタを使用する必要がある
@@ -507,6 +507,7 @@ public class MapActivity extends AppCompatActivity
         initWorkButton();
         initAddWorkButton();
         initAddVisitButton();
+        initCalendarButton();
 
     }
 
@@ -1389,6 +1390,22 @@ public class MapActivity extends AppCompatActivity
             }
         });
 
+    }
+
+    private void initCalendarButton() {
+
+        final Button calendarButton = (Button) findViewById(R.id.calendar_button);
+        calendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent calendarIntent = new Intent(MapActivity.this, CalendarActivity.class);
+                calendarIntent.setAction(Constants.CalendarActions.START_CALENDAR_FROM_MAP_ACTION);
+                calendarIntent.putExtra(Constants.DATE_LONG, Calendar.getInstance().getTimeInMillis());
+                startActivity(calendarIntent);
+
+            }
+        });
     }
 
     private static final String APP_TIMER_TAG = "AppTimer";

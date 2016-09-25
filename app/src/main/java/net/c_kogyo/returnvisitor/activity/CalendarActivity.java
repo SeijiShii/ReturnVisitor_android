@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.AggregationOfDay;
-import net.c_kogyo.returnvisitor.data.AggregationOfMonth;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
 
@@ -414,12 +413,25 @@ public class CalendarActivity extends AppCompatActivity{
 
                                 Intent workIntent = new Intent(CalendarActivity.this, WorkPagerActivity.class);
 
-                                if (getIntent().getAction().equals(Constants.CalendarActions.START_CALENDAR_ACTION)) {
+                                String action = getIntent().getAction();
+                                if (action != null) {
 
-                                    workIntent.putExtra(Constants.DATE_LONG, aggregation.getDate().getTimeInMillis());
-                                    setResult(Constants.CalendarActions.PRESS_DATE_RESULT_CODE, workIntent);
-                                    finish();
+                                    // Workから来ている場合
+                                    if (action.equals(Constants.CalendarActions.START_CALENDAR_FROM_WORK_ACTION)) {
+
+                                        workIntent.putExtra(Constants.DATE_LONG, aggregation.getDate().getTimeInMillis());
+                                        setResult(Constants.CalendarActions.PRESS_DATE_RESULT_CODE, workIntent);
+                                        finish();
+                                    } else if (action.equals(Constants.CalendarActions.START_CALENDAR_FROM_MAP_ACTION)) {
+                                        // Mapから来ている場合
+                                        workIntent.putExtra(Constants.DATE_LONG, aggregation.getDate().getTimeInMillis());
+                                        CalendarActivity.this.startActivity(workIntent);
+                                        finish();
+                                    }
+
                                 }
+
+
 
                                 return true;
 
