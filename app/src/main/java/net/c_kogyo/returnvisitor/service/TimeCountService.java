@@ -216,5 +216,6 @@ public class TimeCountService extends Service {
     }
 
     // TODO エラーで停止した後通知が消えない
+    // TODO TimeCountがシステム側の都合で停止したとき同じIntentで再開できる仕組みにする
 
 }

@@ -270,7 +270,7 @@ public class WorkPagerActivity extends AppCompatActivity {
         if (requestCode == Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE
                 || requestCode == Constants.RecordVisitActions.EDIT_VISIT_REQUEST_CODE) {
 
-            //TODO ここをgetItemでやるべきか　要検証
+            //ここをgetItemでやるべきか　要検証
             ((WorkFragment) datePagerAdapter.instantiateItem(pager, pager.getCurrentItem())).onActivityResult(requestCode, resultCode, data);
         } else if (requestCode == Constants.CalendarActions.PRESS_DATE_RESULT_CODE) {
 

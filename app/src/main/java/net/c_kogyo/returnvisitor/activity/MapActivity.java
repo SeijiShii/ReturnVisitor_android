@@ -1354,7 +1354,7 @@ public class MapActivity extends AppCompatActivity
                         // WorkActivityに遷移
                         Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
 
-                        // TODO Intentにworkの日付を仕込む
+                        // Intentにworkの日付を仕込む
 
                         workActivityIntent.putExtra(Constants.DATE_LONG, work.getStart().getTimeInMillis());
 

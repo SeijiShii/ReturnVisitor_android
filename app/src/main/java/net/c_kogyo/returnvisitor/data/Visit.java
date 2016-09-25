@@ -41,7 +41,7 @@ public class Visit extends TimePeriodDataItem{
     @Override
     public String toStringForSearch(Context context) {
 
-        // TODO Visitをsearchすることはあるのだろうか
+        // Visitをsearchすることはあるのだろうか
         return null;
     }
 
@@ -220,7 +220,7 @@ public class Visit extends TimePeriodDataItem{
 
     }
 
-    // TODO そう考えると場所無き訪問もあるよね
+    // そう考えると場所無き訪問もあるよね
 
     public int getPlacementCount() {
 
