@@ -1,6 +1,7 @@
 package net.c_kogyo.returnvisitor.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -94,6 +95,7 @@ public class PersonActivity extends AppCompatActivity {
         if (toolbar != null) {
 
             toolbar.setTitle(R.string.person);
+            toolbar.setTitleTextColor(Color.WHITE);
         }
     }
 

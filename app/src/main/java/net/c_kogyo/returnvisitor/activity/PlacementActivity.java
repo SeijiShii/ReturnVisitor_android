@@ -1,6 +1,7 @@
 package net.c_kogyo.returnvisitor.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
@@ -79,6 +80,7 @@ public class PlacementActivity extends AppCompatActivity {
         if (toolbar != null) {
 
             toolbar.setTitle(R.string.placement);
+            toolbar.setTitleTextColor(Color.WHITE);
         }
     }
 

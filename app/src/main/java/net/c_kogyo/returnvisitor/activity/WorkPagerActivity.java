@@ -1,6 +1,7 @@
 package net.c_kogyo.returnvisitor.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -53,7 +54,7 @@ public class WorkPagerActivity extends AppCompatActivity {
     private void initToolBar(){
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
-//        toolbar.inflateMenu(R.menu.return_visitor_menu);
+        toolbar.setTitleTextColor(Color.WHITE);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.work_visit_title);

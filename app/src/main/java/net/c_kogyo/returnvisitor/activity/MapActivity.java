@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -265,10 +266,10 @@ public class MapActivity extends AppCompatActivity
     private void createToolBar(){
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
-//        toolbar.inflateMenu(R.menu.return_visitor_menu);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle(R.string.app_name);
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -497,6 +498,7 @@ public class MapActivity extends AppCompatActivity
         // toolBarを設定するコンストラクタを使用する必要がある
         mDrawerToggle = new ActionBarDrawerToggle(this, navDrawer, toolbar, R.string.app_name, R.string.app_name);
         mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerToggle.syncState();
 
         initLoginButton();
         initAnonymousLoginButton();

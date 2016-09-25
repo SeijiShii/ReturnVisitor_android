@@ -107,7 +107,7 @@ public class CalendarActivity extends AppCompatActivity{
     private void initToolBar(){
 
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
-//        toolbar.inflateMenu(R.menu.return_visitor_menu);
+        toolbar.setTitle("");
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
