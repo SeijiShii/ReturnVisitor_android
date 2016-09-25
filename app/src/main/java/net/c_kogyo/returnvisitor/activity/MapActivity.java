@@ -175,6 +175,14 @@ public class MapActivity extends AppCompatActivity
         LocalBroadcastManager.getInstance(getApplicationContext()).unregisterReceiver(broadcastReceiver);
 
         saveCameraPosition();
+
+        try {
+
+            mMap.setMyLocationEnabled(false);
+        } catch (SecurityException e) {
+            //
+        }
+
     }
 
     @Override

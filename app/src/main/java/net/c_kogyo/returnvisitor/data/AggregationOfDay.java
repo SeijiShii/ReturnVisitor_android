@@ -52,4 +52,5 @@ public class AggregationOfDay {
     public int getRvCount() {
         return rvCount;
     }
+
 }

@@ -144,9 +144,10 @@ public class WorkPagerActivity extends AppCompatActivity {
 
 //                CalendarDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem())).show(getFragmentManager(), null);
                 Intent calendarIntent = new Intent(WorkPagerActivity.this, CalendarActivity.class);
+                calendarIntent.setAction(Constants.CalendarActions.START_CALENDAR_ACTION);
                 calendarIntent.putExtra(Constants.DATE_LONG, datePagerAdapter.getDate(pager.getCurrentItem()));
 
-                startActivity(calendarIntent);
+                startActivityForResult(calendarIntent, Constants.CalendarActions.START_CALENDAR_REQUEST_CODE);
 
 
 //                Calendar date = datePagerAdapter.getDate(pager.getCurrentItem());
@@ -267,8 +268,26 @@ public class WorkPagerActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        //TODO ここをgetItemでやるべきか　要検証
-        ((WorkFragment) datePagerAdapter.instantiateItem(pager, pager.getCurrentItem())).onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE
+                || requestCode == Constants.RecordVisitActions.EDIT_VISIT_REQUEST_CODE) {
+
+            //TODO ここをgetItemでやるべきか　要検証
+            ((WorkFragment) datePagerAdapter.instantiateItem(pager, pager.getCurrentItem())).onActivityResult(requestCode, resultCode, data);
+        } else if (requestCode == Constants.CalendarActions.PRESS_DATE_RESULT_CODE) {
+
+            if (resultCode == Constants.CalendarActions.PRESS_DATE_RESULT_CODE) {
+
+                Calendar date = Calendar.getInstance();
+                long dLong = data.getLongExtra(Constants.DATE_LONG, 0);
+                if (dLong != 0) {
+
+                    date.setTimeInMillis(dLong);
+                }
+                pager.setCurrentItem(datePagerAdapter.getPosition(date), true);
+            }
+
+        }
+
     }
 
     class DatePagerAdapter extends FragmentStatePagerAdapter {

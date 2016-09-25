@@ -1,6 +1,7 @@
 package net.c_kogyo.returnvisitor.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,6 +31,9 @@ import net.c_kogyo.returnvisitor.util.DateTimeText;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import static android.view.MotionEvent.ACTION_BUTTON_PRESS;
+import static android.view.MotionEvent.ACTION_BUTTON_RELEASE;
 
 /**
  * Created by SeijiShii on 2016/09/23.
@@ -401,6 +406,42 @@ public class CalendarActivity extends AppCompatActivity{
             initPLCMarker();
             initRVMarker();
             initVideoMarker();
+
+            if (RVData.getInstance().theDayHasData(mDate)) {
+
+                setOnTouchListener(new OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                        switch (motionEvent.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                Log.d(CALENDAR_DEBUG_TAG, "Cell pressed down!");
+                                CalendarCell.this.setAlpha(0.5f);
+
+                                Intent workIntent = new Intent(CalendarActivity.this, WorkPagerActivity.class);
+
+                                if (getIntent().getAction().equals(Constants.CalendarActions.START_CALENDAR_ACTION)) {
+
+                                    workIntent.putExtra(Constants.DATE_LONG, mDate.getTimeInMillis());
+                                    setResult(Constants.CalendarActions.PRESS_DATE_RESULT_CODE, workIntent);
+                                    finish();
+                                }
+
+                                return true;
+
+                            case MotionEvent.ACTION_UP:
+
+                                Log.d(CALENDAR_DEBUG_TAG, "Cell action up!");
+                                CalendarCell.this.setAlpha(1f);
+
+                                return true;
+                        }
+
+
+                        return false;
+                    }
+                });
+            }
 
         }
 

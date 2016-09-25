@@ -72,6 +72,15 @@ public class Constants {
         public static final int VISIT_CHANGED_RESULT_CODE = 4020;
         public static final int VISIT_ADDED_RESULT_CODE = 4030;
 
+
+
+    }
+
+    public class CalendarActions {
+
+        public static final String START_CALENDAR_ACTION = "start_calendar_action";
+        public static final int START_CALENDAR_REQUEST_CODE = 5000;
+        public static final int PRESS_DATE_RESULT_CODE = 5010;
     }
 
     public class WorkActivityActions {
