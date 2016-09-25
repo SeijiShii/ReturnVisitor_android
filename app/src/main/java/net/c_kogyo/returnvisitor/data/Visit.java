@@ -268,6 +268,25 @@ public class Visit extends TimePeriodDataItem{
         return false;
     }
 
+    public boolean hasPersonId (String id) {
 
+        for (String id1 : this.personIds) {
+            if (id.equals(id1)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public boolean hasSamePersonIds(Visit visit) {
+
+        ArrayList<String> ids1 = new ArrayList<>(this.personIds);
+        ArrayList<String> ids2 = new ArrayList<>(visit.personIds);
+
+        ids1.removeAll(visit.personIds);
+        ids2.removeAll(this.personIds);
+
+        return ids1.size() <= 0 && ids2.size() <= 0;
+
+    }
 }

@@ -7,50 +7,43 @@ import java.util.Calendar;
  * Created by SeijiShii on 2016/09/24.
  */
 
-public class AggregationOfDay {
+public class AggregationOfDay extends AggregationBase{
 
-    private long time;
-    private int placementCount;
-    private int showVideoCount;
-    private int rvCount;
+    private ArrayList<Work> worksOfDay;
+    private ArrayList<Visit> visitsOfDay;
+    private ArrayList<Visit> bsVisitsOfDay;
 
     public AggregationOfDay(Calendar date) {
 
-        ArrayList<Work> worksOfDay = RVData.getInstance().workList.getWorksOfDay(date);
-        time = 0;
+        super();
+
+        bsVisitsOfDay = new ArrayList<>();
+
+        worksOfDay = RVData.getInstance().workList.getWorksOfDay(date);
         for (Work work : worksOfDay) {
             time += work.getDuration();
         }
 
 
-        ArrayList<Visit> visitsOfDay = RVData.getInstance().visitList.getVisitsOfDay(date);
-        placementCount = 0;
-        showVideoCount = 0;
-        rvCount = 0;
-
+        visitsOfDay = RVData.getInstance().visitList.getVisitsOfDay(date);
         for (Visit visit : visitsOfDay) {
 
             placementCount += visit.getPlacementCount();
             showVideoCount += visit.getShowVideoCount();
             rvCount += visit.getRvCount();
+
+            if (visit.isBS()) {
+                bsVisitsOfDay.add(visit);
+            }
         }
 
     }
 
-    public long getTime() {
-        return time;
+    public boolean hasWorkOrVisit() {
+        return worksOfDay.size() > 0 || visitsOfDay.size() > 0;
     }
 
-    public int getPlacementCount() {
-        return placementCount;
+    public ArrayList<Visit> getBsVisitsOfDay() {
+        return bsVisitsOfDay;
     }
-
-    public int getShowVideoCount() {
-        return showVideoCount;
-    }
-
-    public int getRvCount() {
-        return rvCount;
-    }
-
 }

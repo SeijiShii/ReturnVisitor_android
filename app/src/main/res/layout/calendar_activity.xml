@@ -63,7 +63,7 @@
         android:layout_weight="1"
         android:id="@+id/calendar_pager"/>
 
-    <!-- AggregationOfDay Frame -->
+    <!-- Aggregation Frame -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"

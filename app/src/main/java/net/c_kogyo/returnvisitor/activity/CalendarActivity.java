@@ -13,7 +13,6 @@ import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,15 +24,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
-import net.c_kogyo.returnvisitor.data.AggregationOfDay;
+import net.c_kogyo.returnvisitor.data.Aggregation;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import static android.view.MotionEvent.ACTION_BUTTON_PRESS;
-import static android.view.MotionEvent.ACTION_BUTTON_RELEASE;
 
 /**
  * Created by SeijiShii on 2016/09/23.
@@ -372,7 +368,7 @@ public class CalendarActivity extends AppCompatActivity{
     class CalendarCell extends FrameLayout{
 
         private Calendar mDate;
-        private AggregationOfDay aggregation;
+        private Aggregation aggregation;
 
         public CalendarCell(Context context, Calendar date) {
 
@@ -391,7 +387,7 @@ public class CalendarActivity extends AppCompatActivity{
 
         private void initCommon() {
 
-            aggregation = new AggregationOfDay(mDate);
+            aggregation = new Aggregation(mDate);
 
             View.inflate(CalendarActivity.this, R.layout.calendar_cell, this);
 
@@ -407,7 +403,7 @@ public class CalendarActivity extends AppCompatActivity{
             initRVMarker();
             initVideoMarker();
 
-            if (RVData.getInstance().theDayHasData(mDate)) {
+            if (aggregation.hasWorkOrVisit()) {
 
                 setOnTouchListener(new OnTouchListener() {
                     @Override
@@ -459,7 +455,7 @@ public class CalendarActivity extends AppCompatActivity{
 
             TextView timeText = (TextView) findViewById(R.id.time_text);
 
-            if (RVData.getInstance().theDayHasData(mDate)) {
+            if (aggregation.hasWorkOrVisit()) {
 //                timeText.setVisibility(VISIBLE);
 
                 long time = RVData.getInstance().workList.getTimeInDay(mDate);
@@ -477,7 +473,7 @@ public class CalendarActivity extends AppCompatActivity{
 
             RelativeLayout timeBar = (RelativeLayout) findViewById(R.id.time_bar);
 
-            if (RVData.getInstance().theDayHasData(mDate)) {
+            if (aggregation.hasWorkOrVisit()) {
                 timeBar.setVisibility(VISIBLE);
             } else {
                 timeBar.setVisibility(INVISIBLE);

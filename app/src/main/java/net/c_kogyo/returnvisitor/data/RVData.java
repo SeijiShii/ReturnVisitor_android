@@ -223,15 +223,15 @@ public class RVData {
         return new ArrayList<>(datesOfVisit);
     }
 
-    public boolean theDayHasData(Calendar date) {
-
-        for (Calendar date1 : getDatesWithData()) {
-            if (CalendarUtil.isSameDay(date1, date)) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    public boolean theDayHasData(Calendar date) {
+//
+//        for (Calendar date1 : getDatesWithData()) {
+//            if (CalendarUtil.isSameDay(date1, date)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     //    public void setListenerAndLoadData() {
 //
