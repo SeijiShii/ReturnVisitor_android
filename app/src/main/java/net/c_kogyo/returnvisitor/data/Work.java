@@ -15,10 +15,11 @@ public class Work extends TimePeriodDataItem {
 
     public static final String WORK = "work";
 
-    public Work(Calendar startTime) {
+    public Work(Calendar startAndEndTime) {
         super();
 
-        this.start = (Calendar) startTime.clone();
+        this.start = (Calendar) startAndEndTime.clone();
+        this.end = (Calendar) startAndEndTime.clone();
     }
 
     public Work(){

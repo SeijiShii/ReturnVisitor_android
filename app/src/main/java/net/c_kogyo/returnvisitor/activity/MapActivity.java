@@ -1230,7 +1230,15 @@ public class MapActivity extends AppCompatActivity
 
                 } else {
 
-                    startService(new Intent(MapActivity.this, TimeCountService.class));
+                    Intent startTimeCountIntent = new Intent(MapActivity.this, TimeCountService.class);
+
+                    // システム側にサービスを止められるためこちらでWorkを生成する。
+                    Work work = new Work(Calendar.getInstance());
+                    RVData.getInstance().workList.addOrSet(work);
+                    String workId = work.getId();
+                    startTimeCountIntent.putExtra(Work.WORK, workId);
+
+                    startService(startTimeCountIntent);
 
                 }
             }

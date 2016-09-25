@@ -79,7 +79,6 @@ public class WorkPagerActivity extends AppCompatActivity {
 
     }
 
-
     private ViewPager pager;
     private DatePagerAdapter datePagerAdapter;
     private void initPager() {
@@ -144,9 +143,10 @@ public class WorkPagerActivity extends AppCompatActivity {
 //                CalendarDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem())).show(getFragmentManager(), null);
                 Intent calendarIntent = new Intent(WorkPagerActivity.this, CalendarActivity.class);
                 calendarIntent.setAction(Constants.CalendarActions.START_CALENDAR_ACTION);
-                calendarIntent.putExtra(Constants.DATE_LONG, datePagerAdapter.getDay(pager.getCurrentItem()).getDate());
+                calendarIntent.putExtra(Constants.DATE_LONG,
+                        datePagerAdapter.getDay(pager.getCurrentItem()).getDate().getTimeInMillis());
 
-                startActivityForResult(calendarIntent, Constants.CalendarActions.START_CALENDAR_REQUEST_CODE);
+                WorkPagerActivity.this.startActivityForResult(calendarIntent, Constants.CalendarActions.START_CALENDAR_REQUEST_CODE);
 
 
 //                Calendar date = datePagerAdapter.getDate(pager.getCurrentItem());
@@ -272,7 +272,7 @@ public class WorkPagerActivity extends AppCompatActivity {
 
             //ここをgetItemでやるべきか　要検証
             ((WorkFragment) datePagerAdapter.instantiateItem(pager, pager.getCurrentItem())).onActivityResult(requestCode, resultCode, data);
-        } else if (requestCode == Constants.CalendarActions.PRESS_DATE_RESULT_CODE) {
+        } else if (requestCode == Constants.CalendarActions.START_CALENDAR_REQUEST_CODE) {
 
             if (resultCode == Constants.CalendarActions.PRESS_DATE_RESULT_CODE) {
 

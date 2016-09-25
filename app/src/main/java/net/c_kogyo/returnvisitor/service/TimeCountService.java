@@ -32,7 +32,7 @@ public class TimeCountService extends Service {
     private static final int TIME_NOTIFY_ID = 100;
 
     private static boolean timeCounting;
-    private long startTime;
+//    private long startTime;
     private static Work mWork;
 
     private LocalBroadcastManager broadcastManager;
@@ -62,7 +62,8 @@ public class TimeCountService extends Service {
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(START_CHANGE_ACTION)) {
 
-                    startTime = intent.getLongExtra(START_TIME, startTime);
+                    long startTime = intent.getLongExtra(START_TIME, mWork.getStart().getTimeInMillis());
+                    mWork.getStart().setTimeInMillis(startTime);
                 }
             }
         };
@@ -82,17 +83,26 @@ public class TimeCountService extends Service {
         minCounter = 0;
         countStopHandler = new Handler();
 
-        startTime = Calendar.getInstance().getTimeInMillis();
+        String workId = intent.getStringExtra(Work.WORK);
+        if (workId != null) {
+            mWork = RVData.getInstance().workList.getById(workId);
 
-        if (mWork == null) {
+            if (mWork == null) {
+                stopTimeCount();
+            }
 
-            Calendar startCal = Calendar.getInstance();
-            startCal.setTimeInMillis(startTime);
-            mWork = new Work(startCal);
         }
 
-        mWork.setEnd(Calendar.getInstance());
-        RVData.getInstance().workList.addOrSet(mWork);
+//        startTime = Calendar.getInstance().getTimeInMillis();
+
+//        if (mWork == null) {
+//
+//            // 既にデータに存在するか
+//
+//            Calendar startCal = Calendar.getInstance();
+//            startCal.setTimeInMillis(startTime);
+//            mWork = new Work(startCal);
+//        }
 
         initNotification(duration);
 
@@ -107,10 +117,10 @@ public class TimeCountService extends Service {
                         //
                     }
 
-                    duration = Calendar.getInstance().getTimeInMillis() - startTime;
+                    duration = Calendar.getInstance().getTimeInMillis() - mWork.getStart().getTimeInMillis();
                     final Intent timeBroadCastIntent = new Intent();
                     timeBroadCastIntent.setAction(TIME_COUNTING_ACTION);
-                    timeBroadCastIntent.putExtra(START_TIME, startTime);
+                    timeBroadCastIntent.putExtra(START_TIME, mWork.getStart().getTimeInMillis());
                     timeBroadCastIntent.putExtra(DURATION, duration);
 
                     mWork.setEnd(Calendar.getInstance());
@@ -122,14 +132,7 @@ public class TimeCountService extends Service {
                     minCounter++;
                     if (minCounter > 50) {
 
-                        if (mWork == null) {
-
-                            Calendar startCal = Calendar.getInstance();
-                            startCal.setTimeInMillis(startTime);
-                            mWork = new Work(startCal);
-                        }
-
-//                        mWork.setEnd(Calendar.newInstance());
+                        mWork.setEnd(Calendar.getInstance());
 
                         RVData.getInstance().workList.addOrSet(mWork);
                         minCounter = 0;
@@ -159,7 +162,7 @@ public class TimeCountService extends Service {
             }
         }).start();
 
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     public static boolean isTimeCounting() {
@@ -215,7 +218,8 @@ public class TimeCountService extends Service {
         notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
     }
 
-    // TODO エラーで停止した後通知が消えない
-    // TODO TimeCountがシステム側の都合で停止したとき同じIntentで再開できる仕組みにする
+    // エラーで停止した後通知が消えない
+    // TimeCountがシステム側の都合で停止したとき同じIntentで再開できる仕組みにする
+    // TODO Workの生成をMapActivityにしたので要検証
 
 }
