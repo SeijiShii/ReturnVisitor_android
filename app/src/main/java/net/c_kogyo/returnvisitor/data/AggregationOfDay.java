@@ -9,6 +9,7 @@ import java.util.Calendar;
 
 public class AggregationOfDay extends AggregationBase{
 
+    private Calendar mDate;
     private ArrayList<Work> worksOfDay;
     private ArrayList<Visit> visitsOfDay;
     private ArrayList<Visit> bsVisitsOfDay;
@@ -17,6 +18,7 @@ public class AggregationOfDay extends AggregationBase{
 
         super();
 
+        mDate = date;
         bsVisitsOfDay = new ArrayList<>();
 
         worksOfDay = RVData.getInstance().workList.getWorksOfDay(date);
@@ -45,5 +47,9 @@ public class AggregationOfDay extends AggregationBase{
 
     public ArrayList<Visit> getBsVisitsOfDay() {
         return bsVisitsOfDay;
+    }
+
+    public Calendar getDate() {
+        return mDate;
     }
 }

@@ -195,7 +195,7 @@ public class RVData {
 
     }
 
-    public ArrayList<Calendar> getDatesWithData() {
+    private ArrayList<Calendar> getDatesWithData() {
 
         ArrayList<Calendar> datesOfVisit = visitList.getDates();
         ArrayList<Calendar> datesOfWork = workList.getDates();
@@ -223,15 +223,15 @@ public class RVData {
         return new ArrayList<>(datesOfVisit);
     }
 
-//    public boolean theDayHasData(Calendar date) {
-//
-//        for (Calendar date1 : getDatesWithData()) {
-//            if (CalendarUtil.isSameDay(date1, date)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    public boolean theDayHasData(Calendar date) {
+
+        for (Calendar date1 : getDatesWithData()) {
+            if (CalendarUtil.isSameDay(date1, date)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     //    public void setListenerAndLoadData() {
 //
@@ -262,6 +262,17 @@ public class RVData {
 //            }
 //        }).start();
 //    }
+
+    public ArrayList<AggregationOfDay> getAggregatedDays() {
+
+        ArrayList<AggregationOfDay> aggregationOfDays = new ArrayList<>();
+
+        for (Calendar date : getDatesWithData()) {
+
+            aggregationOfDays.add(new AggregationOfDay(date));
+        }
+        return aggregationOfDays;
+    }
 
     public interface OnDataChangedListener {
         void onDataChanged(Class clazz);

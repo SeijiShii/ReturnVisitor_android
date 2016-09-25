@@ -15,19 +15,17 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
+import net.c_kogyo.returnvisitor.data.AggregationOfDay;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.data.Work;
 import net.c_kogyo.returnvisitor.dialog.AddSelectDialog;
 import net.c_kogyo.returnvisitor.dialog.AddWorkDialog;
-import net.c_kogyo.returnvisitor.dialog.CalendarDialog;
 import net.c_kogyo.returnvisitor.fragment.WorkFragment;
 import net.c_kogyo.returnvisitor.util.CalendarUtil;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Created by SeijiShii on 2016/09/17.
@@ -146,7 +144,7 @@ public class WorkPagerActivity extends AppCompatActivity {
 //                CalendarDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem())).show(getFragmentManager(), null);
                 Intent calendarIntent = new Intent(WorkPagerActivity.this, CalendarActivity.class);
                 calendarIntent.setAction(Constants.CalendarActions.START_CALENDAR_ACTION);
-                calendarIntent.putExtra(Constants.DATE_LONG, datePagerAdapter.getDate(pager.getCurrentItem()));
+                calendarIntent.putExtra(Constants.DATE_LONG, datePagerAdapter.getDay(pager.getCurrentItem()).getDate());
 
                 startActivityForResult(calendarIntent, Constants.CalendarActions.START_CALENDAR_REQUEST_CODE);
 
@@ -222,7 +220,7 @@ public class WorkPagerActivity extends AppCompatActivity {
     private void updateDateText() {
 
         DateFormat format = android.text.format.DateFormat.getDateFormat(this);
-        String dateString = format.format(datePagerAdapter.getDate(pager.getCurrentItem()).getTime());
+        String dateString = format.format(datePagerAdapter.getDay(pager.getCurrentItem()).getDate().getTime());
 
         dateText.setText(dateString);
 
@@ -242,7 +240,7 @@ public class WorkPagerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                AddSelectDialog.newInstance(datePagerAdapter.getDate(pager.getCurrentItem()),
+                AddSelectDialog.newInstance(datePagerAdapter.getDay(pager.getCurrentItem()).getDate(),
                         new AddWorkDialog.OnWorkSetListener() {
                     @Override
                     public void onWorkSet(Work work) {
@@ -293,37 +291,38 @@ public class WorkPagerActivity extends AppCompatActivity {
 
     class DatePagerAdapter extends FragmentStatePagerAdapter {
 
-        private ArrayList<Calendar> mDates;
+//        private ArrayList<Calendar> mDates;
+        private ArrayList<AggregationOfDay> mAggregationOfDays;
 
         public DatePagerAdapter(FragmentManager fm) {
             super(fm);
 
-            setDates();
+            setDays();
         }
 
         @Override
         public Fragment getItem(int position) {
 
-            return WorkFragment.newInstance(mDates.get(position), new WorkFragment.OnAllItemRemoveListener() {
+            return WorkFragment.newInstance(mAggregationOfDays.get(position).getDate(), new WorkFragment.OnAllItemRemoveListener() {
                 @Override
                 public void onAllItemRemoved(Calendar date) {
-                    removeDate(date);
+                    removeDay(date);
                 }
             });
         }
 
         @Override
         public int getCount() {
-            return mDates.size();
+            return mAggregationOfDays.size();
         }
 
         public int getPosition(Calendar date) {
 
-            for ( int i = 0 ; i < mDates.size() ; i++ ) {
+            for ( int i = 0 ; i < mAggregationOfDays.size() ; i++ ) {
 
-                Calendar date1 = mDates.get(i);
+                AggregationOfDay day = mAggregationOfDays.get(i);
 
-                if (CalendarUtil.isSameDay(date, date1)) {
+                if (CalendarUtil.isSameDay(date, day.getDate())) {
                     return i;
                 }
             }
@@ -331,24 +330,15 @@ public class WorkPagerActivity extends AppCompatActivity {
             return -1;
         }
 
-        private void setDates() {
+        private void setDays() {
 
-            mDates = RVData.getInstance().getDatesWithData();
+            mAggregationOfDays = RVData.getInstance().getAggregatedDays();
         }
 
-        public Calendar getDate(int pos) {
-            return mDates.get(pos);
+        public AggregationOfDay getDay(int pos) {
+            return mAggregationOfDays.get(pos);
         }
 
-        public boolean containsDate(Calendar date) {
-
-            for (Calendar date1 : mDates) {
-                if (CalendarUtil.isSameDay(date, date1)) {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         public int onAddWork(Work work) {
 
@@ -361,7 +351,7 @@ public class WorkPagerActivity extends AppCompatActivity {
             } else {
                 // 日付が存在しない(その日にはまだ何のデータもなかった)
                 // この日には削除されるWorkも存在しない
-                setDates();
+                setDays();
 
                 // 気を取り直して…
                 datePos = getPosition(work.getStart());
@@ -398,11 +388,11 @@ public class WorkPagerActivity extends AppCompatActivity {
             }
         }
 
-        private void removeDate(Calendar date) {
+        private void removeDay(Calendar date) {
 
-            for (Calendar date1 : mDates) {
-                if (CalendarUtil.isSameDay(date, date1)){
-                    mDates.remove(date1);
+            for (AggregationOfDay day : mAggregationOfDays) {
+                if (CalendarUtil.isSameDay(date, day.getDate())){
+                    mAggregationOfDays.remove(day);
                     break;
                 }
             }

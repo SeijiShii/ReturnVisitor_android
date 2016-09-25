@@ -24,7 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
-import net.c_kogyo.returnvisitor.data.Aggregation;
+import net.c_kogyo.returnvisitor.data.AggregationOfDay;
+import net.c_kogyo.returnvisitor.data.AggregationOfMonth;
 import net.c_kogyo.returnvisitor.data.RVData;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
 
@@ -40,7 +41,7 @@ public class CalendarActivity extends AppCompatActivity{
     private static final String CALENDAR_DEBUG_TAG = "CalendarDebugTAG";
 
     private Calendar mDate;
-    private ArrayList<Calendar> mDatesWithData;
+    private ArrayList<AggregationOfDay> days;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class CalendarActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
 
-        mDatesWithData = RVData.getInstance().getDatesWithData();
+        days = RVData.getInstance().getAggregatedDays();
 
         setDate();
 
@@ -367,15 +368,14 @@ public class CalendarActivity extends AppCompatActivity{
 
     class CalendarCell extends FrameLayout{
 
-        private Calendar mDate;
-        private Aggregation aggregation;
+        private Calendar mSingleDay;
+        private AggregationOfDay aggregation;
 
-        public CalendarCell(Context context, Calendar date) {
+        public CalendarCell(Context context, Calendar singleDay) {
 
             super(context);
-
-            mDate = date;
-
+            mSingleDay = singleDay;
+            aggregation = new AggregationOfDay(mSingleDay);
             initCommon();
 
         }
@@ -386,8 +386,6 @@ public class CalendarActivity extends AppCompatActivity{
 
 
         private void initCommon() {
-
-            aggregation = new Aggregation(mDate);
 
             View.inflate(CalendarActivity.this, R.layout.calendar_cell, this);
 
@@ -418,7 +416,7 @@ public class CalendarActivity extends AppCompatActivity{
 
                                 if (getIntent().getAction().equals(Constants.CalendarActions.START_CALENDAR_ACTION)) {
 
-                                    workIntent.putExtra(Constants.DATE_LONG, mDate.getTimeInMillis());
+                                    workIntent.putExtra(Constants.DATE_LONG, aggregation.getDate().getTimeInMillis());
                                     setResult(Constants.CalendarActions.PRESS_DATE_RESULT_CODE, workIntent);
                                     finish();
                                 }
@@ -445,7 +443,7 @@ public class CalendarActivity extends AppCompatActivity{
 
             TextView dateText = (TextView) findViewById(R.id.date_text);
 
-            int dayNum = mDate.get(Calendar.DAY_OF_MONTH);
+            int dayNum = aggregation.getDate().get(Calendar.DAY_OF_MONTH);
 
             dateText.setText(String.valueOf(dayNum));
 
@@ -458,7 +456,7 @@ public class CalendarActivity extends AppCompatActivity{
             if (aggregation.hasWorkOrVisit()) {
 //                timeText.setVisibility(VISIBLE);
 
-                long time = RVData.getInstance().workList.getTimeInDay(mDate);
+                long time = aggregation.getTime();
                 String timeString = DateTimeText.getDurationString(time, false);
 
                 timeText.setText(timeString);
