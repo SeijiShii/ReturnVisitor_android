@@ -16,7 +16,7 @@ public class AggregationOfMonth extends AggregationBase{
     // 判断基準は「研究」の訪問を何件したか、人の完全重複を削除
     private int bsCount;
 
-    AggregationOfMonth(Calendar month) {
+    public AggregationOfMonth(Calendar month) {
 
         mMonth = (Calendar) month.clone();
         mMonth.set(Calendar.DAY_OF_MONTH,1);
@@ -65,5 +65,28 @@ public class AggregationOfMonth extends AggregationBase{
         bsVisits.removeAll(doubledBSVisits);
         bsCount = bsVisits.size();
 
+        // 再帰的に過去へさかのぼり余り時間を取得
+
+    }
+
+    public int getBsCount() {
+        return bsCount;
+    }
+
+    public long getRemaining() {
+
+        final long hours = 1000 * 60 * 60;
+        return time - time / hours * hours;
+    }
+
+    private void addRemainingFromPast(Calendar month) {
+
+        Calendar nMonth = (Calendar) month.clone();
+        nMonth.add(Calendar.MONTH, -1);
+        AggregationOfMonth pastMonth = new AggregationOfMonth(nMonth);
+
+        while (pastMonth.getRemaining() > 0) {
+            time += pastMonth.getRemaining();
+        }
     }
 }

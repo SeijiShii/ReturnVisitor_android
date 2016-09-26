@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,11 +26,12 @@ import android.widget.TextView;
 
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.AggregationOfDay;
-import net.c_kogyo.returnvisitor.data.RVData;
+import net.c_kogyo.returnvisitor.data.AggregationOfMonth;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
 
-import java.util.ArrayList;
 import java.util.Calendar;
+
+import static android.widget.LinearLayout.HORIZONTAL;
 
 /**
  * Created by SeijiShii on 2016/09/23.
@@ -40,7 +42,6 @@ public class CalendarActivity extends AppCompatActivity{
     private static final String CALENDAR_DEBUG_TAG = "CalendarDebugTAG";
 
     private Calendar mDate;
-    private ArrayList<AggregationOfDay> days;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,8 +55,6 @@ public class CalendarActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-
-        days = RVData.getInstance().getAggregatedDays();
 
         setDate();
 
@@ -211,6 +210,7 @@ public class CalendarActivity extends AppCompatActivity{
             }
         });
     }
+
     class CalendarPagerAdapter extends PagerAdapter {
 
         private final int MONTH_COUNT =50;
@@ -258,7 +258,7 @@ public class CalendarActivity extends AppCompatActivity{
         }
     }
 
-    class CalendarView extends LinearLayout{
+    class CalendarView extends FrameLayout{
 
         private Calendar mMonth;
 
@@ -279,14 +279,17 @@ public class CalendarActivity extends AppCompatActivity{
         int rowNum;
         private void initCommon() {
 
-            LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            this.setLayoutParams(params);
+            inflate(CalendarActivity.this, R.layout.calendar_view, this);
 
-//            this.setBackgroundColor(Color.RED);
+            initCalendarLinear();
+            initAggregationLinear();
 
-            this.setOrientation(VERTICAL);
+        }
 
-//            rows = new ArrayList<>();
+        private LinearLayout calendarLinear;
+        private void initCalendarLinear() {
+
+            calendarLinear = (LinearLayout) findViewById(R.id.calendar_linear);
 
             if (mMonth == null) return;
 
@@ -328,7 +331,7 @@ public class CalendarActivity extends AppCompatActivity{
                 CalendarCell cell = new CalendarCell(CalendarActivity.this, dayCal);
 //                rows.get(rows.size() - 1).addView(cell);
 
-                ((LinearLayout) this.getChildAt(rowNum)).addView(cell);
+                ((LinearLayout) calendarLinear.getChildAt(rowNum)).addView(cell);
             }
 
             for (int i = dayCal.get(Calendar.DAY_OF_WEEK) + 1 ; i <= 7 ; i++ ) {
@@ -339,28 +342,79 @@ public class CalendarActivity extends AppCompatActivity{
         private void addNewRow() {
 
             LinearLayout row = new LinearLayout(CalendarActivity.this);
-            LayoutParams rowParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
+            LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0);
             rowParams.weight = 1;
 
             row.setOrientation(HORIZONTAL);
             row.setLayoutParams(rowParams);
 //            row.setBackgroundColor(Color.BLUE);
 
-            this.addView(row);
+            calendarLinear.addView(row);
             rowNum++;
         }
 
         private void addBlank() {
 
             View blank = new View(CalendarActivity.this);
-            LinearLayout.LayoutParams blankParams = new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
+            LinearLayout.LayoutParams blankParams = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT);
             blankParams.weight = 1;
             blank.setLayoutParams(blankParams);
 
 //            blank.setBackgroundColor(Color.GREEN);
 
-            ((LinearLayout) this.getChildAt(rowNum)).addView(blank);
+            ((LinearLayout) calendarLinear.getChildAt(rowNum)).addView(blank);
         }
+
+        private void initAggregationLinear() {
+
+            LinearLayout aggregationLinear = (LinearLayout) findViewById(R.id.aggregation_linear);
+
+            AggregationOfMonth ofMonth = new AggregationOfMonth(mMonth);
+
+            String timeString = null;
+            if (ofMonth.getTime() > 0) {
+                timeString = DateTimeText.getDurationString(ofMonth.getTime(), false);
+            }
+
+            AggregationCell timeCell
+                    = new AggregationCell(getContext(),
+                            R.string.time,
+                            timeString,
+                            R.color.colorPrimary);
+
+            aggregationLinear.addView(timeCell);
+
+            AggregationCell plcCell
+                    = new AggregationCell(getContext(),
+                            R.string.placement,
+                            String.valueOf(ofMonth.getPlacementCount()),
+                            R.color.plc_pink);
+            aggregationLinear.addView(plcCell);
+
+            AggregationCell videoCell
+                            = new AggregationCell(getContext(),
+                            R.string.video,
+                            String.valueOf(ofMonth.getShowVideoCount()),
+                            R.color.video_blue);
+            aggregationLinear.addView(videoCell);
+
+            AggregationCell rvCell
+                            = new AggregationCell(getContext(),
+                            R.string.return_visits,
+                            String.valueOf(ofMonth.getRvCount()),
+                            R.color.rv_blue);
+            aggregationLinear.addView(rvCell);
+
+            AggregationCell bsCell
+                            = new AggregationCell(getContext(),
+                            R.string.bible_study,
+                            String.valueOf(ofMonth.getBsCount()),
+                            R.color.colorAccent);
+            aggregationLinear.addView(bsCell);
+
+        }
+
+
 
 
     }
@@ -516,5 +570,63 @@ public class CalendarActivity extends AppCompatActivity{
                 videoMarker.setVisibility(INVISIBLE);
             }
         }
+    }
+
+    class AggregationCell extends FrameLayout {
+
+        private String mTitle;
+        private int mColorResId;
+        private String mCountString;
+
+        public AggregationCell(Context context, int titleRes, String countString, int colorResId) {
+            super(context);
+
+            mTitle = getContext().getResources().getString(titleRes);
+            mColorResId = colorResId;
+            mCountString = countString;
+
+            initCommon();
+        }
+
+
+        public AggregationCell(Context context, AttributeSet attrs) {
+            super(context, attrs);
+
+            initCommon();
+        }
+
+        private void initCommon() {
+
+            inflate(CalendarActivity.this, R.layout.aggregation_cell, this);
+            initTitleText();
+            initColorBar();
+
+            float scale = getResources().getDisplayMetrics().density;
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(30 * scale));
+
+            if (mCountString == null || mCountString.equals("0")) {
+                params.height = 0;
+            }
+            this.setLayoutParams(params);
+
+        }
+
+        private void initTitleText() {
+
+            TextView titleText = (TextView) findViewById(R.id.title_text);
+
+            titleText.setText(mTitle + ": " + mCountString);
+
+        }
+
+        private void initColorBar() {
+
+            View colorBar = findViewById(R.id.color_bar);
+            colorBar.setBackgroundColor(ContextCompat.getColor(CalendarActivity.this, mColorResId));
+
+        }
+
+
+
     }
 }
