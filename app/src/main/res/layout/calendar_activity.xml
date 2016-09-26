@@ -63,6 +63,24 @@
         android:layout_weight="1"
         android:id="@+id/calendar_pager"/>
 
+    <!-- Report -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/report_frame">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/mail_button"
+            android:text="@string/report_mail"
+            android:background="@drawable/fog_orange_selector"
+            android:textColor="@color/colorAccent"
+            android:textSize="15sp"
+            android:padding="10dp"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
     <!-- Ad -->
     <RelativeLayout
         android:layout_width="match_parent"

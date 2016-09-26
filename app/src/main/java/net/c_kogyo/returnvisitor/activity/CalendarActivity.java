@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
@@ -29,7 +30,9 @@ import net.c_kogyo.returnvisitor.data.AggregationOfDay;
 import net.c_kogyo.returnvisitor.data.AggregationOfMonth;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.concurrent.RunnableFuture;
 
 import static android.widget.LinearLayout.HORIZONTAL;
 
@@ -365,56 +368,135 @@ public class CalendarActivity extends AppCompatActivity{
             ((LinearLayout) calendarLinear.getChildAt(rowNum)).addView(blank);
         }
 
+        private LinearLayout aggregationLinear;
+        private AggregationOfMonth ofMonth;
         private void initAggregationLinear() {
 
-            LinearLayout aggregationLinear = (LinearLayout) findViewById(R.id.aggregation_linear);
+            aggregationLinear = (LinearLayout) findViewById(R.id.aggregation_linear);
+            ofMonth = new AggregationOfMonth(mMonth);
 
-            AggregationOfMonth ofMonth = new AggregationOfMonth(mMonth);
+            initAggregationCells();
+
+        }
+
+        private ArrayList<AggregationCell> aggregationCells;
+        private int containerWidth;
+        private void initAggregationCells() {
+
+            aggregationCells = new ArrayList<>();
 
             String timeString = null;
             if (ofMonth.getTime() > 0) {
                 timeString = DateTimeText.getDurationString(ofMonth.getTime(), false);
+
+                AggregationCell timeCell
+                        = new AggregationCell(getContext(),
+                        R.string.time,
+                        timeString,
+                        R.color.colorPrimary);
+                aggregationCells.add(timeCell);
             }
 
-            AggregationCell timeCell
-                    = new AggregationCell(getContext(),
-                            R.string.time,
-                            timeString,
-                            R.color.colorPrimary);
+            if (ofMonth.getPlacementCount() > 0) {
+                AggregationCell plcCell
+                        = new AggregationCell(getContext(),
+                        R.string.placement,
+                        String.valueOf(ofMonth.getPlacementCount()),
+                        R.color.plc_pink);
+                aggregationCells.add(plcCell);
+            }
 
-            aggregationLinear.addView(timeCell);
+            if (ofMonth.getShowVideoCount() > 0) {
+                AggregationCell videoCell
+                        = new AggregationCell(getContext(),
+                        R.string.video,
+                        String.valueOf(ofMonth.getShowVideoCount()),
+                        R.color.video_blue);
+                aggregationCells.add(videoCell);
+            }
 
-            AggregationCell plcCell
-                    = new AggregationCell(getContext(),
-                            R.string.placement,
-                            String.valueOf(ofMonth.getPlacementCount()),
-                            R.color.plc_pink);
-            aggregationLinear.addView(plcCell);
+            if (ofMonth.getRvCount() > 0) {
+                AggregationCell rvCell
+                        = new AggregationCell(getContext(),
+                        R.string.return_visits,
+                        String.valueOf(ofMonth.getRvCount()),
+                        R.color.rv_blue);
+                aggregationCells.add(rvCell);
+            }
 
-            AggregationCell videoCell
-                            = new AggregationCell(getContext(),
-                            R.string.video,
-                            String.valueOf(ofMonth.getShowVideoCount()),
-                            R.color.video_blue);
-            aggregationLinear.addView(videoCell);
+            if (ofMonth.getBsCount() > 0) {
+                AggregationCell bsCell
+                        = new AggregationCell(getContext(),
+                        R.string.bible_study,
+                        String.valueOf(ofMonth.getBsCount()),
+                        R.color.colorAccent);
+                aggregationCells.add(bsCell);
+            }
 
-            AggregationCell rvCell
-                            = new AggregationCell(getContext(),
-                            R.string.return_visits,
-                            String.valueOf(ofMonth.getRvCount()),
-                            R.color.rv_blue);
-            aggregationLinear.addView(rvCell);
+            aggregationLinear.setOrientation(HORIZONTAL);
+            for (AggregationCell cell : aggregationCells) {
+                aggregationLinear.addView(cell);
+            }
 
-            AggregationCell bsCell
-                            = new AggregationCell(getContext(),
-                            R.string.bible_study,
-                            String.valueOf(ofMonth.getBsCount()),
-                            R.color.colorAccent);
-            aggregationLinear.addView(bsCell);
+            final android.os.Handler handler = new android.os.Handler();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
+                    while (aggregationLinear.getWidth() <= 0) {
+                        try {
+                            Thread.sleep(20);
+                        } catch (InterruptedException e) {
+                            //
+                        }
+                    }
+
+                    containerWidth = aggregationLinear.getWidth();
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            for ( AggregationCell cell : aggregationCells ) {
+
+                                cell.renderedWidth = cell.getWidth();
+
+                            }
+                            aggregationLinear.removeAllViews();
+                            aggregationLinear.setOrientation(LinearLayout.VERTICAL);
+
+                            int widthSum = 0;
+
+                            if (aggregationCells.size() > 0) {
+                                addRow();
+                            }
+
+                            for (AggregationCell cell : aggregationCells) {
+
+                                if (containerWidth < widthSum + cell.renderedWidth) {
+                                    addRow();
+                                    widthSum = 0;
+                                }
+
+                                ((LinearLayout) (aggregationLinear.getChildAt(aggregationLinear.getChildCount() - 1))).addView(cell);
+                                widthSum += cell.renderedWidth;
+
+                            }
+                        }
+                    });
+                }
+            }).start();
         }
 
+        private void addRow() {
 
+            LinearLayout row = new LinearLayout(getContext());
+            float scale = getResources().getDisplayMetrics().density;
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(scale * 40));
+            row.setLayoutParams(params);
+
+            aggregationLinear.addView(row);
+        }
 
 
     }
@@ -577,6 +659,7 @@ public class CalendarActivity extends AppCompatActivity{
         private String mTitle;
         private int mColorResId;
         private String mCountString;
+        int renderedWidth;
 
         public AggregationCell(Context context, int titleRes, String countString, int colorResId) {
             super(context);
@@ -601,13 +684,13 @@ public class CalendarActivity extends AppCompatActivity{
             initTitleText();
             initColorBar();
 
-            float scale = getResources().getDisplayMetrics().density;
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(30 * scale));
-
-            if (mCountString == null || mCountString.equals("0")) {
-                params.height = 0;
-            }
-            this.setLayoutParams(params);
+//            float scale = getResources().getDisplayMetrics().density;
+//            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int)(30 * scale));
+//
+//            if (mCountString == null || mCountString.equals("0")) {
+//                params.height = 0;
+//            }
+//            this.setLayoutParams(params);
 
         }
 

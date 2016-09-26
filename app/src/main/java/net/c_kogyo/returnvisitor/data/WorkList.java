@@ -151,4 +151,27 @@ public abstract class WorkList extends DataList<Work> {
         return time;
     }
 
+    public Work getFirstWork() {
+
+        ArrayList<Work> list1 = new ArrayList<>(list);
+        Collections.sort(list1, new Comparator<Work>() {
+            @Override
+            public int compare(Work work, Work t1) {
+                return work.getStart().compareTo(t1.getStart());
+            }
+        });
+        return list1.get(0);
+    }
+
+    public Work getLastWork() {
+
+        ArrayList<Work> list1 = new ArrayList<>(list);
+        Collections.sort(list1, new Comparator<Work>() {
+            @Override
+            public int compare(Work work, Work t1) {
+                return t1.getStart().compareTo(work.getStart());
+            }
+        });
+        return list1.get(0);
+    }
 }

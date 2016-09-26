@@ -1,5 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
+import net.c_kogyo.returnvisitor.util.CalendarUtil;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -9,7 +11,7 @@ import java.util.Calendar;
 
 public class AggregationOfMonth extends AggregationBase{
 
-    private Calendar mMonth;
+    private Calendar mMonth, thisMonth;
     private ArrayList<AggregationOfDay> days;
 
     // その月に司会された別個の研究数。
@@ -18,6 +20,7 @@ public class AggregationOfMonth extends AggregationBase{
 
     public AggregationOfMonth(Calendar month) {
 
+        thisMonth = (Calendar) month.clone();
         mMonth = (Calendar) month.clone();
         mMonth.set(Calendar.DAY_OF_MONTH,1);
 
@@ -66,6 +69,7 @@ public class AggregationOfMonth extends AggregationBase{
         bsCount = bsVisits.size();
 
         // 再帰的に過去へさかのぼり余り時間を取得
+        addRemainingFromPast();
 
     }
 
@@ -73,20 +77,29 @@ public class AggregationOfMonth extends AggregationBase{
         return bsCount;
     }
 
+    final long hour = 1000 * 60 * 60;
     public long getRemaining() {
-
-        final long hours = 1000 * 60 * 60;
-        return time - time / hours * hours;
+        return time - time / hour * hour;
     }
 
-    private void addRemainingFromPast(Calendar month) {
+    // TODO 要検証なメソッド
+    private void addRemainingFromPast() {
 
-        Calendar nMonth = (Calendar) month.clone();
-        nMonth.add(Calendar.MONTH, -1);
-        AggregationOfMonth pastMonth = new AggregationOfMonth(nMonth);
+        Calendar firstMonth = RVData.getInstance().getFirstMonth();
+        if (CalendarUtil.oneIsBeforeTwo(thisMonth, firstMonth)) return;
 
-        while (pastMonth.getRemaining() > 0) {
-            time += pastMonth.getRemaining();
-        }
+        Calendar pastMonth = (Calendar) thisMonth.clone();
+        pastMonth.add(Calendar.MONTH, -1);
+        AggregationOfMonth aggPastMonth = new AggregationOfMonth(pastMonth);
+
+        time += aggPastMonth.getRemaining();
+
+
+    }
+
+    public int getHours() {
+
+        return (int) (time / hour);
+
     }
 }

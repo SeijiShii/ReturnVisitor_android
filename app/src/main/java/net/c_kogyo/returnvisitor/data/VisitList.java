@@ -147,4 +147,27 @@ public abstract class VisitList extends DataList<Visit> {
         return dates;
     }
 
+    public Visit getFirstVisit() {
+
+        ArrayList<Visit> list1  = new ArrayList<>(list);
+        Collections.sort(list1, new Comparator<Visit>() {
+            @Override
+            public int compare(Visit visit, Visit t1) {
+                return visit.getStart().compareTo(t1.getStart());
+            }
+        });
+        return list1.get(0);
+    }
+
+    public Visit getLastVisit() {
+
+        ArrayList<Visit> list1  = new ArrayList<>(list);
+        Collections.sort(list1, new Comparator<Visit>() {
+            @Override
+            public int compare(Visit visit, Visit t1) {
+                return t1.getStart().compareTo(visit.getStart());
+            }
+        });
+        return list1.get(0);
+    }
 }

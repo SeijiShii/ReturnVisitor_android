@@ -274,6 +274,28 @@ public class RVData {
         return aggregationOfDays;
     }
 
+    public Calendar getFirstMonth() {
+
+        Visit firstVisit = visitList.getFirstVisit();
+        Work firstWork = workList.getFirstWork();
+
+        if (firstVisit.getStart().before(firstWork.getStart())) {
+            return firstVisit.getStart();
+        }
+        return firstWork.getStart();
+    }
+
+    public Calendar getLastMonth() {
+
+        Visit firstVisit = visitList.getLastVisit();
+        Work firstWork = workList.getLastWork();
+
+        if (firstVisit.getStart().after(firstWork.getStart())) {
+            return firstVisit.getStart();
+        }
+        return firstWork.getStart();
+    }
+
     public interface OnDataChangedListener {
         void onDataChanged(Class clazz);
     }
