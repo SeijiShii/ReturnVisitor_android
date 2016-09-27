@@ -52,8 +52,8 @@ public class UserDataDialog extends DialogFragment {
 
                 if (userNameText.getText() == null) return;
 
-                SharedPreferences pref = getActivity().getPreferences(Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
+                SharedPreferences prefs = getActivity().getSharedPreferences(Constants.SharedPrefTags.RETURN_VISITOR_SHARED_PREFS, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
 
                 editor.putString(Constants.SharedPrefTags.USER_NAME, userNameText.getText().toString());
 
@@ -69,7 +69,8 @@ public class UserDataDialog extends DialogFragment {
 
         userNameText = (EditText) view.findViewById(R.id.user_name_text);
 
-        SharedPreferences pref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences pref
+                = getActivity().getSharedPreferences(Constants.SharedPrefTags.RETURN_VISITOR_SHARED_PREFS, Context.MODE_PRIVATE);
         String userName = pref.getString(Constants.SharedPrefTags.USER_NAME, null);
 
         if (userName == null) return;

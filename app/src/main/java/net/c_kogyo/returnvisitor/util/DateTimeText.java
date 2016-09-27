@@ -46,4 +46,8 @@ public class DateTimeText {
         return format.format(calendar.getTime());
 
     }
+
+    static public String getMonthText(Calendar month) {
+        return android.text.format.DateFormat.format("yyyy, MMM", month).toString();
+    }
 }

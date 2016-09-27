@@ -21,6 +21,7 @@ import net.c_kogyo.returnvisitor.data.Work;
 import net.c_kogyo.returnvisitor.dialog.AddSelectDialog;
 import net.c_kogyo.returnvisitor.dialog.AddWorkDialog;
 import net.c_kogyo.returnvisitor.fragment.WorkFragment;
+import net.c_kogyo.returnvisitor.util.AdMobHelper;
 import net.c_kogyo.returnvisitor.util.CalendarUtil;
 
 import java.text.DateFormat;
@@ -39,6 +40,8 @@ public class WorkPagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.work_pager_activity);
+
+        AdMobHelper.setAdView(this);
 
         initToolBar();
 

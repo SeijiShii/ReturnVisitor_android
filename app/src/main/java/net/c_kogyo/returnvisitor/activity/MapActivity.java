@@ -85,6 +85,8 @@ import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
 import net.c_kogyo.returnvisitor.service.TimeCountService;
+import net.c_kogyo.returnvisitor.util.AdMobHelper;
+import net.c_kogyo.returnvisitor.util.MailReport;
 import net.c_kogyo.returnvisitor.view.CollapseButton;
 import net.c_kogyo.returnvisitor.view.HeightChangeFrameLayout;
 
@@ -146,6 +148,7 @@ public class MapActivity extends AppCompatActivity
         initDateIfAuthed();
 
         setContentView(R.layout.map_activity);
+        AdMobHelper.setAdView(this);
 
         mMapView = (MapView) findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
@@ -514,6 +517,7 @@ public class MapActivity extends AppCompatActivity
         initCalendarButton();
         initUserDialogButton();
         initTermButton();
+        initReportMailButton();
 
     }
 
@@ -1461,6 +1465,17 @@ public class MapActivity extends AppCompatActivity
 
         builder.create().show();
 
+    }
+
+    private void initReportMailButton() {
+
+        Button reportMailButton = (Button) findViewById(R.id.report_mail_button);
+        reportMailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MailReport.exportToMail(MapActivity.this, Calendar.getInstance());
+            }
+        });
     }
 
     private static final String APP_TIMER_TAG = "AppTimer";

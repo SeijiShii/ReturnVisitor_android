@@ -11,7 +11,7 @@ public class Constants {
     // Shared Preferences用のタグ類
     public static final class SharedPrefTags{
 
-        static final String RETURN_VISITOR_SHARED_PREFS = "return_visitor_shared_prefs";
+        public static final String RETURN_VISITOR_SHARED_PREFS = "return_visitor_shared_prefs";
         static final String ZOOM_LEVEL = "zoom_level";
         static final String LATITUDE = "latitude";
         static final String LONGITUDE = "longitude";

@@ -151,7 +151,10 @@ public abstract class WorkList extends DataList<Work> {
         return time;
     }
 
+    @Nullable
     public Work getFirstWork() {
+
+        if (list.size() <= 0) return null;
 
         ArrayList<Work> list1 = new ArrayList<>(list);
         Collections.sort(list1, new Comparator<Work>() {
@@ -163,7 +166,10 @@ public abstract class WorkList extends DataList<Work> {
         return list1.get(0);
     }
 
+    @Nullable
     public Work getLastWork() {
+
+        if (list.size() <= 0) return null;
 
         ArrayList<Work> list1 = new ArrayList<>(list);
         Collections.sort(list1, new Comparator<Work>() {

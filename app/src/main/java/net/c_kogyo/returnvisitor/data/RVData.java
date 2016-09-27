@@ -1,6 +1,7 @@
 package net.c_kogyo.returnvisitor.data;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -274,10 +275,15 @@ public class RVData {
         return aggregationOfDays;
     }
 
+    @Nullable
     public Calendar getFirstMonth() {
 
         Visit firstVisit = visitList.getFirstVisit();
         Work firstWork = workList.getFirstWork();
+
+        if (firstVisit == null && firstWork == null) return null;
+        if (firstVisit == null) return firstWork.getStart();
+        if (firstWork == null) return firstVisit.getStart();
 
         if (firstVisit.getStart().before(firstWork.getStart())) {
             return firstVisit.getStart();

@@ -2,7 +2,9 @@ package net.c_kogyo.returnvisitor.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -28,7 +30,9 @@ import android.widget.TextView;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.AggregationOfDay;
 import net.c_kogyo.returnvisitor.data.AggregationOfMonth;
+import net.c_kogyo.returnvisitor.util.AdMobHelper;
 import net.c_kogyo.returnvisitor.util.DateTimeText;
+import net.c_kogyo.returnvisitor.util.MailReport;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,7 +56,7 @@ public class CalendarActivity extends AppCompatActivity{
 
         setContentView(R.layout.calendar_activity);
 
-
+        AdMobHelper.setAdView(this);
     }
 
     @Override
@@ -68,6 +72,8 @@ public class CalendarActivity extends AppCompatActivity{
         initDayRow();
         initLeftButton();
         initRightButton();
+
+        initReportMailButton();
 
     }
 
@@ -125,10 +131,10 @@ public class CalendarActivity extends AppCompatActivity{
         monthText.setText(monthString);
     }
 
-    private LinearLayout dayRow;
     private void initDayRow() {
 
-        dayRow = (LinearLayout) findViewById(R.id.day_row);
+        LinearLayout dayRow = (LinearLayout) findViewById(R.id.day_row);
+        dayRow.removeAllViews();
 
         Calendar dayCal = Calendar.getInstance();
         dayCal.setTimeInMillis(0);
@@ -213,6 +219,20 @@ public class CalendarActivity extends AppCompatActivity{
             }
         });
     }
+
+    private void initReportMailButton() {
+
+        Button reportMailButton = (Button) findViewById(R.id.mail_button);
+        reportMailButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                MailReport.exportToMail(CalendarActivity.this, adapter.getMonth(calendarPager.getCurrentItem()));
+
+            }
+        });
+    }
+
 
     class CalendarPagerAdapter extends PagerAdapter {
 

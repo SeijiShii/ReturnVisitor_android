@@ -86,6 +86,9 @@ public class AggregationOfMonth extends AggregationBase{
     private void addRemainingFromPast() {
 
         Calendar firstMonth = RVData.getInstance().getFirstMonth();
+
+        if (firstMonth == null) return;
+
         if (CalendarUtil.oneIsBeforeTwo(thisMonth, firstMonth)) return;
 
         Calendar pastMonth = (Calendar) thisMonth.clone();

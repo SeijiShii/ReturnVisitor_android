@@ -147,7 +147,10 @@ public abstract class VisitList extends DataList<Visit> {
         return dates;
     }
 
+    @Nullable
     public Visit getFirstVisit() {
+
+        if (list.size() <= 0) return null;
 
         ArrayList<Visit> list1  = new ArrayList<>(list);
         Collections.sort(list1, new Comparator<Visit>() {
@@ -159,7 +162,10 @@ public abstract class VisitList extends DataList<Visit> {
         return list1.get(0);
     }
 
+    @Nullable
     public Visit getLastVisit() {
+
+        if (list.size() <= 0) return null;
 
         ArrayList<Visit> list1  = new ArrayList<>(list);
         Collections.sort(list1, new Comparator<Visit>() {
