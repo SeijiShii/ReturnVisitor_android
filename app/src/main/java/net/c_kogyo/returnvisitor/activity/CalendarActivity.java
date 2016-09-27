@@ -27,6 +27,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.data.AggregationOfDay;
 import net.c_kogyo.returnvisitor.data.AggregationOfMonth;
@@ -223,14 +226,29 @@ public class CalendarActivity extends AppCompatActivity{
     private void initReportMailButton() {
 
         Button reportMailButton = (Button) findViewById(R.id.mail_button);
-        reportMailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                MailReport.exportToMail(CalendarActivity.this, adapter.getMonth(calendarPager.getCurrentItem()));
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
 
-            }
-        });
+            reportMailButton.setClickable(true);
+            reportMailButton.setAlpha(1f);
+            reportMailButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    MailReport.exportToMail(CalendarActivity.this, adapter.getMonth(calendarPager.getCurrentItem()));
+
+                }
+            });
+        } else {
+
+            reportMailButton.setOnClickListener(null);
+            reportMailButton.setAlpha(0.5f);
+            reportMailButton.setClickable(false);
+
+        }
+
+
     }
 
 

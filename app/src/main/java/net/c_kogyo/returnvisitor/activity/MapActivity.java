@@ -108,6 +108,7 @@ public class MapActivity extends AppCompatActivity
 
 
     static public boolean isInForeground;
+    private static final float alphaLevel = 0.3f;
 
     private MapView mMapView;
     private GoogleMap mMap;
@@ -586,6 +587,11 @@ public class MapActivity extends AppCompatActivity
                 setMapListeners(user != null);
                 enableTimeCount(user != null);
                 initGuideText();
+
+                updateWorkButton();
+                updateAddWorkButton();
+                updateAddVisitButton();
+                updateReportMailButton();
             }
         };
     }
@@ -1219,7 +1225,7 @@ public class MapActivity extends AppCompatActivity
                 TimeCountService.stopTimeCount();
             }
 
-            timeCountButton.setAlpha(0.3f);
+            timeCountButton.setAlpha(alphaLevel);
             timeCountButton.setClickable(false);
 
             timeFrame.changeHeight(false, true, null);
@@ -1342,63 +1348,112 @@ public class MapActivity extends AppCompatActivity
         }
     }
 
+    private Button workButton;
     private void initWorkButton() {
 
-        Button workButton = (Button) findViewById(R.id.work_button);
-        workButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        workButton = (Button) findViewById(R.id.work_button);
+        updateWorkButton();
+    }
 
-                Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
-                startActivity(workActivityIntent);
-            }
-        });
+    private void updateWorkButton() {
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            workButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
+                    startActivity(workActivityIntent);
+                }
+            });
+            workButton.setAlpha(1f);
+            workButton.setClickable(true);
+        } else {
+            workButton.setClickable(false);
+            workButton.setAlpha(alphaLevel);
+            workButton.setOnClickListener(null);
+        }
 
     }
 
+    private Button addWorkButton;
     private void initAddWorkButton() {
 
-        Button addWorkButton = (Button) findViewById(R.id.add_work_button);
-        addWorkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                AddWorkDialog.newInstance(Calendar.getInstance(),
-                        new AddWorkDialog.OnWorkSetListener() {
-                    @Override
-                    public void onWorkSet(Work work) {
-
-                        RVData.getInstance().workList.addOrSet(work);
-
-                        // WorkActivityに遷移
-                        Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
-
-                        // Intentにworkの日付を仕込む
-
-                        workActivityIntent.putExtra(Constants.DATE_LONG, work.getStart().getTimeInMillis());
-
-                        startActivity(workActivityIntent);
-                    }
-                }).show(getFragmentManager(), null);
-            }
-        });
+        addWorkButton = (Button) findViewById(R.id.add_work_button);
+        updateAddWorkButton();
 
     }
 
+    private void updateAddWorkButton() {
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            addWorkButton.setAlpha(1f);
+            addWorkButton.setClickable(true);
+
+            addWorkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    AddWorkDialog.newInstance(Calendar.getInstance(),
+                            new AddWorkDialog.OnWorkSetListener() {
+                                @Override
+                                public void onWorkSet(Work work) {
+
+                                    RVData.getInstance().workList.addOrSet(work);
+
+                                    // WorkActivityに遷移
+                                    Intent workActivityIntent = new Intent(MapActivity.this, WorkPagerActivity.class);
+
+                                    // Intentにworkの日付を仕込む
+
+                                    workActivityIntent.putExtra(Constants.DATE_LONG, work.getStart().getTimeInMillis());
+
+                                    startActivity(workActivityIntent);
+                                }
+                            }).show(getFragmentManager(), null);
+                }
+            });
+        } else {
+
+            addWorkButton.setAlpha(alphaLevel);
+            addWorkButton.setClickable(false);
+            addWorkButton.setOnClickListener(null);
+        }
+    }
+
+    private Button addVisitButton;
     private void initAddVisitButton() {
 
-        Button addVisitButton = (Button) findViewById(R.id.add_visit_button);
-        addVisitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        addVisitButton = (Button) findViewById(R.id.add_visit_button);
+        updateAddVisitButton();
+    }
 
-                Intent addVisitIntent = new Intent(MapActivity.this, RecordVisitActivity.class);
-                addVisitIntent.setAction(Constants.RecordVisitActions.NEW_VISIT_ACTION_NO_PLACE);
+    private void updateAddVisitButton() {
 
-                startActivityForResult(addVisitIntent, Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE);
-                // onActivityResult内にWorkActivityへの遷移を仕込む
-            }
-        });
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            addVisitButton.setAlpha(1f);
+            addVisitButton.setClickable(true);
+            addVisitButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent addVisitIntent = new Intent(MapActivity.this, RecordVisitActivity.class);
+                    addVisitIntent.setAction(Constants.RecordVisitActions.NEW_VISIT_ACTION_NO_PLACE);
+
+                    startActivityForResult(addVisitIntent, Constants.RecordVisitActions.NEW_VISIT_REQUEST_CODE);
+                    // onActivityResult内にWorkActivityへの遷移を仕込む
+                }
+            });
+
+        } else {
+            addVisitButton.setAlpha(alphaLevel);
+            addVisitButton.setClickable(false);
+            addVisitButton.setOnClickListener(null);
+
+        }
 
     }
 
@@ -1467,15 +1522,32 @@ public class MapActivity extends AppCompatActivity
 
     }
 
+    private Button reportMailButton;
     private void initReportMailButton() {
 
-        Button reportMailButton = (Button) findViewById(R.id.report_mail_button);
-        reportMailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MailReport.exportToMail(MapActivity.this, Calendar.getInstance());
-            }
-        });
+        reportMailButton = (Button) findViewById(R.id.report_mail_button);
+        updateReportMailButton();
+    }
+
+    private void updateReportMailButton() {
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+            reportMailButton.setAlpha(1f);
+            reportMailButton.setClickable(true);
+            reportMailButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    MailReport.exportToMail(MapActivity.this, Calendar.getInstance());
+                }
+            });
+
+        } else {
+
+            reportMailButton.setAlpha(alphaLevel);
+            reportMailButton.setClickable(false);
+            reportMailButton.setOnClickListener(null);
+        }
     }
 
     private static final String APP_TIMER_TAG = "AppTimer";
