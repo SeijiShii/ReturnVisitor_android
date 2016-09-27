@@ -8,6 +8,17 @@ import net.c_kogyo.returnvisitor.R;
 
 public class Constants {
 
+    // Shared Preferences用のタグ類
+    public static final class SharedPrefTags{
+
+        static final String RETURN_VISITOR_SHARED_PREFS = "return_visitor_shared_prefs";
+        static final String ZOOM_LEVEL = "zoom_level";
+        static final String LATITUDE = "latitude";
+        static final String LONGITUDE = "longitude";
+        public static final String USER_NAME = "user_name";
+    }
+
+
     public static final int[] buttonRes = {
             R.mipmap.button_gray,
             R.mipmap.button_red,

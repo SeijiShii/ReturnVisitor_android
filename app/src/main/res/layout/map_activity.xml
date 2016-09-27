@@ -307,7 +307,6 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:background="@color/text_color_normal" />
-
                 <!-- Calendar Button -->
                 <Button
                     android:layout_width="match_parent"
@@ -326,7 +325,45 @@
                     android:layout_marginRight="5dp"
                     android:background="@color/text_color_normal" />
 
+                <!-- User data Button -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:id="@+id/user_data_button"
+                    android:background="@drawable/trans_green_selector"
+                    android:text="@string/user_data"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="10dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/text_color_normal" />
+
+                <!-- Term of use Button -->
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height"
+                    android:id="@+id/term_of_use_button"
+                    android:background="@drawable/trans_green_selector"
+                    android:text="@string/term_of_use_title"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:gravity="left|center_vertical"
+                    android:paddingLeft="10dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@color/text_color_normal" />
+
             </LinearLayout>
+
+
 
         </ScrollView>
 

@@ -21,9 +21,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -76,6 +80,7 @@ import net.c_kogyo.returnvisitor.data.Visit;
 import net.c_kogyo.returnvisitor.data.Work;
 import net.c_kogyo.returnvisitor.dialog.AddWorkDialog;
 import net.c_kogyo.returnvisitor.dialog.MarkerDialog;
+import net.c_kogyo.returnvisitor.dialog.UserDataDialog;
 import net.c_kogyo.returnvisitor.enums.AddressTextLanguage;
 import net.c_kogyo.returnvisitor.R;
 import net.c_kogyo.returnvisitor.dialog.LoginSelectDialog;
@@ -84,6 +89,10 @@ import net.c_kogyo.returnvisitor.view.CollapseButton;
 import net.c_kogyo.returnvisitor.view.HeightChangeFrameLayout;
 
 import static net.c_kogyo.returnvisitor.activity.Constants.LogInCode.GOOGLE_SIGN_IN_RC;
+import static net.c_kogyo.returnvisitor.activity.Constants.SharedPrefTags.LATITUDE;
+import static net.c_kogyo.returnvisitor.activity.Constants.SharedPrefTags.LONGITUDE;
+import static net.c_kogyo.returnvisitor.activity.Constants.SharedPrefTags.RETURN_VISITOR_SHARED_PREFS;
+import static net.c_kogyo.returnvisitor.activity.Constants.SharedPrefTags.ZOOM_LEVEL;
 import static net.c_kogyo.returnvisitor.util.DateTimeText.getDurationString;
 
 public class MapActivity extends AppCompatActivity
@@ -95,12 +104,7 @@ public class MapActivity extends AppCompatActivity
 
     static final String MAP_DEBUG ="map_debug";
 
-    // Shared Preferences用のタグ類
-    static final String RETURN_VISITOR_SHARED_PREFS = "return_visitor_shared_prefs";
-    static final String ZOOM_LEVEL = "zoom_level";
-    static final String LATITUDE = "latitude";
-    static final String LONGITUDE = "longitude";
-    static final String USER_EMAIL_ID = "user_email_id";
+
     static public boolean isInForeground;
 
     private MapView mMapView;
@@ -508,6 +512,8 @@ public class MapActivity extends AppCompatActivity
         initAddWorkButton();
         initAddVisitButton();
         initCalendarButton();
+        initUserDialogButton();
+        initTermButton();
 
     }
 
@@ -1406,6 +1412,55 @@ public class MapActivity extends AppCompatActivity
 
             }
         });
+    }
+
+    private void initUserDialogButton() {
+
+        Button userDialogButton = (Button) findViewById(R.id.user_data_button);
+        userDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                UserDataDialog.newInstance().show(getFragmentManager(), null);
+
+            }
+        });
+
+    }
+
+    private void initTermButton() {
+
+        Button termButton = (Button) findViewById(R.id.term_of_use_button);
+        termButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                showTermDialog();
+            }
+        });
+    }
+
+    private void showTermDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.term_of_use_title);
+
+        TextView textView = new TextView(this);
+        textView.setText(R.string.term_of_use_message);
+
+        textView.setLinkTextColor(Color.BLUE);
+
+        Linkify.addLinks(textView, Linkify.WEB_URLS);
+
+        textView.setPadding(10, 10, 10, 10);
+
+        builder.setView(textView);
+
+        builder.setPositiveButton(R.string.ok_text, null);
+
+        builder.create().show();
+
     }
 
     private static final String APP_TIMER_TAG = "AppTimer";

@@ -100,8 +100,8 @@ public class RecordVisitActivity extends AppCompatActivity {
 
                 mVisit = new Visit();
 
-                double latitude = intent.getDoubleExtra(MapActivity.LATITUDE, 1000);
-                double longitude = intent.getDoubleExtra(MapActivity.LONGITUDE, 1000);
+                double latitude = intent.getDoubleExtra(Constants.SharedPrefTags.LATITUDE, 1000);
+                double longitude = intent.getDoubleExtra(Constants.SharedPrefTags.LONGITUDE, 1000);
 
                 if ( latitude < 1000 && longitude < 1000 ) {
                     mPlace = new Place(new LatLng(latitude, longitude));
