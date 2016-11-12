@@ -256,8 +256,8 @@ public class WorkPagerActivity extends AppCompatActivity {
                         updateButtons();
 
                         WorkFragment fragment = (WorkFragment) datePagerAdapter.instantiateItem(pager, datePagerAdapter.getPosition(work.getStart()));
+                        fragment.addWorkViewAndInflate(work);
 
-                        fragment.refreshContent();
                     }
                 }).show(getFragmentManager(), null);
 

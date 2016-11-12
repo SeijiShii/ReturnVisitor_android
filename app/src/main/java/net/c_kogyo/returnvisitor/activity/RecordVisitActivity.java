@@ -572,7 +572,7 @@ public class RecordVisitActivity extends AppCompatActivity {
                         break;
 
                     case  Constants.RecordVisitActions.NEW_VISIT_ACTION_NO_PLACE:
-
+                        // finish()後の戻り先。MapActivityまたはWorkActivity
                         Intent intent1 = new Intent();
                         intent1.putExtra(Visit.VISIT, mVisit.getId());
                         setResult(Constants.RecordVisitActions.VISIT_ADDED_RESULT_CODE, intent1);

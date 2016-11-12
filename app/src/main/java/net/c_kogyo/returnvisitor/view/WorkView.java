@@ -426,6 +426,8 @@ public abstract class WorkView extends BaseAnimateView {
 
     public abstract void onTimeChange(WorkView workView, VisitList.VisitsMoved visitsMoved, ArrayList<Work> worksRemoved);
 
+    // WorkPagerActivityでaddVisitした後、必要ならvisitCellを追加する
+
 
 
 }

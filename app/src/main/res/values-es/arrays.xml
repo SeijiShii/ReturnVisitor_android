@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="age_array">
-        <item>Unknown</item>
+        <item>Desconocido</item>
         <item>～10</item>
         <item>11～20</item>
         <item>21～30</item>
@@ -14,35 +14,35 @@
     </array>
 
     <array name="interest_array">
-        <item>None</item>
-        <item>Refused</item>
-        <item>Indifferent</item>
-        <item>Fair</item>
-        <item>Kind</item>
-        <item>Interested</item>
-        <item>Strongly Interested</item>
+        <item>Ninguna</item>
+        <item>Negado</item>
+        <item>Indiferente</item>
+        <item>Más o menos</item>
+        <item>Amable</item>
+        <item>Interesado</item>
+        <item>Muy Interesado</item>
     </array>
 
     <array name="sex_array">
-        <item>Unknown</item>
-        <item>Male</item>
-        <item>Female</item>
+        <item>Desconocido</item>
+        <item>Hombre</item>
+        <item>Mujer</item>
     </array>
 
     <array name="placement_array">
-        <item>Bible</item>
-        <item>Book</item>
-        <item>Tract</item>
-        <item>Magazine</item>
-        <item>Web Link</item>
-        <item>Showing Video</item>
-        <item>Other</item>
+        <item>Bíblia</item>
+        <item>Libro</item>
+        <item>Folleto o tratado</item>
+        <item>Revista</item>
+        <item>Enlace web</item>
+        <item>Muestra de video</item>
+        <item>Otro</item>
     </array>
 
     <array name="magazine_array">
-        <item>WATCHTOWER</item>
-        <item>Study WATCHTOWER</item>
-        <item>Awake!</item>
+        <item>LA ATARAYA</item>
+        <item>LA ATARAYA por estudio</item>
+        <item>¡Despertad!</item>
     </array>
 
     <array name="complete_array">
@@ -193,21 +193,21 @@
     </array>
 
     <array name="tag_item_array">
-        <item>Bible Study</item>
-        <item>Return Visit</item>
-        <item>Magazine Route</item>
+        <item>Estudio bíblico</item>
+        <item>Revisita</item>
+        <item>Ruta de revista</item>
     </array>
 
     <array name="visit_frequency_array">
-        <item>None</item>
-        <item>3 Days</item>
-        <item>1 Week</item>
-        <item>2 Weeks</item>
-        <item>1 Month</item>
-        <item>2 Months</item>
-        <item>3 Months</item>
-        <item>6 Months</item>
-        <item>1 Year</item>
+        <item>Ninguna</item>
+        <item>3 días</item>
+        <item>1 semana</item>
+        <item>2 semanas</item>
+        <item>1 mes</item>
+        <item>2 meses</item>
+        <item>3 meses</item>
+        <item>6 meses</item>
+        <item>1 año</item>
     </array>
 
 

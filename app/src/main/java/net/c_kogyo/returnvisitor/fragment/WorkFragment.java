@@ -179,7 +179,7 @@ public class WorkFragment extends Fragment {
         return container.getChildCount();
     }
 
-    private void insertVisitCell(Visit visit) {
+    private void insertVisitCellAndInflate(Visit visit) {
 
         VisitCell visitCell = new VisitCell(visit, getActivity(), BaseAnimateView.InitialHeightCondition.FROM_0){
             @Override
@@ -200,7 +200,7 @@ public class WorkFragment extends Fragment {
     private void addVisitCells(ArrayList<Visit> visits) {
 
         for (Visit visit : visits) {
-            insertVisitCell(visit);
+            insertVisitCellAndInflate(visit);
         }
     }
 
@@ -275,8 +275,22 @@ public class WorkFragment extends Fragment {
 
             if (resultCode == Constants.RecordVisitActions.VISIT_ADDED_RESULT_CODE) {
 
-                refreshContent();
+                // 追加されたのはWorkかVisitか
+                String workId = data.getStringExtra(Work.WORK);
+                if (workId != null) {
+                    Work work = RVData.getInstance().workList.getById(workId);
+                    if (work != null) {
+                        addWorkViewAndInflate(work);
+                    }
+                }
 
+                String visitId = data.getStringExtra(Visit.VISIT);
+                if (visitId != null) {
+                    Visit visit = RVData.getInstance().visitList.getById(visitId);
+                    if (visit != null) {
+                        insertVisitCellAndInflate(visit);
+                    }
+                }
             }
         }
     }
@@ -366,7 +380,7 @@ public class WorkFragment extends Fragment {
 
         } else {
             // このVisitCellを含むべきWorkViewは存在しなかった
-            insertVisitCell(visitCell.getVisit());
+            insertVisitCellAndInflate(visitCell.getVisit());
 
             visitCell.changeViewHeight(BaseAnimateView.AnimateCondition.FROM_HEIGHT_TO_O,
                     true,
@@ -484,39 +498,6 @@ public class WorkFragment extends Fragment {
         return mDate;
     }
 
-    public void refreshContent(){
-
-        ArrayList<Work> worksAdded = RVData.getInstance().workList.getWorksOfDay(mDate);
-        ArrayList<Work> worksInContainer = new ArrayList<>();
-
-        ArrayList<Visit> visitsAdded = RVData.getInstance().visitList.getVisitsInDayOutOfWork(mDate);
-        ArrayList<Visit> visitsInContainer = new ArrayList<>();
-
-        for ( int i = 0 ; i < container.getChildCount() ; i++ ) {
-
-            View view = container.getChildAt(i);
-            if (view instanceof WorkView) {
-                worksInContainer.add(((WorkView) view).getWork());
-            } else if (view instanceof VisitCell) {
-                visitsInContainer.add(((VisitCell) view).getVisit());
-            }
-        }
-
-        ArrayList<Work> worksRemoved = new ArrayList<>(worksInContainer);
-        worksRemoved.removeAll(worksAdded);
-        worksAdded.removeAll(worksInContainer);
-
-        ArrayList<Visit> visitsRemoved = new ArrayList<>(visitsInContainer);
-        visitsRemoved.removeAll(visitsAdded);
-        visitsAdded.removeAll(visitsInContainer);
-
-        removeVisitCells(visitsRemoved);
-        removeWorkViews(worksRemoved);
-
-        addVisitCells(visitsAdded);
-        addWorkViews(worksAdded);
-
-    }
 
     private WorkView instantiateWorkView(Work work, BaseAnimateView.InitialHeightCondition condition) {
 
@@ -545,15 +526,10 @@ public class WorkFragment extends Fragment {
         };
     }
 
-    private void addWorkViews(ArrayList<Work> works) {
+    public void addWorkViewAndInflate(Work work) {
 
-        for (Work work : works) {
-
-            int pos = getInsertPosition(work.getStart());
-
-            container.addView(instantiateWorkView(work, BaseAnimateView.InitialHeightCondition.FROM_0), pos);
-
-        }
+        int pos = getInsertPosition(work.getStart());
+        container.addView(instantiateWorkView(work, BaseAnimateView.InitialHeightCondition.FROM_0), pos);
 
     }
 

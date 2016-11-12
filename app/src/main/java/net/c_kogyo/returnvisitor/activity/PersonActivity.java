@@ -183,6 +183,7 @@ public class PersonActivity extends AppCompatActivity {
     private void initInterestRater() {
 
         LinearLayout raterContainer = (LinearLayout) findViewById(R.id.rater_container);
+        raterContainer.removeAllViews();
 
         raterButtons = new Button[8];
         for ( int i = 0 ; i < 7 ; i++ ) {
