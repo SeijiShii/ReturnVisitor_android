@@ -143,7 +143,7 @@ public class CalendarActivity extends AppCompatActivity{
         Calendar dayCal = Calendar.getInstance();
         int dayOfWeek = dayCal.get(Calendar.DAY_OF_WEEK);
 
-        dayCal.add(Calendar.DAY_OF_MONTH, dayOfWeek - 1);
+        dayCal.add(Calendar.DAY_OF_MONTH, -(dayOfWeek - 1));
 
         TextView[] dayCells = new TextView[7];
         for ( int i = 0 ; i < 7 ; i++ ) {
